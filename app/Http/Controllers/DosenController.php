@@ -38,15 +38,15 @@ class DosenController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'id'                    => 'required|unique:dosens,id|max:255',
+            'nip'                   => 'required|unique:dosens,nip|max:255',
             'name'                  => 'required',
             'keterangan'            => 'required',
             'password'              => 'required|confirmed|min:8|max:255',
             'password_confirmation' => 'required|required_with:password_confirmation|same:password_confirmation|min:8|max:255',
         ],[
-            'id.required'                           =>'Nip Dosen tidak boleh kosong',
-            'id.unique'                             =>'Nip Dosen sudah terpakai',
-            'id.max'                                =>'Nip Dosen max 255 karakter',
+            'nip.required'                          =>'Nip Dosen tidak boleh kosong',
+            'nip.unique'                            =>'Nip Dosen sudah terpakai',
+            'nip.max'                               =>'Nip Dosen max 255 karakter',
             'name.required'                         =>'Nama Dosen tidak boleh kosong',
             'keterangan.required'                   =>'Keterangan Dosen tidak boleh kosong',
             'password.required'                     =>'Password tidak boleh kosong',
@@ -60,21 +60,21 @@ class DosenController extends Controller
             'password_confirmation.min'             =>'Password min 8 karakter',
         ]);
 
-        $data = $request->all();
-        $dosen = new Dosen;
-        $dosen->id      = $data['id'];
-        $dosen->name    = $data['name'];
-        $dosen->keterangan   = $data['keterangan'];
+        $dosen = new Dosen();
+        $dosen->id          = Uuid::uuid4()->getHex();
+        $dosen->nip         = $request->nip;
+        $dosen->name        = $request->name;
+        $dosen->keterangan  = $request->kelas;
 
-        $user = new User;
-        $user->id           = Uuid::uuid4()->getHex();
-        $user->dosen_id     = $dosen->id;
-        $user->name         = $dosen->name;
-        $user->password     = bcrypt($request->password);
-        $user->role_id      = 2;
+        $data = new User();
+        $data->id           = Uuid::uuid4()->getHex();
+        $data->dosen_id     = $dosen->id;
+        $data->name         = $dosen->name;
+        $data->password     = bcrypt($request->password);
+        $data->role_id      = 2;
 
         $dosen->save();
-        $user->save();
+        $data->save();
         return redirect()->route('index_dosen')->with('alert-success','Data dosen dan akun dosen berhasil dibuat!');
     }
 
@@ -96,9 +96,10 @@ class DosenController extends Controller
      * @param  \App\Models\Dosen  $dosen
      * @return \Illuminate\Http\Response
      */
-    public function edit(Dosen $dosen)
+    public function edit(Dosen $dosen, $id)
     {
-        //
+        $dosen = Dosen::findOrFail($id);
+        return view('dosen.edit',compact('dosen'));
     }
 
     /**
@@ -108,9 +109,16 @@ class DosenController extends Controller
      * @param  \App\Models\Dosen  $dosen
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Dosen $dosen)
+    public function update(Request $request, Dosen $dosen , $id)
     {
-        //
+        $dosen = Dosen::findOrFail($id);
+
+        $dosen->nip         = $request->nip;
+        $dosen->name        = $request->name;
+        $dosen->keterangan  = $request->keterangan;
+        $dosen->update();
+        return redirect()->route('index_dosen')->with('pesan', 'Data berhasil diubah');
+
     }
 
     /**
@@ -119,8 +127,14 @@ class DosenController extends Controller
      * @param  \App\Models\Dosen  $dosen
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Dosen $dosen)
+    public function destroy(Dosen $dosen, $id)
     {
-        //
+        try {
+            $dosen = Dosen::find($id);
+            $dosen->delete();
+            return redirect()->route('index_dosen')->with('delete', 'Data Berhasil Dihapus');
+        } catch (\Throwable $th) {
+            return redirect()->route('index_dosen')->withErrors('Data gagal Dihapus');
+        }
     }
 }

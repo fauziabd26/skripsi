@@ -24,15 +24,6 @@
                     @csrf
                     <div class="row">
                         <div class="form-group col-6 col-md-3 col-lg-3">    
-                            <label class="control-label" for="id">Kode Barang</label>
-                            <input type="number" name="id" class="form-control" value="{{ $barang->id }}">
-                            <div class="text-danger">
-                               @error('id')
-                                   {{ $message }}
-                               @enderror
-                            </div>
-                        </div>
-                        <div class="form-group col-6 col-md-3 col-lg-3">    
                                 <label class="control-label" for="name">Nama Barang</label>
                                 <input type="text" name="name" class="form-control" value="{{ $barang->name }}">
                                 <div class="text-danger">
@@ -41,8 +32,6 @@
                                     @enderror
                                 </div>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="form-group col-6 col-md-3 col-lg-3">
                             <label class="control-label" for="stok">Stok Barang</label>
                             <input type="number" name="stok" class="form-control" value="{{ $barang->stok }}">
@@ -52,7 +41,10 @@
                                @enderror
                             </div>
                         </div>
-                        <div class="form-group col-6 col-md-3 col-lg-3">
+                        
+                    </div>
+                    <div class="row">
+                       <div class="form-group col-6 col-md-3 col-lg-3">
                             <label class="control-label" for="k_name">Pilih Kategori Barang</label>
                             <select name="kategori_id" class="form-control">
                                 <option disabled> Semua Kategori </option>
@@ -66,8 +58,6 @@
                                @enderror
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="form-group col-6 col-md-3 col-lg-3">
                             <label class="control-label" for="s_name">Pilih Satuan Barang</label>
                             <select name="satuan_id" class="form-control">
@@ -82,6 +72,9 @@
                                @enderror
                             </div>
                         </div>
+                        
+                    </div>
+                    <div class="row">
                         <div class="form-group col-6 col-md-3 col-lg-3">
                             <label class="control-label" for="file">Ganti Gambar Barang</label>
                             <input type="file" name="file" class="form-control">

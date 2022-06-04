@@ -6,6 +6,9 @@ use App\Models\Barang;
 use App\Models\Kategori;
 use App\Models\Satuan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Ramsey\Uuid\Uuid;
+
 
 class BarangController extends Controller
 {
@@ -16,16 +19,16 @@ class BarangController extends Controller
      */
      public function __construct()
     {
-        $this->middleware('admin');
         $this->Barang = new Barang();
     }
 
     public function index()
     {
-       $datas = [
-           'barang'=> $this->Barang->allData(),
-       ];
-       return view('barang.index', $datas);
+        $barang = DB::table('barangs')
+        ->join('kategoris', 'kategoris.id', '=', 'barangs.kategori_id')
+        ->join('satuans', 'satuans.id', '=', 'barangs.satuan_id')
+        ->get(['barangs.*', 'kategoris.name as k_name', 'satuans.name as s_name']);
+        return view('barang.index', compact('barang'));
     }
     /**
      * Show the form for creating a new resource.
@@ -48,16 +51,12 @@ class BarangController extends Controller
     public function store(Request $request)
     {
         Request()->validate([
-        'id'            => 'required|unique:barangs,id|max:255',
         'name'          => 'required',
         'stok'          => 'required|min:0',
         'kategori_id'   => 'required',
         'satuan_id'     => 'required',
         'file'          => 'required|mimes:jpeg,jpg,png|max:2048kb',
         ],[
-            'id.required'           =>'Kode Barang tidak boleh kosong',
-            'id.unique'             =>'Kode Barang sudah terpakai',
-            'id.max'                =>'Kode Barang max 255 karakter',
             'name.required'         =>'Nama Barang tidak boleh kosong',
             'stok.required'         =>'stok tidak boleh kosong',
             'stok.min'              =>'stok minimal 0',
@@ -73,15 +72,15 @@ class BarangController extends Controller
         $fileName = Request ()->id .'.'. $file->extension();
         $file->move('img/barang/',$fileName);
         
-        $datas = [
-            'id'            => Request()->id,
-            'name'          => Request()->name,
-            'stok'          => Request()->stok,
-            'kategori_id'   => Request()->kategori_id,
-            'satuan_id'     => Request()->satuan_id,
-            'file'          => $fileName,
-        ];
-        $this->Barang->addData($datas);
+        $data = new Barang();
+        $data->id = Uuid::uuid4()->getHex();
+        $data->name = $request->name;
+        $data->stok = $request->stok;
+        $data->kategori_id = $request->kategori_id;
+        $data->satuan_id = $request->satuan_id;
+        $data->file = $fileName;
+        $data->save();
+
         return redirect()->route('index_barang')->with('pesan','Data Berhasil Disimpan');
 
     }
@@ -105,7 +104,7 @@ class BarangController extends Controller
      */
     public function edit(barang $barang, $id)
     {
-        $barang = Barang::findOrFail($id);
+        $barang = Barang::with('kategori','satuan')->findOrFail($id);
         $kategoris = Kategori::all();
         $satuans = Satuan::all();
         return view('barang.edit',compact('barang','kategoris','satuans'));
@@ -121,30 +120,26 @@ class BarangController extends Controller
     public function update(Request $request, barang $barang, $id)
     {
         Request()->validate([
-            'id'            => 'required|max:255',
             'name'          => 'required',
             'stok'          => 'required',
             'kategori_id'   => 'required',
             'satuan_id'     => 'required',
             'file'          => 'mimes:jpeg,jpg,png|max:2048kb',
         ],[
-                'id.required'       =>'id tidak boleh kosong',
-                'id.max'            =>'id max 255 karakter',
-                'name.required'     =>'Nama Barang tidak boleh kosong',
-                'stok.required'     =>'stok tidak boleh kosong',
-                'kategori_id.required' =>'Kategori Barang tidak boleh kosong',
-                'satuan_id.required'   =>'Satuan Barang tidak boleh kosong',
-                'file.mimes'        =>'Format gambar harus jpeg/jpg/png',
-                'file.max'          =>'Ukuran Max Foto Barang 2 Mb',
+            'name.required'     =>'Nama Barang tidak boleh kosong',
+            'stok.required'     =>'stok tidak boleh kosong',
+            'kategori_id.required' =>'Kategori Barang tidak boleh kosong',
+            'satuan_id.required'   =>'Satuan Barang tidak boleh kosong',
+            'file.mimes'        =>'Format gambar harus jpeg/jpg/png',
+            'file.max'          =>'Ukuran Max Foto Barang 2 Mb',
     
         ]);
-        $datas = [
-                'id'            => Request()->id,
-                'name'          => Request()->name,
-                'stok'          => Request()->stok,
-                'kategori_id'   => Request()->kategori_id,
-                'satuan_id'     => Request()->satuan_id,
-        ];
+        $barang = Barang::findOrFail($id);
+        $barang->name = $request->name;
+        $barang->stok = $request->stok;
+        $barang->kategori_id = $request->kategori_id;
+        $barang->satuan_id = $request->satuan_id;
+
         if (empty($request->file('file')))
         {
                 $barang->file = $barang->file;
@@ -158,7 +153,7 @@ class BarangController extends Controller
                 $file->move('img/barang/',$fileName);
                 $barang->file = $fileName;
         }
-        $this->Barang->editData($id, $datas);
+        $barang->update();
         return redirect()->route('index_barang')->with('pesan','Data Berhasil Diupdate');
     }
     /**
@@ -167,14 +162,74 @@ class BarangController extends Controller
      * @param  \App\Models\barang  $barang
      * @return \Illuminate\Http\Response
      */
-    public function destroy(barang $barang, $id)
+    public function destroy($id)
     {
         try {
             $barang = Barang::find($id);
             $barang->delete();
-            return redirect('/barang')->with('delete', 'Data Berhasil Dihapus');
-        }catch (\Throwable $th) {
-            return redirect('/barang')->withErrors('Data gagal Dihapus');
+            return redirect()->route('index_barang')->with('delete', 'Data Berhasil Dihapus');
+        } catch (\Throwable $th) {
+            return redirect()->route('index_barang')->withErrors('Data gagal Dihapus');
         }
     }
+
+    public function indexBarang()
+    {
+        $barang = Barang::with('kategori','satuan')->get();
+        return view('laporan.index', compact('barang'));
+    }
+    public function cetakBarang()
+    {
+        $barang = Barang::with('kategori','satuan')->get();
+        return view('barang.cetakpdf', compact('barang'));
+    }
+    public function cetakpertanggal($tglawal, $tglakhir)
+    {
+        $barang = Barang::with('kategori','satuan')
+        ->whereBetween('barangs.created_at',[$tglawal,$tglakhir])
+        ->latest()
+        ->get();
+        return view('barang.cetakpdf', compact('barang'));
+    }
+    public function search(Request $request)
+    {
+        $keyword = $request->search;
+        $barang = Barang::where('name', 'like', "%" . $keyword . "%")->paginate(5);
+        return view('barang.index', compact('barang'))->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+    public function trash()
+    {
+    	$barang = Barang::onlyTrashed()->get();
+    	return view('barang.trash', ['barang' => $barang]); 
+    }
+    public function kembalikan($id)
+    {
+    	$barang = Barang::onlyTrashed()->where('id',$id);
+    	$barang->restore();
+    	return redirect()->route('index_recycle_bin')->with('success', 'Data Berhasil Dikembalikan');
+    }
+    public function kembalikan_semua()
+    {
+    		
+    	$barang = Barang::onlyTrashed();
+    	$barang->restore();
+ 
+    	return redirect()->route('index_recycle_bin')->with('success', 'Data Berhasil Dikembalikan');
+    }
+    public function hapus_permanen($id)
+    {
+
+    	$barang = Barang::onlyTrashed()->where('id',$id);
+    	$barang->forceDelete();
+ 
+    	return redirect()->route('index_recycle_bin')->with('success', 'Data Berhasil Dihapus');
+    }
+    public function hapus_permanen_semua()
+    {
+    	$barang = Barang::onlyTrashed();
+    	$barang->forceDelete();
+ 
+    	return redirect()->route('index_recycle_bin')->with('success', 'Data Berhasil Dihapus');
+    }
+    
 }

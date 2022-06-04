@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Laporan;
 use Illuminate\Http\Request;
 use App\Exports\BarangExport;
-use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Controller;
+use App\Models\Barang;
+use Illuminate\Support\Facades\DB;
+use Excel;
 
 class LaporanController extends Controller
 {
@@ -17,13 +19,34 @@ class LaporanController extends Controller
      */
     public function index()
     {
-        $laporan = Laporan::all();
-        return view('laporan.index', compact('laporan'));
+        $barang = DB::table('barangs')
+        ->join('kategoris', 'kategoris.id', '=', 'barangs.kategori_id')
+        ->join('satuans', 'satuans.id', '=', 'barangs.satuan_id')
+        ->select('barangs.*', 'kategoris.name as k_name', 'satuans.name as s_name')
+        ->get();
+        return view('laporan.index', compact('barang'));
     }
-
-    public function export_excel()
+    
+    public function export_excel(Request $request)
 	{
-		Return Excel::download(new BarangExport, 'Laporan_Barang.xlsx');
+		$request->validate([
+            'month'     => 'required',
+            'year'      => 'required',
+            'extension' => 'required|in:csv,xlsx'
+        ]);
+        
+        $barang = Barang::with(['barangs'])
+                        ->whereYear('created_at', $request->year)
+                        ->whereMonth('created_at', $request->month)
+                        ->get();
+
+        if ($barang) {
+            $name_file = 'Laporan Barang.'.$request->extension;
+        
+            return (new BarangExport($request->year, $request->month))->download($name_file);
+        }
+        
+        return back()->with('error', 'Maaf data kosong');
 	}
 
     /**

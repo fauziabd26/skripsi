@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Satuan;
 use Illuminate\Http\Request;
+use Ramsey\Uuid\Uuid;
 
 class SatuanController extends Controller
 {
@@ -43,19 +44,15 @@ class SatuanController extends Controller
     public function store(Request $request)
     {
         Request()->validate([
-            'id'            => 'required|unique:satuans,id|max:255',
             'name'          => 'required',
             ],[
-                'id.required'       =>'id tidak boleh kosong',
-                'id.unique'         =>'id sudah terpakai',
-                'id.max'            =>'id max 255 karakter',
                 'name.required'     =>'Nama Satuan tidak boleh kosong',
             ]);
-            $datas = [
-                'id'            => Request()->id,
-                'name'          => Request()->name,
-            ];
-            $this->Satuan->addData($datas);
+            
+            $data = new Satuan();
+            $data->id = Uuid::uuid4()->getHex();
+            $data->name = $request->name;
+            $data->save();
             return redirect()->route('index_satuan')->with('pesan','Data Berhasil Disimpan');
 
     }

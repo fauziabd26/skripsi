@@ -10,7 +10,9 @@ use App\Models\aproval;
 use App\Models\Dosen;
 use App\Models\peminjaman;
 use App\Models\Kategori;
-
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Stmt\Do_;
 class HomeController extends Controller
 {
     /**
@@ -51,12 +53,15 @@ class HomeController extends Controller
     }
     public function index_barang()
     {
-       $barang = Barang::all();
-       return view('barang.index', compact('barang'));
+        
+        $barang = Barang::with('kategori','satuan')->get();
+        return view('barang.index', compact('barang'));
     }
     public function index_dosen()
     {
         $dosen = Dosen::all();
         return view('DashboardDosen.DashboardDosen', compact('dosen'));
     }
+    
+    
 }

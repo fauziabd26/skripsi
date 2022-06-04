@@ -5,16 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\DB;
 
 
-class kategori extends Model
+class Kategori extends Model
 {
     use HasFactory, SoftDeletes;
-    public function addData($data)
+    public $incrementing = false;
+    protected $table = 'kategoris';
+    protected $fillable = [
+        'id', 'name' 
+    ];
+    public function barang()
     {
-        DB::table('kategoris')->insert($data);
+        return $this->hasMany(Barang::class);
     }
-    protected $hidden;
-
 }

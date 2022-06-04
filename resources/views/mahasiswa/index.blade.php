@@ -19,15 +19,16 @@
                         </a>
                     </div>
                 </div>
+                @if(session()->has('alert-success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{session('alert-success')}}
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                @endif
+                @if (count($mahasiswa))
                 <div class="table-responsive">
-                    @if(session()->has('alert-success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{session('alert-success')}}
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    @endif
                     <table id="example1" class="table table-bordered table-hover">
                         <thead class="thead-dark" align="center">
                             <tr>
@@ -39,51 +40,32 @@
                             </tr>
                         </thead>
                         <?php $no = 1;?>
-                        @foreach($mahasiswa as $m)
+                        @foreach($mahasiswa as $data)
                         <tr>
                             <td align="center">{{ $no++ }}</td>
-                            <td align="center">{{ $m->id }}</td>
-                            <td align="center">{{ $m->name }}</td>
-                            <td align="center">{{ $m->kelas }}</td>
+                            <td align="center">{{ $data->nim }}</td>
+                            <td align="center">{{ $data->name }}</td>
+                            <td align="center">{{ $data->kelas }}</td>
                             <td align="center">
-                                <button class="btn btn-success btn-sm mr-2" data-toggle="modal" data-target="#modal-lihat"><i class="fa fa-eye" aria-hidden="true"> Lihat</i></button>
-                                <a href="#" class="btn btn-warning btn-sm mr-2" title="Edit" data-toggle="tooltip"><i class="fa fa-pen" aria-hidden="true"> Edit</i></a>
-                                <a href="#" class="btn btn-danger btn-sm mr-2" title="Hapus" data-toggle="tooltip" onclick="return confirm('Anda yakin mau menghapus item ini ?')"><i class="fa fa-trash" aria-hidden="true"> Hapus</i></a>
+                                <a href="/mahasiswa/edit/{{ $data->id }}" class="btn btn-warning btn-sm mr-2" title="Edit" data-toggle="tooltip"><i class="fa fa-pen" aria-hidden="true"> Edit</i></a>
+                                <a href="/mahasiswa/delete{{ $data->id }}" class="btn btn-danger btn-sm mr-2" title="Hapus" data-toggle="tooltip" onclick="return confirm('Anda yakin mau menghapus {{ $data->name }} ?')"><i class="fa fa-trash" aria-hidden="true"> Hapus</i></a>
                             </td>
                         </tr>
                         @endforeach
                     </table>
                 </div>
+                @else
+                <div class="row mb-3">
+                    <div class="col">
+                            <div class="alert alert-primary">
+                                <i class="fa fa-exclamation-triangle"></i> Data Mahasiswa Belum tersedia
+                            </div>
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
     </div>
 </section>
-<!-- Modal Lihat -->
-<?php if (!empty($mahasiswa)) { ?>
-    <?php foreach ($mahasiswa as $m) : ?>
-        <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="modal-lihat" class="modal fade">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Data Mahasiswa </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Nama : <?= $m['name'] ?></p>
-                        <p>Nim : <?= $m['id'] ?></p>
-                        <p>Kelas : <?= $m['kelas'] ?></p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    <?php endforeach; ?>
-<?php } ?>
-<!-- END Modal Lihat -->
-
 
 @stop

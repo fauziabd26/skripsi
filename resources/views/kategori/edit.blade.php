@@ -25,15 +25,6 @@
                 @method('PUT')    
                     <div class="row">
                         <div class="form-group col-6 col-md-3 col-lg-3">    
-                            <label class="control-label" for="id">Kode Kategori</label>
-                            <input type="text" name="id" class="form-control" value="{{ $kategori->id }}">
-                            <div class="text-danger">
-                               @error('id')
-                                   {{ $message }}
-                               @enderror
-                            </div>
-                        </div>
-                        <div class="form-group col-6 col-md-3 col-lg-3">    
                                 <label class="control-label" for="name">Nama Kategori</label>
                                 <input type="text" name="name" class="form-control" value="{{ $kategori->name }}">
                                 <div class="text-danger">

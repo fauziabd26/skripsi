@@ -60,6 +60,10 @@
                         </tr>
                         @endforeach
                     </table>
+                    Halaman ke: {{ $BarangMasuk->currentPage() }}<br>
+                    Jumlah Semua Data: {{ $BarangMasuk->total() }}<br>
+                    Data perhalaman: {{ $BarangMasuk->perPage() }}<br>
+                    {{ $BarangMasuk->links() }}
                 </div>
             </div>
         </div>

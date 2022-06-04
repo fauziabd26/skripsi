@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 
-class paket extends Model
+class Paket extends Model
 {
     protected $table = "pakets";
 	protected $primaryKey = "id";

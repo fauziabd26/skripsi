@@ -39,15 +39,14 @@ class MahasiswaController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'id'                    => 'required|unique:mahasiswas,id|max:255',
+            'nim'                   => 'required|unique:mahasiswas,nim',
             'name'                  => 'required',
             'kelas'                 => 'required',            
             'password'              => 'required|confirmed|min:8|max:255',
             'password_confirmation' => 'required|required_with:password_confirmation|same:password_confirmation|min:8|max:255',
         ],[
-            'id.required'                           =>'Nim Mahasiswa tidak boleh kosong',
-            'id.unique'                             =>'Nim Mahasiswa sudah terpakai',
-            'id.max'                                =>'Nim Mahasiswa max 255 karakter',
+            'nim.required'                          =>'Nim Mahasiswa tidak boleh kosong',
+            'nim.unique'                            =>'Nim Mahasiswa sudah ada',
             'name.required'                         =>'Nama Mahasiswa tidak boleh kosong',
             'kelas.required'                        =>'Kelas Mahasiswa tidak boleh kosong',
             'password.required'                     =>'Password tidak boleh kosong',
@@ -61,21 +60,21 @@ class MahasiswaController extends Controller
             'password_confirmation.min'             =>'Password min 8 karakter',
         ]);
 
-        $data = $request->all();
-        $mahasiswa = new Mahasiswa;
-        $mahasiswa->id      = $data['id'];
-        $mahasiswa->name    = $data['name'];
-        $mahasiswa->kelas   = $data['kelas'];
+        $mahasiswa = new Mahasiswa();
+        $mahasiswa->id      = Uuid::uuid4()->getHex();
+        $mahasiswa->nim     = $request->nim;
+        $mahasiswa->name    = $request->name;
+        $mahasiswa->kelas   = $request->kelas;
 
-        $user = new User;
-        $user->id           = Uuid::uuid4()->getHex();
-        $user->mahasiswa_id = $mahasiswa->id;
-        $user->name         = $mahasiswa->name;
-        $user->password     = bcrypt($request->password);
-        $user->role_id      = 3;
+        $data = new User();
+        $data->id           = Uuid::uuid4()->getHex();
+        $data->mahasiswa_id = $mahasiswa->id;
+        $data->name         = $mahasiswa->name;
+        $data->password     = bcrypt($request->password);
+        $data->role_id      = 3;
 
         $mahasiswa->save();
-        $user->save();
+        $data->save();
         return redirect()->route('index_mahasiswa')->with('alert-success','Data Mahasiswa dan akun mahasiswa berhasil dibuat!');
     }
 
@@ -96,9 +95,10 @@ class MahasiswaController extends Controller
      * @param  \App\Models\mahasiswa  $mahasiswa
      * @return \Illuminate\Http\Response
      */
-    public function edit(mahasiswa $mahasiswa)
+    public function edit(mahasiswa $mahasiswa, $id)
     {
-        //
+        $mahasiswa = Mahasiswa::findOrFail($id);
+        return view('mahasiswa.edit',compact('mahasiswa'));
     }
 
     /**
@@ -108,9 +108,16 @@ class MahasiswaController extends Controller
      * @param  \App\Models\mahasiswa  $mahasiswa
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, mahasiswa $mahasiswa)
+    public function update(Request $request, Mahasiswa $mahasiswa, $id)
     {
-        //
+        $mahasiswa = Mahasiswa::findOrFail($id);
+
+        $mahasiswa->nim     = $request->nim;
+        $mahasiswa->name    = $request->name;
+        $mahasiswa->kelas   = $request->kelas;
+        $mahasiswa->update();
+        return redirect()->route('index_mahasiswa')->with('pesan', 'Data berhasil diubah');
+
     }
 
     /**
@@ -119,8 +126,14 @@ class MahasiswaController extends Controller
      * @param  \App\Models\mahasiswa  $mahasiswa
      * @return \Illuminate\Http\Response
      */
-    public function destroy(mahasiswa $mahasiswa)
+    public function destroy(Mahasiswa $mahasiswa, $id)
     {
-        //
+        try {
+            $mahasiswa = Mahasiswa::find($id);
+            $mahasiswa->delete();
+            return redirect()->route('index_mahasiswa')->with('delete', 'Data Berhasil Dihapus');
+        } catch (\Throwable $th) {
+            return redirect()->route('index_mahasiswa')->withErrors('Data gagal Dihapus');
+        }
     }
 }

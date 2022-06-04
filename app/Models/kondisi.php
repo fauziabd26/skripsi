@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class kondisi extends Model
+class Kondisi extends Model
 {
     protected $table = "kondisis";
 	protected $primaryKey = "id";

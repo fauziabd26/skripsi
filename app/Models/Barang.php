@@ -8,8 +8,12 @@ use Illuminate\Support\Facades\DB;
 
 class Barang extends Model
 {
-    use SoftDeletes, HasFactory;
+    use SoftDeletes, HasFactory;    
+    public $incrementing = false;
+    protected $dates = ['deleted_at'];
+    protected $table = 'barangs';
 	protected $fillable=['id','name','stok','file','kategori_id','satuan_id'];
+    
     public function allData()
     {
         return DB::table('barangs')
@@ -17,21 +21,18 @@ class Barang extends Model
         ->join('satuans', 'satuans.id', '=', 'barangs.satuan_id')
         ->get(['barangs.*', 'kategoris.name as k_name', 'satuans.name as s_name']);
     }
-    public function addData($data)
-    {
-        DB::table('barangs')->insert($data);
-    }
     public function editData($id, $datas)
     {
         DB::table('barangs')
         ->where('id',$id)
         ->update($datas);
     }
-    public function barang_masuks()
+    public function kategori()
     {
-        return $this->hasMany('App\Models\BarangMasuk');
+        return $this->belongsTo(Kategori::class);
     }
-    protected $hidden;
-
-
+    public function satuan()
+    {
+        return $this->belongsTo(Satuan::class);
+    }
 }

@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use DB;
 use App\Models\Barang;
 use App\Models\Kategori;
 use App\Models\Satuan;
 use App\Models\BarangMasuk;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BarangMasukController extends Controller
 {
@@ -25,7 +25,9 @@ class BarangMasukController extends Controller
      */
     public function index()
     {
-        $BarangMasuk = BarangMasuk::all();
+        $BarangMasuk = DB::table('$barang_masuks')
+        ->latest()
+        ->paginate(5);
         return view('BarangMasuk.index', compact('BarangMasuk'));
     }
 

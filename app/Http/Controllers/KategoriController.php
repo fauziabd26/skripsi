@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kategori;
 use Illuminate\Http\Request;
+use Ramsey\Uuid\Uuid;
 
 class KategoriController extends Controller
 {
@@ -18,8 +19,7 @@ class KategoriController extends Controller
      */
     public function index()
     {
-        $kategori = Kategori::all();
-        return view('kategori.index', compact('kategori'));
+        //
     }
 
     /**
@@ -42,19 +42,14 @@ class KategoriController extends Controller
     public function store(Request $request)
     {
         Request()->validate([
-            'id'            => 'required|unique:kategoris,id|max:255',
             'name'          => 'required',
             ],[
-                'id.required'       =>'id tidak boleh kosong',
-                'id.unique'         =>'id sudah terpakai',
-                'id.max'            =>'id max 255 karakter',
                 'name.required'     =>'Nama Kategori tidak boleh kosong',
             ]);
-            $datas = [
-                'id'            => Request()->id,
-                'name'          => Request()->name,
-            ];
-            $this->Kategori->addData($datas);
+            $data = new Kategori();
+            $data->id = Uuid::uuid4()->getHex();
+            $data->name = $request->name;
+            $data->save();
             return redirect()->route('index_kategori')->with('pesan','Data Berhasil Disimpan');
 
     }
@@ -111,9 +106,9 @@ class KategoriController extends Controller
         try {
             $kategori = Kategori::find($id);
             $kategori->delete();
-            return redirect('/kategori')->with('delete', 'Data Berhasil Dihapus');
+            return redirect()->route('index_kategori')->with('delete', 'Data Berhasil Dihapus');
         } catch (\Throwable $th) {
-            return redirect('/kategori')->withErrors('Data gagal Dihapus');
+            return redirect()->route('index_kategori')->withErrors('Data gagal Dihapus');
         }
 
     }

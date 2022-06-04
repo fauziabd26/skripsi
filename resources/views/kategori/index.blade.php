@@ -19,6 +19,7 @@
                         </a>
                     </div>
                 </div>
+                @if (count($kategori))
                 <div class="table-responsive">
                     @if (session('pesan'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -57,41 +58,17 @@
                         @endforeach
                     </table>
                 </div>
+                @else
+                <div class="row mb-3">
+                    <div class="col">
+                            <div class="alert alert-primary">
+                                <i class="fa fa-exclamation-triangle"></i> Data kategori Belum tersedia
+                            </div>
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
     </div>
 </section>
-<!-- Modal Lihat -->
-@if (!empty($kategori))
-    @foreach ($kategori as $data)
-        <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="modal-lihat-{{ $data->id }}" class="modal fade">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Data Kategori </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="container-fluid">
-                                <div class="row">
-                                    <div class="col-md-4">Kode Kategori</div>
-                                    <div class="col-md-4 ms-auto">{{ $data->id }}</div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4">Nama Kategori</div>
-                                    <div class="col-md-6 ms-auto">{{ $data->name }}</div>
-                                </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endforeach
-@endif
-<!-- END Modal Lihat -->
 @stop

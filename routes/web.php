@@ -25,44 +25,69 @@ Route::get('login', [LoginController::class, 'index'])->name('login')->middlewar
 Route::post('/login/post', [LoginController::class, 'login'])->name('post_login');
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
+use App\Http\Controllers\UserController;
+Route::get('/user/profile/{user}', [UserController::class, 'userProfile'])->name('user.profile');
+Route::get('/user/profile/edit/{user}', [UserController::class, 'editUserProfile'])->name('user.profile.edit');
+Route::put('/user/profile/update/{user}', [UserController::class, 'updateUserProfile'])->name('user.profile.update');
+Route::get('profile', 'UserController@edit')->name('profile.edit');
+Route::patch('profile', 'UserController@update')->name('profile.update');
+
+//Route Ubah Password
+Route::get('password', 'UserController@editPassword')->name('user.password.edit');
+Route::patch('password', 'UserController@updatePassword')->name('user.password.update');
+
 //Route Dashboard
 use App\Http\Controllers\HomeController;
 Route::get('/', [HomeController::class, 'index'])->name('dashboard');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('barang', [HomeController::class, 'index_barang'])->name('index_barang')->middleware('admin');
+Route::get('kategori', 'HomeController@index_kategori')->name('index_kategori');
 
 //Route Mahasiswa
 use App\Http\Controllers\MahasiswaController;
-Route::get('mahasiswa', [MahasiswaController::class, 'index'])->name('index_mahasiswa');
+Route::get('mahasiswa', [MahasiswaController::class, 'index'])->name('index_mahasiswa')->middleware('admin');
 Route::get('mahasiswa/add', [MahasiswaController::class, 'create'])->name('tambah_mahasiswa')->middleware('admin');
 Route::post('/mahasiswa/post', [MahasiswaController::class, 'store'])->name('post_mahasiswa')->middleware('admin');
-Route::get('dashboard_mahasiswa', [HomeController::class, 'index_mahasiswa'])->name('dashboard_mahasiswa');
+Route::get('/mahasiswa/edit/{id}', [MahasiswaController::class, 'edit'])->name('edit_mahasiswa')->middleware('admin');
+Route::put('/mahasiswa/update/{id}', [MahasiswaController::class, 'update'])->name('update_mahasiswa')->middleware('admin');
+Route::get('/mahasiswa/delete{id}', [MahasiswaController::class, 'destroy'])->name('destroy_mahasiswa')->middleware('admin');
 
 //Route Admin
 use App\Http\Controllers\RegisterController;
 Route::get('admin/add', [RegisterController::class, 'createAdmin'])->name('tambah_admin');
 Route::post('/admin/post', [RegisterController::class, 'storeAdmin'])->name('post_admin');
 //Route Kalab
-Route::get('kalab/add', [RegisterController::class, 'createKalab'])->name('tambah_kalab');
+Route::get('dashboard_kepala_laboratorium', [UserController::class, 'indexKalab'])->name('index_kalab');
+Route::get('kalab/add', [RegisterController::class, 'createKalab'])->name('tambah_kalab')->middleware('admin');
 Route::post('/kalab/post', [RegisterController::class, 'storeKalab'])->name('post_kalab')->middleware('admin');
 //Route Dosen
 use App\Http\Controllers\DosenController;
-Route::get('dosen', [DosenController::class, 'index'])->name('index_dosen');
+Route::get('dosen', [DosenController::class, 'index'])->name('index_dosen')->middleware('admin');
 Route::get('dosen/add', [DosenController::class, 'create'])->name('tambah_dosen')->middleware('admin');
 Route::post('/dosen/post', [DosenController::class, 'store'])->name('post_dosen')->middleware('admin');
-Route::get('dashboard_dosen', [HomeController::class, 'index_dosen'])->name('dashboard_dosen');
+Route::get('/dosen/edit/{id}', [DosenController::class, 'edit'])->name('edit_dosen')->middleware('admin');
+Route::put('/dosen/update/{id}', [DosenController::class, 'update'])->name('update_dosen')->middleware('admin');
+Route::get('/dosen/delete{id}', [DosenController::class, 'destroy'])->name('destroy_dosen')->middleware('admin');
 
 //Route Barang
 use App\Http\Controllers\BarangController;
-Route::get('barang', [HomeController::class, 'index_barang'])->name('index_barang');
 Route::get('/barang/add', [BarangController::class, 'create'])->name('tambah_barang')->middleware('admin');
 Route::post('/barang/post', [BarangController::class, 'store'])->name('post_barang')->middleware('admin');
 Route::get('/barang/edit/{id}', [BarangController::class, 'edit'])->name('edit_barang')->middleware('admin');
 Route::put('/barang/update/{id}', [BarangController::class, 'update'])->name('update_barang')->middleware('admin');
 Route::get('/barang/delete{id}', [BarangController::class, 'destroy'])->name('destroy_barang')->middleware('admin');
+Route::get('/search_barang', [BarangController::class, 'search'])->name('cari_barang');
+Route::get('/laporan_barang', [BarangController::class,'indexBarang'])->name('index_laporan_barang');
+Route::get('print_barang_pertanggal/{tglawal}/{tglakhir}', [BarangController::class, 'cetakpertanggal'])->name('cetak_barang');
+Route::get('/barang/trash', [BarangController::class, 'trash'])->name('index_recycle_bin');
+Route::get('/barang/kembalikan/{id}', [BarangController::class, 'kembalikan'])->name('restore_barang');
+Route::get('/barang/kembalikan_semua', [BarangController::class, 'kembalikan_semua'])->name('restore_all_barang');
+Route::get('/barang/hapus_permanen/{id}', [BarangController::class, 'hapus_permanen'])->name('delete_barang');
+Route::get('/guru/hapus_permanen_semua', [BarangController::class, 'hapus_permanen_semua'])->name('delete_all');
 
 
 //Route Kategori
 use App\Http\Controllers\KategoriController;
-Route::get('/kategori', [HomeController::class, 'index_kategori'])->name('index_kategori');
 Route::get('/kategori/add', [KategoriController::class, 'create'])->name('tambah_kategori')->middleware('admin');
 Route::post('/kategori/post', [KategoriController::class, 'store'])->name('post_kategori')->middleware('admin');
 Route::get('/kategori/edit/{id}', [KategoriController::class, 'edit'])->name('edit_kategori')->middleware('admin');
@@ -87,8 +112,6 @@ Route::post('/barang_masuk/post', [BarangMasukController::class, 'store'])->name
 Route::get('/barang_masuk/edit/{id}', [BarangMasukController::class, 'edit'])->name('edit_barang_masuk')->middleware('admin');
 Route::put('/barang_masuk/update/{id}', [BarangMasukController::class, 'update'])->name('update_barang_masuk')->middleware('admin');
 Route::get('/barang_masuk/delete{id}', [BarangMasukController::class, 'destroy'])->name('destroy_barang_masuk')->middleware('admin');
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 //Route Peminjaman
 use App\Http\Controllers\PeminjamanController;
@@ -139,5 +162,4 @@ Route::post('import', function () {
     return redirect()->back()->with('success','Data Imported Successfully');
 });
 use App\Http\Controllers\LaporanController;
-Route::get('/laporan_barang', [LaporanController::class,'index'])->name('index_laporan_barang');
 Route::get('/laporan_barang/export_excel', [LaporanController::class,'export_excel'])->name('export_laporan_barang');

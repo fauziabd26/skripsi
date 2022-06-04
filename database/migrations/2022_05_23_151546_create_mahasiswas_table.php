@@ -15,6 +15,7 @@ class CreateMahasiswasTable extends Migration
     {
         Schema::create('mahasiswas', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->string('nim');
             $table->string('name');
             $table->string('kelas');
             $table->softDeletes();

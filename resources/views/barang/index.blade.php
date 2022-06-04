@@ -10,7 +10,7 @@
         </div>
     </div>
     <div class="section-body">
-        <div class="card">
+    <div class="card">
             <div class="card-body">
                 <div class="row mb-3">
                     <div class="col">
@@ -19,8 +19,17 @@
                             <i class="fas fa-plus mr-2"></i> Tambah Data Barang
                         </a>
                     </div>
+                    @if (count($barang))
+                    <div class="col">
+                        <form class="form" method="get" action="{{ route('cari_barang') }}">
+                            <label for="search" class="d-block mr-2">Pencarian</label>
+                            <input type="text" name="search" class="form-control w-75 d-inline" id="search" placeholder="Masukkan keyword">
+                            <button type="submit" class="btn btn-primary mb-1">Cari</button>
+                        </form>
+                    </div>
+                    @endif
                 </div>
-                @if (session('pesan'))
+                    @if (session('pesan'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         <strong>Success</strong> {{ session('pesan') }}.
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -35,10 +44,11 @@
                         </button>
                     </div>
                     @endif
-                <div class="table-responsive">
-                    <table id="example1" class="table table-bordered table-hover">
-                        <thead class="thead-dark" align="center">
-                            <tr>
+                    @if (count($barang))
+                    <div class="table-responsive">
+                        <table id="example1" class="table table-bordered table-hover">
+                            <thead class="thead-dark" align="center">
+                                <tr>
                                 <th>NO</th>
                                 <th>Nama Barang</th>
                                 <th>stok</th>
@@ -53,8 +63,8 @@
                             <td align="center">{{ $no++ }}</td>
                             <td align="center">{{ $data->name }}</td>
                             <td align="center">{{ $data->stok }}</td>
-                            <td align="center">{{ $data->k_name }} </td>
-                            <td align="center">{{ $data->s_name }}</td>
+                            <td align="center">{{ $data->kategori->name }}</td>
+                            <td align="center">{{ $data->satuan->name }}</td>
                             <td align="center">
                                 <button type="button" class="btn btn-success btn-sm mr-2" data-toggle="modal" data-target="#modal-lihat-{{ $data->id }}"><i class="fa fa-eye"> Lihat</i></button>
                                 <a href="/barang/edit/{{ $data->id }}" class="btn btn-warning btn-sm mr-2" title="Edit" data-toggle="tooltip"><i class="fa fa-pen" aria-hidden="true"> Edit</i></a>
@@ -63,7 +73,18 @@
                         </tr>
                         @endforeach
                     </table>
+                    
+                    <br>
                 </div>
+                @else
+                <div class="row mb-3">
+                    <div class="col">
+                            <div class="alert alert-primary">
+                                <i class="fa fa-exclamation-triangle"></i> Data Barang Belum tersedia
+                            </div>
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
     </div>
@@ -82,10 +103,6 @@
                     <div class="modal-body">
                         <div class="container-fluid">
                             <div class="row">
-                                <div class="col-md-4">Kode Barang</div>
-                                <div class="col-md-4 ms-auto">{{ $data->id }}</div>
-                            </div>
-                            <div class="row">
                                 <div class="col-md-4">Nama Barang</div>
                                 <div class="col-md-6 ms-auto">{{ $data->name }}</div>
                             </div>
@@ -95,11 +112,11 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-4">Kategori Barang</div>
-                                <div class="col-md-6 ms-auto">{{ $data->k_name }}</div>
+                                <div class="col-md-6 ms-auto">{{ $data->kategori->name }}</div>
                             </div>
                             <div class="row">
                                 <div class="col-md-4">Satuan Barang</div>
-                                <div class="col-md-6 ms-auto">{{ $data->s_name }}</div>
+                                <div class="col-md-6 ms-auto">{{ $data->satuan->name }}</div>
                             </div>
                             <div class="row">
                                 <div class="col-md-4">Gambar Barang</div>

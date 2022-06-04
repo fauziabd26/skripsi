@@ -19,13 +19,16 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->uuid('role_id');
             $table->uuid('mahasiswa_id')->nullable();
             $table->uuid('dosen_id')->nullable();
+            $table->integer('role_id');
         
-            $table->foreign('dosen_id')->references('id')->on('dosens');
-            $table->foreign('mahasiswa_id')->references('id')->on('mahasiswas');
-            $table->foreign('role_id')->references('id')->on('roles');
+            $table->foreign('dosen_id')->references('id')->on('dosens')
+                ->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('mahasiswa_id')->references('id')->on('mahasiswas')
+                ->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('role_id')->references('id')->on('roles')
+                ->onUpdate('cascade')->onDelete('cascade');
             $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();

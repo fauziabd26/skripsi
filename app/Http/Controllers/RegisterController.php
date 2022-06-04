@@ -53,10 +53,10 @@ class RegisterController extends Controller
             ]);
     
             $data = new User();
-            $data->id = Uuid::uuid4()->getHex();
-            $data->name = $request->name;
+            $data->id       = Uuid::uuid4()->getHex();
+            $data->name     = $request->name;
             $data->password = bcrypt($request->password);
-            $data->role_id = 1;
+            $data->role_id  = 1;
     
             $data->save();
             return redirect()->route('index_admin')->with('alert-success','Data akun berhasil dibuat!');

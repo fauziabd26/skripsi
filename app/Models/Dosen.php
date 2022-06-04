@@ -10,5 +10,14 @@ class Dosen extends Model
 {
     use HasFactory, SoftDeletes;
     protected $hidden;
+    public $incrementing = false;
+    protected $table = 'dosens';
+    protected $fillable = [
+        'id', 'nip', 'name', 'keterangan' 
+    ];
+    public function user()
+    {
+        return $this->hasMany(User::class);
+    }
 
 }

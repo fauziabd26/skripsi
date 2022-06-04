@@ -23,10 +23,10 @@
                     @csrf    
                     <div class="row">
                         <div class="form-group col-6 col-md-3 col-lg-3">    
-                            <label class="control-label" for="id">Nip</label>
-                            <input type="number" name="id" class="form-control" value="{{ old('id') }}">
+                            <label class="control-label" for="nip">Nip</label>
+                            <input type="number" name="nip" class="form-control" value="{{ old('nip') }}">
                             <div class="text-danger">
-                               @error('id')
+                               @error('nip')
                                    {{ $message }}
                                @enderror
                             </div>

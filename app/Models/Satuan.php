@@ -7,13 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
-class satuan extends Model
+class Satuan extends Model
 {
     use HasFactory, SoftDeletes;
-    public function addData($data)
+    public $incrementing = false;
+    protected $table = 'satuans';
+    protected $fillable = [
+        'id', 'name' 
+    ];
+    public function satuan()
     {
-        DB::table('satuans')->insert($data);
+        return $this->hasMany(satuan::class);
     }
-    protected $hidden;
 
 }

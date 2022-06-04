@@ -19,7 +19,8 @@ class CreateBarangMasuksTable extends Migration
             $table->string('stok_awal')->nullable();
             $table->string('nama_konsumen')->nullable();
             $table->uuid('barang_id');
-            $table->foreign('barang_id')->references('id')->on('barangs');
+            $table->foreign('barang_id')->references('id')->on('barangs')
+                ->onUpdate('cascade')->onDelete('cascade');
             $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();
