@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\BarangExport;
 use App\Models\Barang;
 use App\Models\Kategori;
 use App\Models\Satuan;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use Ramsey\Uuid\Uuid;
 
 
@@ -17,18 +20,23 @@ class BarangController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-     public function __construct()
+    public function __construct()
     {
         $this->Barang = new Barang();
+        $this->middleware('auth');
     }
 
     public function index()
     {
+        $kategori = DB::table('barangs')
+        ->select('barangs.kategori_id','barangs.satuan_id')
+        ->get();
         $barang = DB::table('barangs')
         ->join('kategoris', 'kategoris.id', '=', 'barangs.kategori_id')
         ->join('satuans', 'satuans.id', '=', 'barangs.satuan_id')
-        ->get(['barangs.*', 'kategoris.name as k_name', 'satuans.name as s_name']);
-        return view('barang.index', compact('barang'));
+        ->select('barangs.*', 'kategoris.name as k_name', 'satuans.name as s_name')
+        ->get();
+        return view('barang.index', compact('barang','kategori'));
     }
     /**
      * Show the form for creating a new resource.
@@ -79,6 +87,8 @@ class BarangController extends Controller
         $data->kategori_id = $request->kategori_id;
         $data->satuan_id = $request->satuan_id;
         $data->file = $fileName;
+        $data->created_at = date('Y-m-d H:i:s');
+        $data->updated_at = date('Y-m-d H:i:s');
         $data->save();
 
         return redirect()->route('index_barang')->with('pesan','Data Berhasil Disimpan');
@@ -132,26 +142,26 @@ class BarangController extends Controller
             'satuan_id.required'   =>'Satuan Barang tidak boleh kosong',
             'file.mimes'        =>'Format gambar harus jpeg/jpg/png',
             'file.max'          =>'Ukuran Max Foto Barang 2 Mb',
-    
+            
         ]);
         $barang = Barang::findOrFail($id);
         $barang->name = $request->name;
         $barang->stok = $request->stok;
         $barang->kategori_id = $request->kategori_id;
         $barang->satuan_id = $request->satuan_id;
-
+        
         if (empty($request->file('file')))
         {
-                $barang->file = $barang->file;
+            $barang->file = $barang->file;
         }
         else{
             
-                $destinationPath = 'img/barang/'.$barang->file;
-                Barang::destroy($destinationPath.'img/barang'.$barang->file);
-                $file = $request->file('file');
-                $fileName = Request ()->id .'.'. $file->extension();
-                $file->move('img/barang/',$fileName);
-                $barang->file = $fileName;
+            $destinationPath = 'img/barang/'.$barang->file;
+            Barang::destroy($destinationPath.'img/barang'.$barang->file);
+            $file = $request->file('file');
+            $fileName = Request ()->id .'.'. $file->extension();
+            $file->move('img/barang/',$fileName);
+            $barang->file = $fileName;
         }
         $barang->update();
         return redirect()->route('index_barang')->with('pesan','Data Berhasil Diupdate');
@@ -172,24 +182,32 @@ class BarangController extends Controller
             return redirect()->route('index_barang')->withErrors('Data gagal Dihapus');
         }
     }
-
+    
     public function indexBarang()
     {
         $barang = Barang::with('kategori','satuan')->get();
         return view('laporan.index', compact('barang'));
     }
-    public function cetakBarang()
-    {
-        $barang = Barang::with('kategori','satuan')->get();
-        return view('barang.cetakpdf', compact('barang'));
-    }
-    public function cetakpertanggal($tglawal, $tglakhir)
-    {
-        $barang = Barang::with('kategori','satuan')
-        ->whereBetween('barangs.created_at',[$tglawal,$tglakhir])
+    public function cetakpertanggal(Request $request)
+    {        
+        $tglawal=$request->tglawal;
+        $tglakhir=$request->tglakhir;
+        $barang = Barang::whereBetween('created_at',[$request->tglawal, $request->tglakhir])
         ->latest()
         ->get();
-        return view('barang.cetakpdf', compact('barang'));
+        
+        return view('barang.cetakpdf', compact('barang','tglawal','tglakhir'));            
+        
+    }
+    public function export(Request $request) 
+    {
+        $tglawal=$request->tglawal;
+        $tglakhir=$request->tglakhir;
+        $barang = Barang::whereBetween('created_at',[$request->tglawal, $request->tglakhir])
+        ->latest()
+        ->get();
+    
+        return Excel::download(new BarangExport($tglawal, $tglakhir), 'Laporan Barang.xlsx');
     }
     public function search(Request $request)
     {
@@ -231,5 +249,4 @@ class BarangController extends Controller
  
     	return redirect()->route('index_recycle_bin')->with('success', 'Data Berhasil Dihapus');
     }
-    
 }

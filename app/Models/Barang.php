@@ -8,19 +8,15 @@ use Illuminate\Support\Facades\DB;
 
 class Barang extends Model
 {
-    use SoftDeletes, HasFactory;    
-    public $incrementing = false;
-    protected $dates = ['deleted_at'];
+    use SoftDeletes, HasFactory;   
     protected $table = 'barangs';
-	protected $fillable=['id','name','stok','file','kategori_id','satuan_id'];
-    
-    public function allData()
-    {
-        return DB::table('barangs')
-        ->join('kategoris', 'kategoris.id', '=', 'barangs.kategori_id')
-        ->join('satuans', 'satuans.id', '=', 'barangs.satuan_id')
-        ->get(['barangs.*', 'kategoris.name as k_name', 'satuans.name as s_name']);
-    }
+    protected $guarded = ['id'];
+	protected $fillable=[
+        'id','name','stok','file','kategori_id','satuan_id', 'created_at', 'updated_at'
+    ];
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = 'updated_at';
+
     public function editData($id, $datas)
     {
         DB::table('barangs')

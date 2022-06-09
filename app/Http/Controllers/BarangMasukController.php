@@ -15,7 +15,7 @@ class BarangMasukController extends Controller
     {
         $this->BarangMasuk = new BarangMasuk();
         $this->Barang = new Barang();
-        
+        $this->middleware('auth');        
     }
     
     /**
@@ -25,7 +25,7 @@ class BarangMasukController extends Controller
      */
     public function index()
     {
-        $BarangMasuk = DB::table('$barang_masuks')
+        $BarangMasuk = BarangMasuk::with('barang')
         ->latest()
         ->paginate(5);
         return view('BarangMasuk.index', compact('BarangMasuk'));

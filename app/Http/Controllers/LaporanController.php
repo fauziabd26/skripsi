@@ -6,9 +6,13 @@ use App\Models\Laporan;
 use Illuminate\Http\Request;
 use App\Exports\BarangExport;
 use App\Http\Controllers\Controller;
+use App\Imports\BarangImport;
 use App\Models\Barang;
+use App\Models\Kategori;
+use App\Models\Satuan;
 use Illuminate\Support\Facades\DB;
-use Excel;
+use Maatwebsite\Excel\Facades\Excel;
+use Ramsey\Uuid\Uuid;
 
 class LaporanController extends Controller
 {
@@ -17,37 +21,50 @@ class LaporanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function __construct()
     {
-        $barang = DB::table('barangs')
-        ->join('kategoris', 'kategoris.id', '=', 'barangs.kategori_id')
-        ->join('satuans', 'satuans.id', '=', 'barangs.satuan_id')
-        ->select('barangs.*', 'kategoris.name as k_name', 'satuans.name as s_name')
-        ->get();
-        return view('laporan.index', compact('barang'));
+        $this->middleware('auth');
     }
+     public function add_import()
+    {
+        $kategoris = Kategori::all();
+        $satuans = Satuan::all();
+        return view('barang.import', compact('kategoris','satuans'));
+    }
+    public function store_import(Request $request)
+    {
+        $this->validate($request, [
+            'kategori_id'   => 'required',
+            'satuan_id'     => 'required',
+            'file'          => 'required|mimes:csv,xlx,xls,xlsx|max:2048kb',
+            ],[
+                'kategori_id.required'  =>'Kategori Barang tidak boleh kosong',
+                'satuan_id.required'    =>'Satuan Barang tidak boleh kosong',
+                'file.required'         =>'Gambar Barang tidak boleh kosong',
+                'file.mimes'            =>'Format gambar harus csv/xlx/xls/xlsx',
+                'file.max'              =>'Ukuran Max Foto Barang 2 Mb',
     
-    public function export_excel(Request $request)
-	{
-		$request->validate([
-            'month'     => 'required',
-            'year'      => 'required',
-            'extension' => 'required|in:csv,xlsx'
-        ]);
-        
-        $barang = Barang::with(['barangs'])
-                        ->whereYear('created_at', $request->year)
-                        ->whereMonth('created_at', $request->month)
-                        ->get();
+            ]);
+        $data = new Barang();
+        $data->id = Uuid::uuid4()->getHex();
+        $data->kategori_id = $request->kategori_id;
+        $data->satuan_id = $request->satuan_id;
+        $fileName = time().'_'.$request->file->getClientOriginalName();
+        $filePath = $request->file('file')->storeAs('reports', $fileName, 'public');
 
-        if ($barang) {
-            $name_file = 'Laporan Barang.'.$request->extension;
-        
-            return (new BarangExport($request->year, $request->month))->download($name_file);
+        $data->file = $filePath;
+
+        if ($data->save()) {
+            Excel::import(new BarangImport($data), $request->file('file'));
         }
-        
-        return back()->with('error', 'Maaf data kosong');
-	}
+
+        return redirect()->route('index_barang')->with('success','Data have been imported');
+    }
+   /*  public function export_excel(Request $request)
+	{
+		$nama_file = 'laporan_barang_'.date('Y-m-d_H-i-s').'.xlsx';
+        return Excel::download(new BarangExport, $nama_file);
+	} */
 
     /**
      * Show the form for creating a new resource.

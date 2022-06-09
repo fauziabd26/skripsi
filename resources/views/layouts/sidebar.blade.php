@@ -1,10 +1,10 @@
 <div class="main-sidebar">
         <aside id="sidebar-wrapper">
-          <div class="sidebar-brand">
+          <!-- <div class="sidebar-brand">
             <a href="/"><h3> Sistem Informasi Laboratorium Keperawatan</h3></a>
           <a href="/"><img src="{{URL::asset('stisla/img/polindra.png')}}" alt="profile Pic" height="200" width="200">
             "SILK"</a>
-          </div>
+          </div> -->
           <ul class="sidebar-menu">
             <li class="menu-header">Dashboard</li>
             <li class="nav-item dropdown">

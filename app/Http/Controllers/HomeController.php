@@ -53,8 +53,7 @@ class HomeController extends Controller
     }
     public function index_barang()
     {
-        
-        $barang = Barang::with('kategori','satuan')->get();
+        $barang = Barang::with('kategori','satuan')->paginate(5);
         return view('barang.index', compact('barang'));
     }
     public function index_dosen()

@@ -82,4 +82,5 @@ class UserController extends Controller
 
         return redirect()->route('user.password.edit')->with(["success" => "Password berhasil diubah"]);
     }
+    
 }

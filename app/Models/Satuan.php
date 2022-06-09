@@ -15,9 +15,9 @@ class Satuan extends Model
     protected $fillable = [
         'id', 'name' 
     ];
-    public function satuan()
+    public function barang()
     {
-        return $this->hasMany(satuan::class);
+        return $this->hasMany(Barang::class);
     }
 
 }

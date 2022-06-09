@@ -23,25 +23,14 @@
                     @csrf    
                     <div class="row">
                         <div class="form-group col-6 col-md-3 col-lg-3">    
-                            <label class="control-label" for="id">Kode Barang</label>
-                            <input type="number" name="id" class="form-control" value="{{ old('id') }}">
+                            <label class="control-label" for="name">Nama Barang</label>
+                            <input type="text" name="name" class="form-control" value="{{ old('name') }}">
                             <div class="text-danger">
-                               @error('id')
-                                   {{ $message }}
-                               @enderror
+                                @error('name')
+                                    {{ $message }}
+                                @enderror
                             </div>
                         </div>
-                        <div class="form-group col-6 col-md-3 col-lg-3">    
-                                <label class="control-label" for="name">Nama Barang</label>
-                                <input type="text" name="name" class="form-control" value="{{ old('name') }}">
-                                <div class="text-danger">
-                                    @error('name')
-                                        {{ $message }}
-                                    @enderror
-                                </div>
-                        </div>
-                    </div>
-                    <div class="row">
                         <div class="form-group col-6 col-md-3 col-lg-3">
                             <label class="control-label" for="file">Nama Konsumen</label>
                             <input type="text" name="nama_konsumen" class="form-control" value="{{ old('nama_konsumen') }}">
@@ -60,8 +49,6 @@
                                @enderror
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="form-group col-6 col-md-3 col-lg-3">
                             <label class="control-label" for="kategori_id">Kategori Barang</label>
                             <select name="kategori_id" class="form-control">
@@ -76,6 +63,8 @@
                                @enderror
                             </div>
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="form-group col-6 col-md-3 col-lg-3">
                             <label class="control-label" for="satuan_id">Pilih Satuan Barang</label>
                             <select name="satuan_id" class="form-control">
@@ -90,8 +79,6 @@
                                @enderror
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="form-group col-6 col-md-3 col-lg-3">
                             <label class="control-label" for="file">Tanggal Masuk Barang</label>
                             <input type="date" name="tggl_masuk" class="form-control" value="{{ old('tggl_masuk') }}">
@@ -109,12 +96,6 @@
                                    {{ $message }}
                                @enderror
                             </div>
-                        </div>
-                    </div>
-                     <div class="row">
-                        <div class="form-group col-6 col-md-3 col-lg-3">
-                            <label class="control-label" for="s_name">Foto Gambar Barang Sebelumnya</label>
-                            <img src="{{ url('img/barang/'.$barang->file) }}" width="200px" alt="">
                         </div>
                     </div>
                     <div class="form-group">

@@ -3,10 +3,10 @@
 @section('content')
 <section class="section">
     <div class="section-header">
-        <h1>Tambah Data Barang</h1>
+        <h1>Import Data Barang</h1>
         <div class="section-header-breadcrumb">
             <div class="breadcrumb-item active"><a href="/">Dashboard</a></div>
-            <div class="breadcrumb-item">Tambah Data Barang</div>
+            <div class="breadcrumb-item">Import Data Barang</div>
         </div>
     </div>
     <div class="section-body">
@@ -19,31 +19,13 @@
                         </a>
                     </div>
                 </div>
-                <form action="{{ route('post_barang') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('import_post_barang') }}" method="POST" enctype="multipart/form-data">
                     @csrf    
                     <div class="row">
-                        <div class="form-group col-6 col-md-3 col-lg-3">    
-                            <label class="control-label" for="name">Nama Barang</label>
-                            <input type="text" name="name" class="form-control" value="{{ old('name') }}">
-                            <div class="text-danger">
-                                @error('name')
-                                    {{ $message }}
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="form-group col-6 col-md-3 col-lg-3">
-                            <label class="control-label" for="stok">Stok Barang</label>
-                            <input type="number" min="0" name="stok" class="form-control" value="{{ old('stok') }}">
-                            <div class="text-danger">
-                                @error('stok')
-                                    {{ $message }}
-                                @enderror
-                            </div>
-                        </div>
                         <div class="form-group col-6 col-md-3 col-lg-3">
                             <label class="control-label" for="kategori_id">Kategori Barang</label>
                             <select name="kategori_id" class="form-control">
-                                <option selected disabled> Pilih Kategori Barang </option>
+                                <option> Pilih Kategori Barang </option>
                                 @foreach ($kategoris as $data)
                                 <option value="{{ $data->id }}">{{ $data->name }}</option> 
                                 @endforeach
@@ -57,7 +39,7 @@
                         <div class="form-group col-6 col-md-3 col-lg-3">
                             <label class="control-label" for="satuan_id">Pilih Satuan Barang</label>
                             <select name="satuan_id" class="form-control">
-                                <option selected disabled>Pilih Satuan Barang </option>
+                                <option>Pilih Satuan Barang </option>
                                 @foreach ($satuans as $data)
                                 <option value="{{ $data->id }}">{{ $data->name }}</option> 
                                 @endforeach
@@ -71,7 +53,7 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-6 col-md-3 col-lg-3">
-                            <label class="control-label" for="file">Gambar Barang</label>
+                            <label class="control-label" for="file">Import Data</label>
                             <input type="file" name="file" class="form-control" value="{{ old('file') }}">
                             <div class="text-danger">
                                @error('file')

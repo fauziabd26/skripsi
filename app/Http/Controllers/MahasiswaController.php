@@ -14,7 +14,11 @@ class MahasiswaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+     public function index()
     {
         $mahasiswa = Mahasiswa::all();
         return view('mahasiswa.index', compact('mahasiswa'));

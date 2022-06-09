@@ -1,48 +1,100 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA Compatible" content="ie=edge">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <link rel="icon" href="{{asset('stisla')}}/img/polindra.png" type="image" sizes="16x16">
+        <title>SILK &mdash; POLINDRA</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384=Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcjlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    </head>
+    <body style="background-color: white;">
         <style>
             table.static {
                 position: relative;
                 border: 1px solid #543535;
             }
+            .line-tittle{
+                border: 0;
+                border-style: inset;
+                border-top: 1px solid #000;
+            }
         </style>
-        <link rel="icon" href="{{asset('stisla')}}/img/polindra.png" type="image" sizes="16x16">
-        <title>SILK &mdash; POLINDRA</title>
-    </head>
-    <body>
-
-        <div class="table-responsive">
-            <p align="center">Laporan Barang</p>
-            <table class="static" align="center" rules="all" border="1px" style="width: 95%;">
-                <thead class="thead-dark" align="center">
-                    <tr>
-                        <th>NO</th>
-                        <th>Nama Barang</th>
-                        <th>stok</th>
-                        <th>Kategori Barang</th>
-                        <th>Satuan Barang</th>
-                    </tr>
-                </thead>
-                <?php $no = 1;?>
-                @foreach($barang as $data)
-                <tr>
-                    <td align="center">{{ $no++ }}</td>
-                    <td align="center">{{ $data->name }}</td>
-                    <td align="center">{{ $data->stok }}</td>
-                    <td align="center">{{ $data->kategori->name }}</td>
-                    <td align="center">{{ $data->satuan->name }}</td>
-                </tr>
-                @endforeach
-            </table>
+        @if (count($barang))
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card-body">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td align="center">
+                                <span>
+                                    SISTEM INFORMASI LABORATORIUM KEPERAWATAN 
+                                    <br>POLITEKNIK NEGERI INDRAMAYU
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                    <hr class="line-title">
+                        <p align="center">
+                            Laporan Data Barang
+                        </p>
+                        <p align="center">
+                            Periode <b>{{ date('d F Y', strtotime($tglawal)) }} s/d {{ date('d F Y', strtotime($tglakhir)) }}</b>
+                        </p>
+                    </hr>
+                    <table class="table table-bordered">
+                        <thead class="thead-dark" align="center">
+                            <tr>
+                                <th>NO</th>
+                                <th>Nama Barang</th>
+                                <th>stok</th>
+                                <th>Kategori Barang</th>
+                                <th>Satuan Barang</th>
+                            </tr>
+                        </thead>
+                        <?php $no = 1;?>
+                        @foreach($barang as $data)
+                        <tr>
+                            <td align="center">{{ $no++ }}</td>
+                            <td align="center">{{ $data->name }}</td>
+                            <td align="center">{{ $data->stok }}</td>
+                            <td align="center">{{ !empty($data->kategori) ? $data->kategori->name:'' }}</td>
+                            <td align="center">{{ !empty($data->satuan) ? $data->satuan->name:'' }}</td>
+                        </tr>
+                        @endforeach
+                    </table>
+                </div>
+                @else
+                <b>Laporan Barang Periode {{ date('d F Y', strtotime($tglawal)) }} s/d {{ date('d F Y', strtotime($tglakhir)) }} Belum tersedia</b>        
+                @endif
+                </div>
+            </div>
         </div>
-    <script type="text/javascript">
-        document.tittle = window.parent.document.title = "Laporan Barang"
-        window.print();
-    </script>
-</body>
+        <script type="text/javascript">
+            document.tittle = window.parent.document.title = "Laporan Barang {{ date('d F Y', strtotime($tglawal)) }} s/d {{ date('d F Y', strtotime($tglakhir)) }}"
+            window.print();
+        </script>
+        <!-- Modal Import-->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Import Data Barang</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="import" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="input-group mb-3">
+                                <input type="file" name="file" class="form-control">
+                                <button type="submit" class="btn btn-primary mb-1">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    </body>
 </html>

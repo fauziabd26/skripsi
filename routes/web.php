@@ -1,5 +1,6 @@
 <?php
 
+use App\Exports\BarangExport;
 use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\UsersImport;
@@ -71,6 +72,8 @@ Route::get('/dosen/delete{id}', [DosenController::class, 'destroy'])->name('dest
 
 //Route Barang
 use App\Http\Controllers\BarangController;
+use Carbon\Carbon;
+
 Route::get('/barang/add', [BarangController::class, 'create'])->name('tambah_barang')->middleware('admin');
 Route::post('/barang/post', [BarangController::class, 'store'])->name('post_barang')->middleware('admin');
 Route::get('/barang/edit/{id}', [BarangController::class, 'edit'])->name('edit_barang')->middleware('admin');
@@ -78,13 +81,13 @@ Route::put('/barang/update/{id}', [BarangController::class, 'update'])->name('up
 Route::get('/barang/delete{id}', [BarangController::class, 'destroy'])->name('destroy_barang')->middleware('admin');
 Route::get('/search_barang', [BarangController::class, 'search'])->name('cari_barang');
 Route::get('/laporan_barang', [BarangController::class,'indexBarang'])->name('index_laporan_barang');
-Route::get('print_barang_pertanggal/{tglawal}/{tglakhir}', [BarangController::class, 'cetakpertanggal'])->name('cetak_barang');
 Route::get('/barang/trash', [BarangController::class, 'trash'])->name('index_recycle_bin');
 Route::get('/barang/kembalikan/{id}', [BarangController::class, 'kembalikan'])->name('restore_barang');
 Route::get('/barang/kembalikan_semua', [BarangController::class, 'kembalikan_semua'])->name('restore_all_barang');
 Route::get('/barang/hapus_permanen/{id}', [BarangController::class, 'hapus_permanen'])->name('delete_barang');
 Route::get('/guru/hapus_permanen_semua', [BarangController::class, 'hapus_permanen_semua'])->name('delete_all');
-
+Route::post('/laporan_masuk', 'BarangController@cetakpertanggal');
+Route::get('/laporan_excel', 'BarangController@export');
 
 //Route Kategori
 use App\Http\Controllers\KategoriController;
@@ -152,14 +155,14 @@ Route::post('Aproval/add/{id}', [PenggunaController::class, 'storeaproval']);
 
 //Route paket barang
 use App\Http\Controllers\PaketController;
+use App\Imports\BarangImport;
+
 Route::get('paket', [PaketController::class, 'index'])->name('index_Paket');
 Route::get('paket/add', [PaketController::class, 'create'])->name('create_Paket');
 Route::post('paket/add/post', [PaketController::class, 'store'])->name('post_create_Paket');
 
 //Route import export
 Route::post('import', function () {
-    Excel::import(new UsersImport, request()->file('file'));
-    return redirect()->back()->with('success','Data Imported Successfully');
+    Excel::import(new BarangImport, request()->file('file'));
+    return redirect()->route('index_barang')->with('success','Data Imported Successfully');
 });
-use App\Http\Controllers\LaporanController;
-Route::get('/laporan_barang/export_excel', [LaporanController::class,'export_excel'])->name('export_laporan_barang');

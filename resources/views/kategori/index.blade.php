@@ -50,7 +50,6 @@
                             <td align="center">{{ $no++ }}</td>
                             <td align="center">{{ $data->name }}</td>
                             <td align="center">
-                                <button class="btn btn-success btn-sm mr-2" data-toggle="modal" data-target="#modal-lihat-{{ $data->id }}"><i class="fa fa-eye" aria-hidden="true"> Lihat</i></button>
                                 <a href="/kategori/edit/{{ $data->id }}" class="btn btn-warning btn-sm mr-2" title="Edit" data-toggle="tooltip"><i class="fa fa-pen" aria-hidden="true"> Edit</i></a>
                                 <a href="/kategori/delete{{ $data->id }}" class="btn btn-danger btn-sm mr-2" title="Hapus" data-toggle="tooltip" onclick="return confirm('Anda yakin mau menghapus {{$data->name}} ?')"><i class="fa fa-trash" aria-hidden="true"> Hapus</i></a>
                             </td>

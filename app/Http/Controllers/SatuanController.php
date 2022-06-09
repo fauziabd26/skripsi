@@ -11,6 +11,7 @@ class SatuanController extends Controller
     public function __construct()
     {
         $this->Satuan = new Satuan();
+        $this->middleware('auth');
     }
 
     /**

@@ -59,7 +59,7 @@ class RegisterController extends Controller
             $data->role_id  = 1;
     
             $data->save();
-            return redirect()->route('index_admin')->with('alert-success','Data akun berhasil dibuat!');
+            return redirect()->route('dashboard')->with('alert-success','Data akun berhasil dibuat!');
     }
 
     public function storeKalab(Request $request)

@@ -11,6 +11,7 @@ class KategoriController extends Controller
     public function __construct()
     {
         $this->Kategori = new Kategori();
+        $this->middleware('auth');
     }
     /**
      * Display a listing of the resource.
