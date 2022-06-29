@@ -68,7 +68,7 @@ class DosenController extends Controller
         $dosen->id          = Uuid::uuid4()->getHex();
         $dosen->nip         = $request->nip;
         $dosen->name        = $request->name;
-        $dosen->keterangan  = $request->kelas;
+        $dosen->keterangan  = $request->keterangan;
 
         $data = new User();
         $data->id           = Uuid::uuid4()->getHex();

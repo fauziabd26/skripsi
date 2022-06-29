@@ -9,17 +9,21 @@ use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Ramsey\Uuid\Uuid;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithStartRow;
 
-class BarangImport implements ToModel, WithHeadingRow
+class BarangImport implements ToModel, WithHeadingRow, WithStartRow
 {
     use Importable;
     protected $kategoris;
-    protected $satuans;
-
-    public function __construct()
+    
+    public function startRow():int
     {
-        $this->kategoris = Kategori::select('id', 'name')->get();
-        $this->satuans = Satuan::select('id', 'name')->get();
+        return 2;
+    }
+
+    public function __construct($kategori)
+    {
+        $this->kategoris = $kategori;
     }
     /**
     * @param array $row
@@ -28,14 +32,22 @@ class BarangImport implements ToModel, WithHeadingRow
     */
     public function model(array $row)
     {
-        $kategori = $this->kategoris->where('kategori_id', $row['kategori_id'])->first();
-        $satuan = $this->satuans->where('satuan_id', $row['satuan_id'])->first();
-        return new Barang([
-            'id'    => Uuid::uuid4()->getHex(), 
-            'name'  => $row['name'],
-            'stok'  => $row['stok'],
-            'kategori_id' => $kategori->id ?? NULL, 
-            'satuan_id' => $satuan->id ?? NULL, 
-        ]);
+        $satuan = Satuan::where('name', $row['satuan'])->first();
+        if($row['nama_barang']!= NULL){
+            if($satuan==NULL)
+            {
+                $data = new Satuan();
+                $data->id = Uuid::uuid4()->getHex();
+                $data->name = $row['satuan'];
+                $data->save();
+            }
+            return new Barang([
+                'id'    => Uuid::uuid4()->getHex(), 
+                'name'  => $row['nama_barang'],
+                'stok'  => $row['2020']+$row['2021'],
+                'kategori_id' => $this->kategoris->id ?? NULL, 
+                'satuan_id' => $satuan->id ?? NULL, 
+            ]);
+        }
     }
 }

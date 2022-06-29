@@ -8,14 +8,12 @@ use Illuminate\Support\Facades\DB;
 
 class Barang extends Model
 {
-    use SoftDeletes, HasFactory;   
+    use SoftDeletes, HasFactory;
+    public $incrementing = false;
     protected $table = 'barangs';
-    protected $guarded = ['id'];
-	protected $fillable=[
+    protected $fillable=[
         'id','name','stok','file','kategori_id','satuan_id', 'created_at', 'updated_at'
     ];
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'updated_at';
 
     public function editData($id, $datas)
     {
@@ -30,5 +28,9 @@ class Barang extends Model
     public function satuan()
     {
         return $this->belongsTo(Satuan::class);
+    }
+    public function barangmasuk()
+    {
+        return $this->belongsTo(BarangMasuk::class);
     }
 }

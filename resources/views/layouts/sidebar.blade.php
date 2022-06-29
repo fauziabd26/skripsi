@@ -15,8 +15,8 @@
               <li class="nav-item dropdown">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-user"></i> <span>Data Pengguna</span></a>
                 <ul class="dropdown-menu">
-                  <li><a class="nav-link" href="mahasiswa">Mahasiswa</a></li>
-                  <li><a class="nav-link" href="dosen">Dosen</a></li> 
+                  <li><a class="nav-link" href="{{ route('index_mahasiswa') }}">Mahasiswa</a></li>
+                  <li><a class="nav-link" href="{{ route('index_dosen') }}">Dosen</a></li> 
                   <li><a class="nav-link" href="{{ route('index_kalab') }}">Kepala Laboratorium</a></li> 
                 </ul>
               </li>

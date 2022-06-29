@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Dosen extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $hidden;
     public $incrementing = false;
     protected $table = 'dosens';
     protected $fillable = [
@@ -19,5 +18,4 @@ class Dosen extends Model
     {
         return $this->hasMany(User::class);
     }
-
 }

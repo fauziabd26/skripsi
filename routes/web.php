@@ -1,9 +1,6 @@
 <?php
 
-use App\Exports\BarangExport;
 use Illuminate\Support\Facades\Route;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\UsersImport;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,8 +69,6 @@ Route::get('/dosen/delete{id}', [DosenController::class, 'destroy'])->name('dest
 
 //Route Barang
 use App\Http\Controllers\BarangController;
-use Carbon\Carbon;
-
 Route::get('/barang/add', [BarangController::class, 'create'])->name('tambah_barang')->middleware('admin');
 Route::post('/barang/post', [BarangController::class, 'store'])->name('post_barang')->middleware('admin');
 Route::get('/barang/edit/{id}', [BarangController::class, 'edit'])->name('edit_barang')->middleware('admin');
@@ -88,14 +83,13 @@ Route::get('/barang/hapus_permanen/{id}', [BarangController::class, 'hapus_perma
 Route::get('/guru/hapus_permanen_semua', [BarangController::class, 'hapus_permanen_semua'])->name('delete_all');
 Route::post('/laporan_masuk', 'BarangController@cetakpertanggal');
 Route::get('/laporan_excel', 'BarangController@export');
+Route::post('/import_barang', [BarangController::class, 'import'])->name('import_barang')->middleware('admin');
 
 //Route Kategori
 use App\Http\Controllers\KategoriController;
 Route::get('/kategori/add', [KategoriController::class, 'create'])->name('tambah_kategori')->middleware('admin');
 Route::post('/kategori/post', [KategoriController::class, 'store'])->name('post_kategori')->middleware('admin');
 Route::get('/kategori/edit/{id}', [KategoriController::class, 'edit'])->name('edit_kategori')->middleware('admin');
-Route::put('/kategori/update/{id}', [KategoriController::class, 'update'])->name('update_kategori')->middleware('admin');
-Route::get('/kategori/delete{id}', [KategoriController::class, 'destroy'])->name('destroy_kategori')->middleware('admin');
 
 
 //Route Satuan
@@ -112,8 +106,6 @@ use App\Http\Controllers\BarangMasukController;
 Route::get('/barang_masuk', [BarangMasukController::class, 'index'])->name('index_barang_masuk')->middleware('admin');
 Route::get('/barang_masuk/add', [BarangMasukController::class, 'create'])->name('tambah_barang_masuk')->middleware('admin');
 Route::post('/barang_masuk/post', [BarangMasukController::class, 'store'])->name('post_barang_masuk')->middleware('admin');
-Route::get('/barang_masuk/edit/{id}', [BarangMasukController::class, 'edit'])->name('edit_barang_masuk')->middleware('admin');
-Route::put('/barang_masuk/update/{id}', [BarangMasukController::class, 'update'])->name('update_barang_masuk')->middleware('admin');
 Route::get('/barang_masuk/delete{id}', [BarangMasukController::class, 'destroy'])->name('destroy_barang_masuk')->middleware('admin');
 
 //Route Peminjaman
@@ -155,14 +147,8 @@ Route::post('Aproval/add/{id}', [PenggunaController::class, 'storeaproval']);
 
 //Route paket barang
 use App\Http\Controllers\PaketController;
-use App\Imports\BarangImport;
-
 Route::get('paket', [PaketController::class, 'index'])->name('index_Paket');
 Route::get('paket/add', [PaketController::class, 'create'])->name('create_Paket');
 Route::post('paket/add/post', [PaketController::class, 'store'])->name('post_create_Paket');
 
-//Route import export
-Route::post('import', function () {
-    Excel::import(new BarangImport, request()->file('file'));
-    return redirect()->route('index_barang')->with('success','Data Imported Successfully');
-});
+

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\BarangExport;
+use App\Imports\BarangImport;
 use App\Models\Barang;
 use App\Models\Kategori;
 use App\Models\Satuan;
@@ -28,15 +29,7 @@ class BarangController extends Controller
 
     public function index()
     {
-        $kategori = DB::table('barangs')
-        ->select('barangs.kategori_id','barangs.satuan_id')
-        ->get();
-        $barang = DB::table('barangs')
-        ->join('kategoris', 'kategoris.id', '=', 'barangs.kategori_id')
-        ->join('satuans', 'satuans.id', '=', 'barangs.satuan_id')
-        ->select('barangs.*', 'kategoris.name as k_name', 'satuans.name as s_name')
-        ->get();
-        return view('barang.index', compact('barang','kategori'));
+        //
     }
     /**
      * Show the form for creating a new resource.
@@ -73,20 +66,19 @@ class BarangController extends Controller
             'file.required'         =>'Gambar Barang tidak boleh kosong',
             'file.mimes'            =>'Format gambar harus jpeg/jpg/png',
             'file.max'              =>'Ukuran Max Foto Barang 2 Mb',
-
         ]);
         //upload gambar
         $file = $request->file('file');
-        $fileName = Request ()->id .'.'. $file->extension();
+        $fileName = Request()->id .'.'. $file->extension();
         $file->move('img/barang/',$fileName);
         
         $data = new Barang();
-        $data->id = Uuid::uuid4()->getHex();
-        $data->name = $request->name;
-        $data->stok = $request->stok;
-        $data->kategori_id = $request->kategori_id;
-        $data->satuan_id = $request->satuan_id;
-        $data->file = $fileName;
+        $data->id           = Uuid::uuid4()->getHex();
+        $data->name         = $request->name;
+        $data->stok         = $request->stok;
+        $data->kategori_id  = $request->kategori_id;
+        $data->satuan_id    = $request->satuan_id;
+        $data->file         = $fileName;
         $data->created_at = date('Y-m-d H:i:s');
         $data->updated_at = date('Y-m-d H:i:s');
         $data->save();
@@ -209,11 +201,19 @@ class BarangController extends Controller
     
         return Excel::download(new BarangExport($tglawal, $tglakhir), 'Laporan Barang.xlsx');
     }
+    public function import(Request $request) 
+    {
+        $kategoris = Kategori::findOrFail($request->kategori_id);
+        
+        Excel::import(new BarangImport($kategoris), $request->file('file'));
+        return redirect()->route('index_barang')->with('Data Success di Import'); 
+    }
     public function search(Request $request)
     {
         $keyword = $request->search;
+        $kategoris = Kategori::all();
         $barang = Barang::where('name', 'like', "%" . $keyword . "%")->paginate(5);
-        return view('barang.index', compact('barang'))->with('i', (request()->input('page', 1) - 1) * 5);
+        return view('barang.index', compact('barang','kategoris'))->with('i', (request()->input('page', 1) - 1) * 5);
     }
     public function trash()
     {

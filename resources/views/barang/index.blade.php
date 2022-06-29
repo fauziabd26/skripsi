@@ -63,11 +63,11 @@
                         @foreach($barang as $data)
                         <tr>
                             <td align="center">{{ $no++ }}</td>
-                            <td align="center">{{ $data->name }}</td>
+                            <td align="center" style="width: 25%;">{{ $data->name }}</td>
                             <td align="center">{{ $data->stok }}</td>
                             <td align="center">{{ !empty($data->kategori) ? $data->kategori->name:'' }}</td>
                             <td align="center">{{ !empty($data->satuan) ? $data->satuan->name:'' }}</td>
-                            <td align="center">
+                            <td align="center" style="width: 30%;">
                                 <button type="button" class="btn btn-success btn-sm mr-2" data-toggle="modal" data-target="#modal-lihat-{{ $data->id }}"><i class="fa fa-eye"> Lihat</i></button>
                                 <a href="/barang/edit/{{ $data->id }}" class="btn btn-warning btn-sm mr-2" title="Edit" data-toggle="tooltip"><i class="fa fa-pen" aria-hidden="true"> Edit</i></a>
                                 <a href="/barang/delete{{ $data->id }}" class="btn btn-danger btn-sm mr-2" title="Hapus" data-toggle="tooltip" onclick="return confirm('Anda yakin mau menghapus {{ $data->name }} ?')"><i class="fa fa-trash" aria-hidden="true"> Hapus</i></a>
@@ -145,18 +145,25 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <form action="import" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="input-group mb-3">
-                        <input type="file" name="file" class="form-control">
-                        <button type="submit" class="btn btn-primary mb-1">Submit</button>
-                    </div>
-                </form>
-            </div>
+            <form action="{{route('import_barang')}}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                <div class="form-group col-6">
+                    <label class="control-label" for="kategori_id">Kategori Barang</label>
+                    <select name="kategori_id" class="form-control">
+                        <option selected disabled> Pilih Kategori Barang </option>
+                        @foreach ($kategoris as $data)
+                            <option value="{{ $data->id }}">{{ $data->name }}</option> 
+                        @endforeach
+                    </select>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="file" name="file" class="form-control">
+                    <button type="submit" class="btn btn-primary mb-1">Submit</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 @stop

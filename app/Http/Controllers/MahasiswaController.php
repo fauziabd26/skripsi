@@ -64,13 +64,13 @@ class MahasiswaController extends Controller
             'password_confirmation.min'             =>'Password min 8 karakter',
         ]);
 
-        $mahasiswa = new Mahasiswa();
+        $mahasiswa = new Mahasiswa;
         $mahasiswa->id      = Uuid::uuid4()->getHex();
         $mahasiswa->nim     = $request->nim;
         $mahasiswa->name    = $request->name;
         $mahasiswa->kelas   = $request->kelas;
 
-        $data = new User();
+        $data = new User;
         $data->id           = Uuid::uuid4()->getHex();
         $data->mahasiswa_id = $mahasiswa->id;
         $data->name         = $mahasiswa->name;

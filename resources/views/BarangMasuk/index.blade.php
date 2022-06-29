@@ -46,7 +46,7 @@
                             </tr>
                         </thead>
                         <?php $no = 1;?>
-                        @foreach($BarangMasuk as $data)
+                        @foreach($datas as $data)
                         <tr>
                             <td align="center">{{ $no++ }}</td>
                             <td align="center">{{ $data->tggl_masuk }}</td>
@@ -60,16 +60,16 @@
                         </tr>
                         @endforeach
                     </table>
-                    Halaman ke: {{ $BarangMasuk->currentPage() }}<br>
-                    Jumlah Semua Data: {{ $BarangMasuk->total() }}<br>
-                    Data perhalaman: {{ $BarangMasuk->perPage() }}<br>
-                    {{ $BarangMasuk->links() }}
+                    Halaman ke: {{ $datas->currentPage() }}<br>
+                    Jumlah Semua Data: {{ $datas->total() }}<br>
+                    Data perhalaman: {{ $datas->perPage() }}<br>
+                    {{ $datas->links() }}
                 </div>
             </div>
         </div>
     </div>
 </section>
-@foreach ($BarangMasuk as $data)
+@foreach ($datas as $data)
 <!-- Modal Lihat -->
         <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="modal-lihat-{{ $data->id }}" class="modal fade">
             <div class="modal-dialog" role="document">

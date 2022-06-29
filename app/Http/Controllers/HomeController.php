@@ -10,6 +10,7 @@ use App\Models\aproval;
 use App\Models\Dosen;
 use App\Models\peminjaman;
 use App\Models\Kategori;
+use App\Models\Satuan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Stmt\Do_;
@@ -53,8 +54,10 @@ class HomeController extends Controller
     }
     public function index_barang()
     {
+        $kategoris = Kategori::all();
+        $satuans = Satuan::all();
         $barang = Barang::with('kategori','satuan')->paginate(5);
-        return view('barang.index', compact('barang'));
+        return view('barang.index', compact('barang','satuans','kategoris'));
     }
     public function index_dosen()
     {
