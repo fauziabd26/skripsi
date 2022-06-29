@@ -17,4 +17,12 @@ class BarangMasuk extends Model
     {
         return $this->belongsTo(Barang::class);
     }
+    public function kategori()
+    {
+        return $this->belongsTo(Kategori::class);
+    }
+    public function satuan()
+    {
+        return $this->belongsTo(Satuan::class);
+    }
 }

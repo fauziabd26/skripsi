@@ -68,9 +68,10 @@ class BarangController extends Controller
             'file.max'              =>'Ukuran Max Foto Barang 2 Mb',
         ]);
         //upload gambar
-        $file = $request->file('file');
-        $fileName = Request()->id .'.'. $file->extension();
-        $file->move('img/barang/',$fileName);
+        $file      = $request->file('file');
+        $imageName  = time() . "_" . $file->getClientOriginalName();
+        $file->move(public_path('img/barang/'), $imageName);
+
         
         $data = new Barang();
         $data->id           = Uuid::uuid4()->getHex();
@@ -78,7 +79,7 @@ class BarangController extends Controller
         $data->stok         = $request->stok;
         $data->kategori_id  = $request->kategori_id;
         $data->satuan_id    = $request->satuan_id;
-        $data->file         = $fileName;
+        $data->file         = $imageName;
         $data->created_at = date('Y-m-d H:i:s');
         $data->updated_at = date('Y-m-d H:i:s');
         $data->save();

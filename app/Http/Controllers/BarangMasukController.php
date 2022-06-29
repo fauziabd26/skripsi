@@ -25,8 +25,9 @@ class BarangMasukController extends Controller
     {
         $kategoris = Kategori::all();
         $satuans = Satuan::all();
-        $datas = BarangMasuk::with('barang')->paginate(5);
-        return view('barangmasuk.index', compact('datas','satuans','kategoris'));
+        $datas = BarangMasuk::with('barang','kategori','satuan')->paginate(5);
+        $barang = Barang::with('kategori','satuan')->paginate(5);
+        return view('barangmasuk.index', compact('datas','satuans','kategoris','barang'));
     }
 
     /**
@@ -50,7 +51,6 @@ class BarangMasukController extends Controller
     public function store(Request $request)
     {
         Request()->validate([
-            'id'            => 'required|unique:barangs,id|max:255',
             'name'          => 'required',
             'nama_konsumen' => 'required',
             'stok'          => 'required|min:0',
@@ -59,9 +59,6 @@ class BarangMasukController extends Controller
             'tggl_masuk'    => 'required',
             'file'          => 'mimes:jpeg,jpg,png|max:2048kb',
         ],[
-            'id.required'           =>'Kode Barang tidak boleh kosong',
-            'id.unique'             =>'Kode Barang sudah terpakai',
-            'id.max'                =>'Kode Barang max 255 karakter',
             'name.required'         =>'Nama Barang tidak boleh kosong',
             'nama_konsumen.required'=>'Nama Konsumen tidak boleh kosong',
             'stok.required'         =>'stok tidak boleh kosong',
@@ -73,9 +70,9 @@ class BarangMasukController extends Controller
             'file.max'              =>'Ukuran Max Foto Barang 2 Mb'
         ]);
         //upload gambar
-        $file = $request->file('file');
-        $fileName = Request ()->id .'.'. $file->extension();
-        $file->move('img/barang/',$fileName);
+        $file      = $request->file('file');
+        $imageName  = time() . "_" . $file->getClientOriginalName();
+        $file->move(public_path('img/barang/'), $imageName);
         
         $barang = new Barang;
         $barang->id             = Uuid::uuid4()->getHex();
@@ -83,7 +80,7 @@ class BarangMasukController extends Controller
         $barang->stok           = $request->stok;
         $barang->kategori_id    = $request->kategori_id;
         $barang->satuan_id      = $request->satuan_id;
-        $barang->file           = $fileName;
+        $barang->file           = $imageName;
         
         $data = new BarangMasuk;
         $data->id               = Uuid::uuid4()->getHex();
@@ -91,10 +88,8 @@ class BarangMasukController extends Controller
         $data->stok_awal        = $barang->stok;
         $data->nama_konsumen    = $request->nama_konsumen;
         $data->barang_id        = $barang->id;        
-        // $barang->save();
-        // $data->save();
-        dd($barang);
-        dd($data);
+        $barang->save();
+        $data->save();
         return redirect()->route('index_barang_masuk')->with('pesan','Data Berhasil Disimpan');
     }
 
@@ -140,6 +135,12 @@ class BarangMasukController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $barangmasuk = BarangMasuk::find($id);
+            $barangmasuk->delete();
+            return redirect()->route('index_barang_masuk')->with('delete', 'Data Berhasil Dihapus');
+        } catch (\Throwable $th) {
+            return redirect()->route('index_barang_masuk')->withErrors('Data gagal Dihapus');
+        }
     }
 }

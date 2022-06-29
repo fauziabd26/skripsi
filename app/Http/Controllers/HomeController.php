@@ -57,6 +57,7 @@ class HomeController extends Controller
         $kategoris = Kategori::all();
         $satuans = Satuan::all();
         $barang = Barang::with('kategori','satuan')->paginate(5);
+        //dd($barang);
         return view('barang.index', compact('barang','satuans','kategoris'));
     }
     public function index_dosen()

@@ -64,8 +64,9 @@ class BarangController extends Controller
         }
         try
         {
-            $fileName = time().$request->file('file')->getClientOriginalName();
-            $path = $request->file('file')->storeAs('img/barang/',$fileName);
+            $file      = $request->file('file');
+            $imageName  = time() . "_" . $file->getClientOriginalName();
+            $file->move(public_path('img/barang/'), $imageName);
 
             $data = new Barang();
             $data->id = Uuid::uuid4()->getHex();
@@ -73,7 +74,7 @@ class BarangController extends Controller
             $data->stok = $request->stok;
             $data->kategori_id = $request->kategori_id;
             $data->satuan_id = $request->satuan_id;
-            $data->file = $path;
+            $data->file = $imageName;
             $data->created_at = date('Y-m-d H:i:s');
             $data->updated_at = date('Y-m-d H:i:s');
             $data->save();

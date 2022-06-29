@@ -39,7 +39,8 @@
                         <thead class="thead-dark" align="center">
                             <tr>
                                 <th>NO</th>
-                                <th>tanggal Masuk</th>
+                                <th>Nama barang</th>
+                                <th>Tanggal Masuk</th>
                                 <th>Stok Awal</th>
                                 <th>Nama Konsumen</th>
                                 <th>AKSI</th>
@@ -49,13 +50,13 @@
                         @foreach($datas as $data)
                         <tr>
                             <td align="center">{{ $no++ }}</td>
+                            <td align="center">{{ !empty($data->barang) ? $data->barang->name:'' }}</td>
                             <td align="center">{{ $data->tggl_masuk }}</td>
                             <td align="center">{{ $data->stok_awal }}</td>
                             <td align="center">{{ $data->nama_konsumen }} </td>
                             <td>
                                 <button type="button" class="btn btn-success btn-sm mr-2" data-toggle="modal" data-target="#modal-lihat-{{ $data->id }}"><i class="fa fa-eye"> Lihat</i></button>
-                                <a href="/barang_masuk/edit/{{ $data->id_barang_masuk }}" class="btn btn-warning btn-sm mr-2" title="Edit" data-toggle="tooltip"><i class="fa fa-pen" aria-hidden="true"> Edit</i></a>
-                                <a href="/barang_masuk/delete{{ $data->id_barang_masuk }}" class="btn btn-danger btn-sm mr-2" title="Hapus" data-toggle="tooltip" onclick="return confirm('Anda yakin mau menghapus {{ $data->name }} ?')"><i class="fa fa-trash" aria-hidden="true"> Hapus</i></a>
+                                <a href="/barang_masuk/delete{{ $data->id_barang_masuk }}" class="btn btn-danger btn-sm mr-2" title="Hapus" data-toggle="tooltip" onclick="return confirm('Anda yakin mau menghapus {{ $data->barang->name }} ?')"><i class="fa fa-trash" aria-hidden="true"> Hapus</i></a>
                             </td>
                         </tr>
                         @endforeach
@@ -70,6 +71,7 @@
     </div>
 </section>
 @foreach ($datas as $data)
+@foreach ($barang as $b)
 <!-- Modal Lihat -->
         <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="modal-lihat-{{ $data->id }}" class="modal fade">
             <div class="modal-dialog" role="document">
@@ -83,36 +85,32 @@
                     <div class="modal-body">
                         <div class="container-fluid">
                             <div class="row">
-                                <div class="col-md-4">Kode Barang</div>
-                                <div class="col-md-4 ms-auto">{{ $data->id }}</div>
-                            </div>
-                            <div class="row">
                                 <div class="col-md-4">Nama Barang</div>
-                                <div class="col-md-6 ms-auto">{{ $data->name }}</div>
+                                <div class="col-md-6 ms-auto">{{ !empty($data->barang) ? $data->barang->name:'' }}</div>
                             </div>
                             <div class="row">
-                                <div class="col-md-4">Stok Barang</div>
-                                <div class="col-md-6 ms-auto">{{ $data->stok }}</div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">Kategori Barang</div>
-                                <div class="col-md-6 ms-auto">{{ $data->k_name }}</div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">Satuan Barang</div>
-                                <div class="col-md-6 ms-auto">{{ $data->s_name }}</div>
+                                <div class="col-md-4">Stok Awal Barang</div>
+                                <div class="col-md-6 ms-auto">{{ $data->stok_awal }}</div>
                             </div>
                             <div class="row">
                                 <div class="col-md-4">Nama Konsumen</div>
                                 <div class="col-md-6 ms-auto">{{ $data->nama_konsumen }}</div>
                             </div>
                             <div class="row">
-                                <div class="col-md-4">Tanggal Masuk Barang</div>
+                                <div class="col-md-4">Tanggal Masuk</div>
                                 <div class="col-md-6 ms-auto">{{ $data->tggl_masuk }}</div>
                             </div>
                             <div class="row">
+                                <div class="col-md-4">Kategori Barang</div>
+                                <div class="col-md-6 ms-auto">{{ !empty($b->kategori) ? $b->kategori->name:'' }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">Satuan Barang</div>
+                                <div class="col-md-6 ms-auto">{{ !empty($b->satuan) ? $b->satuan->name:'' }}</div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-4">Gambar Barang</div>
-                                <div class="col-md-6 ms-auto"><img src="{{ url('img/barang/'.$data->file) }}" width="150px" alt=""></div>
+                                <div class="col-md-6 ms-auto"><img src="{{ url('img/barang/'.$data->barang->file) }}" width="150px" alt=""></div>
                             </div>
                         </div>
                     </div>
@@ -123,6 +121,7 @@
             </div>
         </div>
 <!-- END Modal Lihat -->
+@endforeach
 @endforeach
 
 @stop

@@ -105,7 +105,7 @@ Route::get('/satuan/delete{id}', [SatuanController::class, 'destroy'])->name('de
 use App\Http\Controllers\BarangMasukController;
 Route::get('/barang_masuk', [BarangMasukController::class, 'index'])->name('index_barang_masuk')->middleware('admin');
 Route::get('/barang_masuk/add', [BarangMasukController::class, 'create'])->name('tambah_barang_masuk')->middleware('admin');
-Route::post('/barang_masuk/post', [BarangMasukController::class, 'store'])->name('post_barang_masuk')->middleware('admin');
+Route::post('/barangmasuk/post', [BarangMasukController::class, 'store'])->name('post_barangmasuk')->middleware('admin');
 Route::get('/barang_masuk/delete{id}', [BarangMasukController::class, 'destroy'])->name('destroy_barang_masuk')->middleware('admin');
 
 //Route Peminjaman

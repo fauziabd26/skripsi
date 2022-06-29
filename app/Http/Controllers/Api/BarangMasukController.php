@@ -4,8 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BarangMasukResource;
+use App\Models\Barang;
 use App\Models\BarangMasuk;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\Response;
 
 class BarangMasukController extends Controller
@@ -39,7 +43,51 @@ class BarangMasukController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(),[
+            'file'          => 'required|mimes:jpeg,jpg,png|max:2048kb',
+        ],[
+            'file.mimes'            =>'Format gambar harus jpeg/jpg/png',
+            'file.max'              =>'Ukuran Max Foto Barang 2 Mb',
+        ]);
+        if($validator->fails()){
+            return response()->json($validator->errors(), 
+            Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+        try
+        {
+            $file      = $request->file('file');
+            $imageName  = time() . "_" . $file->getClientOriginalName();
+            $file->move(public_path('img/barang/'), $imageName);
+
+            $barang = new Barang;
+            $barang->id             = Uuid::uuid4()->getHex();
+            $barang->name           = $request->name;
+            $barang->stok           = $request->stok;
+            $barang->kategori_id    = $request->kategori_id;
+            $barang->satuan_id      = $request->satuan_id;
+            $barang->file           = $imageName;
+            
+            $data = new BarangMasuk;
+            $data->id               = Uuid::uuid4()->getHex();
+            $data->tggl_masuk       = $request->tggl_masuk;
+            $data->stok_awal        = $barang->stok;
+            $data->nama_konsumen    = $request->nama_konsumen;
+            $data->barang_id        = $barang->id;        
+            $barang->save();
+            $data->save();
+            $response = [
+                'success' => true,
+                'message' => 'Barang Masuk Created',
+                'data' => $data
+            ];
+            return response()->json($response, Response::HTTP_CREATED);
+        }
+        catch(QueryException $e)
+        {
+            return response()->json([
+                'message' => "Failed" . $e->errorInfo
+            ]);
+        }
     }
 
     /**
@@ -84,6 +132,17 @@ class BarangMasukController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $barangmasuk = BarangMasuk::findOrFail($id);
+        try {
+            $barangmasuk->delete();
+            $response =[
+                'message' => 'Barang Masuk Deleted'
+            ];
+            return response()->json($response, Response::HTTP_OK);
+        } catch (QueryException $e) {
+            return response()->json([
+                'message' => "Failed" . $e->errorInfo
+            ]);
+        }
     }
 }
