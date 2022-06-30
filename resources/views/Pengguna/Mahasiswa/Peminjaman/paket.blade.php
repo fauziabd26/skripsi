@@ -7,6 +7,7 @@
         <div class="section-header-breadcrumb">
             <div class="breadcrumb-item active"><a href="/">Dashboard</a></div>
             <div class="breadcrumb-item">Peminjaman</div>
+			<div class="breadcrumb-item">Peminjam Paket Barang</div>
         </div>
     </div>
     <div class="section-body">
@@ -21,38 +22,53 @@
 								<strong>{{ $message }}</strong>
 							</div>
 						@endif
-						<a href="{{ route('index_paket_pengguna') }}" class="btn btn-primary" title="Paket Barang" data-toggle="tooltip">
-                            <i class="fas fa-plus mr-2"></i> Peminjaman Paket Barang
-                        </a>&emsp;
-						<a href="{{ route('create_Peminjaman') }}" class="btn btn-primary" title="Tambah" data-toggle="tooltip">
-                            <i class="fas fa-plus mr-2"></i> Tambah Peminjaman
+						@if ($message = Session::get('gagal'))
+							<div class="alert alert-danger alert-block">
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+									<span aria-hidden="true">×</span>
+								</button>
+								<strong>{{ $message }}</strong>
+							</div>
+						@endif
+						<br>
+						<?php if (Auth::user()->name == "admin") { ?>
+						<div class="col">
+                        <a href="{{ route('Peminjaman_paket') }}" class="btn btn-primary" title="Kembali" data-toggle="tooltip">
+                            <i class="fas fa-angle-left mr-2"></i> Kembali
                         </a>
+						<?php } ?>
+						<?php if (Auth::user()->name != "admin") { ?>
+						<div class="col">
+                        <a href="{{ route('index_Peminjaman_pengguna') }}" class="btn btn-primary" title="Kembali" data-toggle="tooltip">
+                            <i class="fas fa-angle-left mr-2"></i> Kembali
+                        </a>
+						<?php } ?>
+                    </div>
                 </div>
                 <div class="table-responsive">
                     <table id="example1" class="table table-bordered table-hover">
                         <thead class="thead-dark" align="center">
                             <tr>
                                 <th>NO</th>
-                                <th>Nama Barang</th>
-                                <th>stok</th>
-                                <th>Kategori Barang</th>
-                                <th>Satuan Barang</th>
+                                <th>Nama Paket</th>
+                                <th>Jumlah</th>
+                                <th>keterangan</th>
                                 <th>AKSI</th>
                             </tr>
                         </thead>
                         <?php 
 							$no = 1;
 						?>
-                        @foreach($barang as $b)
+                        @foreach($data as $b)
                         <tr>
                             <td align="center">{{ $no++ }}</td>
-                            <td align="center">{{ $b->name }}</td>
-                            <td align="center">{{ $b->stok }}</td>
-                            <td align="center">{{ $b->k_name }} </td>
-                            <td align="center">{{ $b->s_name }}</td>
+                            <td align="center">{{ $b->nama }}</td>
+                            <td align="center">{{ $b->jumlah }}</td>
+                            <td align="center">{{ $b->keterangan }} </td>
                             <td align="center">
 								<button class="btn btn-success btn-sm mr-2" data-toggle="modal" data-target="#modal-lihat<?php echo $b['id']; ?>"><i class="fa fa-eye" aria-hidden="true"> Lihat</i></button>
-								</td>
+								<button class="btn btn-warning btn-sm mr-2" data-toggle="modal" data-target="#modal-pinjam<?php echo $b['id']; ?>"><i class="fa fa-pen" aria-hidden="true"> Pinjam</i></button>
+                            </td>
                         </tr>
                         @endforeach
                     </table>
@@ -62,8 +78,8 @@
     </div>
 </section>
 <!-- Modal Lihat -->
-<?php if (!empty($barang)) { ?>
-    <?php foreach ($barang as $b) : ?>
+<?php if (!empty($data)) { ?>
+    <?php foreach ($data as $b) : ?>
         <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="modal-lihat<?php echo $b['id']; ?>" class="modal fade">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -74,26 +90,32 @@
                         </button>
                     </div>
                     <div class="modal-body">
-						<div class="container-fluid">
+					<div class="container-fluid">
                             <div class="row">
-                                <div class="col-md-4">Nama Barang</div>
-                                <div class="col-md-6 ms-auto"><?= $b['name'] ?></div>
+                                <div class="col-md-4">Kode Paket</div>
+                                <div class="col-md-4 ms-auto"><?= $b['id'] ?></div>
                             </div><br>
                             <div class="row">
-                                <div class="col-md-4">Stok Barang</div>
-                                <div class="col-md-6 ms-auto"><?= $b['stok'] ?></div>
+                                <div class="col-md-4">Nama Paket</div>
+                                <div class="col-md-6 ms-auto"><?= $b['nama'] ?></div>
                             </div><br>
-                            <div class="row">
-                                <div class="col-md-4">Kategori Barang</div>
-                                <div class="col-md-6 ms-auto"><?= $b['k_name'] ?></div>
+							<div class="row">
+                                <div class="col-md-4">Jumlah Paket</div>
+                                <div class="col-md-6 ms-auto"><?= $b['jumlah'] ?></div>
                             </div><br>
+							@foreach($pbarang as $pb)
+							@foreach($barang as $ba)
+							<?php if ($ba->id == $pb->id_barang && $b->kode == $pb->kode) { ?>
                             <div class="row">
-                                <div class="col-md-4">Satuan Barang</div>
-                                <div class="col-md-6 ms-auto"><?= $b['s_name'] ?></div>
+                                <div class="col-md-4">Barang</div>
+                                <div class="col-md-6 ms-auto"><?= $ba['name'] ?> Jumlah <?= $pb['jumlah'] ?></div>
                             </div><br>
+							<?php } ?>
+							@endforeach
+							@endforeach
                             <div class="row">
-                                <div class="col-md-4">Gambar Barang</div>
-                                <div class="col-md-6 ms-auto"><img src="{{ url('img/barang/'.$b->file) }}" width="150px" alt=""></div>
+                                <div class="col-md-4">Keterangan</div>
+                                <div class="col-md-6 ms-auto"><?= $b['keterangan'] ?></div>
                             </div><br>
                         </div>
                     </div>
@@ -108,8 +130,8 @@
 <!-- END Modal Lihat -->
 
 <!-- Modal Pinjam -->
-<?php if (!empty($barang)) { ?>
-    <?php foreach ($barang as $b) : ?>
+<?php if (!empty($data)) { ?>
+    <?php foreach ($data as $b) : ?>
         <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="modal-pinjam<?php echo $b['id']; ?>" class="modal fade">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -121,20 +143,10 @@
                     </div>
 					
 						
-					<form action="/PenggunaMahasiswa/add/{{$b->id}}" method="POST">
+					<form action="/PenggunaMahasiswapaket/add/{{$b->id}}" method="POST">
 						@csrf
                     <div class="modal-body">
-						<label>Kode Barang		&emsp;&emsp;&emsp;&emsp;&ensp;:</label>
-						<input type="text" id="k_barang" name="k_barang" value="<?= $b['id'] ?>"readonly><br><br>
-						
-						<label>Nama Barang		&emsp;&emsp;&emsp;&emsp;:</label>
-						<input type="text" id="n_barang" name="n_barang" value="<?= $b['name'] ?>"readonly><br><br>
-						
-						<label>Kategori Barang	&emsp;&emsp;&emsp;:</label>
-						<input type="text" id="kategori_b" name="kategori_b" value="<?= $b['k_name'] ?>"readonly><br><br>
-						
-						<label>Satuan Barang	&emsp;&ensp;&emsp;&emsp;:</label>
-						<input type="text" id="s_barang" name="s_barang" value="<?= $b['s_name'] ?>"readonly><br><br>
+						<input type="hidden" id="k_paket" name="k_paket" value="<?= $b['id'] ?>"readonly><br><br>
 						
 						<label>Nama Peminjam	&emsp;&emsp;&emsp;:</label>
 						<input type="text" id="n_peminjam" name="n_peminjam"><br><br>

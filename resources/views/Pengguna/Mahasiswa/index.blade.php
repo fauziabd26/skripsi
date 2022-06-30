@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layoutMahasiswa.main')
 
 @section('content')
 <section class="section">
@@ -21,12 +21,6 @@
 								<strong>{{ $message }}</strong>
 							</div>
 						@endif
-						<a href="{{ route('index_paket_pengguna') }}" class="btn btn-primary" title="Paket Barang" data-toggle="tooltip">
-                            <i class="fas fa-plus mr-2"></i> Peminjaman Paket Barang
-                        </a>&emsp;
-						<a href="{{ route('create_Peminjaman') }}" class="btn btn-primary" title="Tambah" data-toggle="tooltip">
-                            <i class="fas fa-plus mr-2"></i> Tambah Peminjaman
-                        </a>
                 </div>
                 <div class="table-responsive">
                     <table id="example1" class="table table-bordered table-hover">
@@ -52,7 +46,8 @@
                             <td align="center">{{ $b->s_name }}</td>
                             <td align="center">
 								<button class="btn btn-success btn-sm mr-2" data-toggle="modal" data-target="#modal-lihat<?php echo $b['id']; ?>"><i class="fa fa-eye" aria-hidden="true"> Lihat</i></button>
-								</td>
+								<button class="btn btn-warning btn-sm mr-2" data-toggle="modal" data-target="#modal-pinjam<?php echo $b['id']; ?>"><i class="fa fa-pen" aria-hidden="true"> Pinjam</i></button>
+                            </td>
                         </tr>
                         @endforeach
                     </table>
@@ -74,28 +69,12 @@
                         </button>
                     </div>
                     <div class="modal-body">
-						<div class="container-fluid">
-                            <div class="row">
-                                <div class="col-md-4">Nama Barang</div>
-                                <div class="col-md-6 ms-auto"><?= $b['name'] ?></div>
-                            </div><br>
-                            <div class="row">
-                                <div class="col-md-4">Stok Barang</div>
-                                <div class="col-md-6 ms-auto"><?= $b['stok'] ?></div>
-                            </div><br>
-                            <div class="row">
-                                <div class="col-md-4">Kategori Barang</div>
-                                <div class="col-md-6 ms-auto"><?= $b['k_name'] ?></div>
-                            </div><br>
-                            <div class="row">
-                                <div class="col-md-4">Satuan Barang</div>
-                                <div class="col-md-6 ms-auto"><?= $b['s_name'] ?></div>
-                            </div><br>
-                            <div class="row">
-                                <div class="col-md-4">Gambar Barang</div>
-                                <div class="col-md-6 ms-auto"><img src="{{ url('img/barang/'.$b->file) }}" width="150px" alt=""></div>
-                            </div><br>
-                        </div>
+                        <p>Kode Barang      &emsp;&emsp;&emsp;&emsp;&ensp;: <?= $b['id'] ?></p>
+                        <p>Nama Barang      &emsp;&emsp;&emsp;&emsp;: <?= $b['name'] ?></p>
+                        <p>stok             &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;: <?= $b['stok'] ?></p>
+                        <p>Kategori Barang  &emsp;&emsp;&emsp;: <?= $b['k_name'] ?></p>
+                        <p>Satuan Barang    &emsp;&ensp;&emsp;&emsp;: <?= $b['s_name'] ?></p>
+                        <p>Gambar Barang    &emsp;&emsp;&emsp;: <?= $b['file'] ?></p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
@@ -121,7 +100,7 @@
                     </div>
 					
 						
-					<form action="/PenggunaMahasiswa/add/{{$b->id}}" method="POST">
+					<form action="/PenggunaMahasiswa/add" method="POST">
 						@csrf
                     <div class="modal-body">
 						<label>Kode Barang		&emsp;&emsp;&emsp;&emsp;&ensp;:</label>
@@ -140,7 +119,7 @@
 						<input type="text" id="n_peminjam" name="n_peminjam"><br><br>
 						
 						<label>Jumlah Peminjaman &emsp;&ensp;:</label>
-						<input type="number" id="j_peminjam" name="j_peminjam"><br><br>
+						<input type="text" id="j_peminjam" name="j_peminjam"><br><br>
 						
 						<label>Tanggal Peminjaman	&emsp;:</label>
 						<input type="date" id="t_peminjaman" name="t_peminjaman"><br><br>

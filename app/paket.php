@@ -6,16 +6,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class Kondisi extends Model
+
+class Paket extends Model
 {
-    protected $table = "kondisis";
+    protected $table = "pakets";
 	protected $primaryKey = "id";
-	public $incrementing = false;
 	protected $fillable = [
-		'name',
+		'nama',
+		'barang',
+		'keterangan',
 	];
+	
 	public function allData()
     {
-        return DB::table('kondisis')->get();
+        return DB::table('pakets')->get();
     }
 }

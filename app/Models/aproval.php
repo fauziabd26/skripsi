@@ -10,14 +10,11 @@ use Illuminate\Support\Facades\DB;
 class aproval extends Model
 {
     protected $table = "aprovals";
+	public $incrementing = false;
 	protected $primaryKey = "id";
 	protected $fillable = [
-		'kode_barang',
-		'nama_barang',
-		'kategori_barang',
-		'satuan_barang',
+		'kode_barang_peminjaman',
 		'nama_peminjam',
-		'jumlah_peminjaman',
 		'tanggal_peminjaman',
 		'waktu_peminjaman',
 	];

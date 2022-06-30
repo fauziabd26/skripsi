@@ -6,16 +6,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class Kondisi extends Model
+
+class peminjaman_paket extends Model
 {
-    protected $table = "kondisis";
+    protected $table = "peminjaman_pakets";
 	protected $primaryKey = "id";
 	public $incrementing = false;
 	protected $fillable = [
-		'name',
+		'kode_paket',
+		'nama_peminjam',
+		'jumlah_peminjaman',
+		'tanggal_peminjaman',
+		'waktu_peminjaman',
 	];
+	
 	public function allData()
     {
-        return DB::table('kondisis')->get();
+        return DB::table('peminjaman_pakets')->get();
     }
 }

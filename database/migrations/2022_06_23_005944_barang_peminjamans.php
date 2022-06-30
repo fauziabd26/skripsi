@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePaketsTable extends Migration
+class BarangPeminjamans extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreatePaketsTable extends Migration
      */
     public function up()
     {
-        Schema::create('pakets', function (Blueprint $table) {
+        Schema::create('barang_peminjamans', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('nama');
-            $table->string('keterangan')->nullable();
+            $table->uuid('id_barang');
             $table->integer('kode');
             $table->integer('jumlah');
+            $table->foreign('id_barang')->references('id')->on('barangs')
+                ->onUpdate('cascade')->onDelete('cascade');
             $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();
@@ -32,6 +33,6 @@ class CreatePaketsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pakets');
+        Schema::dropIfExists('barang_peminjamans');
     }
 }

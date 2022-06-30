@@ -7,23 +7,24 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 
-class pengembalian extends Model
+class peminjaman extends Model
 {
-    protected $table = "pengembalians";
+    protected $table = "peminjamans";
 	protected $primaryKey = "id";
-	public $incrementing = false;
 	protected $fillable = [
+		'kode_barang',
 		'nama_barang',
+		'kategori_barang',
+		'satuan_barang',
 		'nama_peminjam',
-		'jumlah_pengembalian',
+		'jumlah_peminjam',
 		'tanggal_peminjaman',
 		'waktu_peminjaman',
-		'tanggal_pengembalian',
-		'kondisi',
+		'aprovals',
 	];
 	
 	public function allData()
     {
-        return DB::table('pengembalians')->get();
+        return DB::table('peminjamans')->get();
     }
 }
