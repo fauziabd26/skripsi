@@ -156,12 +156,12 @@ Route::get('PenggunaMahasiswaPengembalian', [PenggunaController::class, 'indexPe
 Route::post('PenggunaMahasiswaPengembalian/add', [PenggunaController::class, 'storepengembalian']);
 
 //Route Pengguna Dosen
-Route::get('PenggunaDosen', [PenggunaController::class, 'indexdosen']);
+Route::get('PenggunaDosen', [PenggunaController::class, 'indexdosen'])->name('Aproval');
 Route::post('PenggunaDosen/add', [PenggunaController::class, 'storedosen']);
 Route::get('PenggunaDosen/delete/{id}', [PenggunaController::class, 'destroyAproval']);
 
 //Route Aproval
-Route::get('Aproval', [PenggunaController::class, 'indexaproval'])->name('Aproval');
+Route::get('Aproval', [PenggunaController::class, 'indexaproval']);
 Route::post('Aproval/add/{id}', [PenggunaController::class, 'storeaproval']);
 
 //Route paket barang
