@@ -156,7 +156,7 @@ Route::post('PenggunaDosen/add', [PenggunaController::class, 'storedosen']);
 Route::get('PenggunaDosen/delete/{id}', [PenggunaController::class, 'destroyAproval']);
 
 //Route Aproval
-Route::get('Aproval', [PenggunaController::class, 'indexaproval']);
+Route::get('Aproval', [PenggunaController::class, 'indexaproval'])->name('Aproval');
 Route::post('Aproval/add/{id}', [PenggunaController::class, 'storeaproval']);
 
 //Route paket barang
@@ -167,6 +167,6 @@ Route::post('paket/add/post', [PaketController::class, 'store'])->name('post_cre
 Route::get('paket/edit/{id}', [PaketController::class, 'edit_paket'])->name('edit_Paket');
 Route::put('paket/edit/post/{id}', [PaketController::class, 'updatePaket'])->name('post_update_Paket');
 Route::get('paket/delete/{id}', [PaketController::class, 'destroy']);
-Route::get('paket/edit/deletebarang/{id}', [PaketController::class, 'destroypaketbarang'])->name('kembali');
+Route::get('paket/edit/deletebarang/{id}', [PaketController::class, 'destroypaketbarang']);
 
 
