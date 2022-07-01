@@ -121,6 +121,17 @@ Route::post('Peminjaman/post', [PeminjamanController::class, 'store'])->name('po
 Route::get('Peminjaman/edit/{id}', [PeminjamanController::class, 'edit']);
 Route::put('Peminjaman/update/{id}', [PeminjamanController::class, 'update']);
 Route::get('Peminjaman/delete/{id}', [PeminjamanController::class, 'destroy']);
+Route::get('Peminjaman/edit/deletebarang/{id}', [PeminjamanController::class, 'destroypeminjamanbarang'])->name('kembali');
+Route::get('PeminjamanPaket', [PeminjamanController::class, 'indexpaket'])->name('Peminjaman_paket');
+Route::get('PeminjamanPaket/edit/{id}', [PeminjamanController::class, 'editPaket'])->name('Peminjaman_paket_edit');
+Route::put('PeminjamanPaket/edit/post/{id}', [PeminjamanController::class, 'editPaketpos'])->name('Peminjaman_paket_edit_post');
+Route::get('PeminjamanPaket/delete/{id}', [PeminjamanController::class, 'destroypeminjamanpaket']);
+Route::post('/laporan_pdf_peminjaman', 'PeminjamanController@cetakpertanggal');
+Route::get('/laporan_excel_peminjaman', 'PeminjamanController@export');
+Route::get('/laporan_Peminjaman', [PeminjamanController::class,'indexlaporan'])->name('index_laporan_peminjaman');
+Route::get('/laporan_Peminjaman_Paket', [PeminjamanController::class,'indexlaporanPaket'])->name('index_laporan_peminjaman_paket');
+Route::post('/laporan_pdf_paket', 'PeminjamanController@cetakpertanggalpaket');
+Route::get('/laporan_excel_paket', 'PeminjamanController@exportpaket');
 
 //Route Pengembalian
 use App\Http\Controllers\PengembalianController;
@@ -134,9 +145,12 @@ Route::get('Pengembalian/delete/{id}', [PengembalianController::class, 'destroy'
 //Route Pengguna Mahasiswa
 use App\Http\Controllers\PenggunaController;
 Route::get('PenggunaMahasiswa', [PenggunaController::class, 'index'])->name('index_Peminjaman_pengguna');
-Route::post('PenggunaMahasiswa/add/{id}', [PenggunaController::class, 'store']);
+Route::get('PenggunaMahasiswa/add/', [PenggunaController::class, 'create'])->name('create_Peminjaman');
+Route::post('PenggunaMahasiswa/add/', [PenggunaController::class, 'store'])->name('post_create_Peminjaman');
 Route::get('PenggunaMahasiswa/edit/{id}', [PenggunaController::class, 'edit']);
 Route::put('PenggunaMahasiswa/update/{id}', [PenggunaController::class, 'update']);
+Route::get('PenggunaMahasiswapaket', [PenggunaController::class, 'indexpaket'])->name('index_paket_pengguna');
+Route::post('PenggunaMahasiswapaket/add/{id}', [PenggunaController::class, 'storepaket'])->name('index_Peminjaman_paket');
 
 Route::get('PenggunaMahasiswaPengembalian', [PenggunaController::class, 'indexPengembalian']);
 Route::post('PenggunaMahasiswaPengembalian/add', [PenggunaController::class, 'storepengembalian']);
@@ -147,7 +161,7 @@ Route::post('PenggunaDosen/add', [PenggunaController::class, 'storedosen']);
 Route::get('PenggunaDosen/delete/{id}', [PenggunaController::class, 'destroyAproval']);
 
 //Route Aproval
-Route::get('Aproval', [PenggunaController::class, 'indexaproval']);
+Route::get('Aproval', [PenggunaController::class, 'indexaproval'])->name('Aproval');
 Route::post('Aproval/add/{id}', [PenggunaController::class, 'storeaproval']);
 
 //Route paket barang
@@ -155,5 +169,9 @@ use App\Http\Controllers\PaketController;
 Route::get('paket', [PaketController::class, 'index'])->name('index_Paket');
 Route::get('paket/add', [PaketController::class, 'create'])->name('create_Paket');
 Route::post('paket/add/post', [PaketController::class, 'store'])->name('post_create_Paket');
+Route::get('paket/edit/{id}', [PaketController::class, 'edit_paket'])->name('edit_Paket');
+Route::put('paket/edit/post/{id}', [PaketController::class, 'updatePaket'])->name('post_update_Paket');
+Route::get('paket/delete/{id}', [PaketController::class, 'destroy']);
+Route::get('paket/edit/deletebarang/{id}', [PaketController::class, 'destroypaketbarang']);
 
 

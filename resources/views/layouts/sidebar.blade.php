@@ -31,9 +31,21 @@
                 </ul>
               </li>
               <li class="nav-item dropdown">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-folder"></i></i> <span>Data Peminjaman</span></a>
+                <ul class="dropdown-menu">
+                  <li class="menu-header">Pilih Menu</li>
+                  <li><a class="nav-link" href="{{ route('index_Peminjaman') }}">Data Peminjaman</a></li>
+                  <li><a class="nav-link" href="{{ route('Peminjaman_paket') }}">Data Peminjaman Paket</a></li>
+                  <li><a class="nav-link" href="{{ route('index_Paket') }}">Data Paket</a></li>
+                  <li><a class="nav-link" href="{{ route('Aproval') }}">Data Aproval</a></li>
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-file"></i></i> <span>Laporan</span></a>
                 <ul class="dropdown-menu">
                   <li><a class="nav-link" href="{{ route('index_laporan_barang') }}">Laporan Barang</a></li>
+				  <li><a class="nav-link" href="{{ route('index_laporan_peminjaman') }}">Laporan Peminjaman</a></li>
+				  <li><a class="nav-link" href="{{ route('index_laporan_peminjaman_paket') }}">Laporan Paket</a></li>
                 </ul>
               </li>
               <li class="nav-item dropdown">

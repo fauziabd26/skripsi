@@ -15,20 +15,16 @@ class CreatePeminjamansTable extends Migration
     {
         Schema::create('peminjamans', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('kode_barang');
-            $table->uuid('kategori_id');
-            $table->uuid('satuan_id');
-            $table->uuid('user_id');
-            $table->string('jumlah_peminjaman');
+            $table->integer('kode_barang_peminjaman');
+            $table->uuid('id_dosen');
+            $table->uuid('nama_peminjam');
             $table->date('tanggal_peminjaman');
-            $table->enum('approvals', ['ya', 'tidak']);
-            $table->foreign('kode_barang')->references('id')->on('barangs')
+            $table->time('waktu_peminjaman');
+            $table->enum('approvals', ['Ya', 'Tidak']);
+            $table->enum('status', ['Dipinjam', 'Dikembalikan']);
+            $table->foreign('id_dosen')->references('id')->on('users')
                 ->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('kategori_id')->references('id')->on('kategoris')
-                ->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('satuan_id')->references('id')->on('satuans')
-                ->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')
+            $table->foreign('nama_peminjam')->references('id')->on('users')
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->softDeletes();
             $table->rememberToken();

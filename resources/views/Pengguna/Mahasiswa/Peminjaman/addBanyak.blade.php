@@ -3,33 +3,34 @@
 @section('content')
 <section class="section">
     <div class="section-header">
-        <h1>Tambah Data Paket Barang</h1>
+        <h1>Tambah Data Peminjaman</h1>
         <div class="section-header-breadcrumb">
             <div class="breadcrumb-item active"><a href="/">Dashboard</a></div>
-			<div class="breadcrumb-item">Data Paket Barang</div>
-            <div class="breadcrumb-item">Tambah Data Paket Barang</div>
+			<div class="breadcrumb-item">Peminjaman</div>
+            <div class="breadcrumb-item">Tambah Data Peminjaman</div>
         </div>
     </div>
     <div class="section-body">
         <div class="card">
             <div class="card-body">
                 <div class="row mb-3">
-                    <div class="col">
-					@if ($message = Session::get('gagal'))
+					
+						@if ($message = Session::get('gagal'))
 							<div class="alert alert-danger alert-block">
 								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 									<span aria-hidden="true">×</span>
 								</button>
 								<strong>{{ $message }}</strong>
 							</div>
-					@endif
-                        <a href="{{ route('index_Paket') }}" class="btn btn-primary" title="Back" data-toggle="tooltip">
-                            <i class="fas fa-angle-left mr-2"></i> Kembali ke Data Paket Barang
+						@endif
+                    <div class="col">
+                        <a href="{{ route('index_Peminjaman_pengguna') }}" class="btn btn-primary" title="Back" data-toggle="tooltip">
+                            <i class="fas fa-angle-left mr-2"></i> Kembali ke Peminjaman
                         </a>
                     </div>
                 </div>
 				<?php $no = 1;?>
-				<form action="{{ route('post_create_Paket') }}" method="POST" enctype="multipart/form-data">    
+				<form action="{{ route('post_create_Peminjaman') }}" method="POST" enctype="multipart/form-data">    
                     @csrf  
 					<div class="alert alert-danger show-error-message" style="display:none">
 						<ul></ul>
@@ -40,31 +41,51 @@
 					
 					<div class="row">
                         <div class="form-group col-6 col-md-3 col-lg-3">
-                            <label class="control-label">Nama Paket</label>
-                            <input type="text" name="namaPaket" id="namaPaket" class="form-control">
+                            @foreach ($mahasiswa as $datanama)
+							<?php if (Auth::user()->id == $datanama->id_Mahasiswa) { ?>
+                            <label class="control-label">Nama Peminjam</label>
+                            <select class="form-control" name="n_peminjam" id="n_peminjam">
+								<option value="{{ $datanama->id_Mahasiswa }}" selected> {{ $datanama->name }} </option>
+                            </select>
 							<div class="text-danger">
-                                @error('namaPaket')
+                                @error('n_peminjam')
                                     {{ $message }}
                                 @enderror
                             </div>
+							<?php } ?>
+                            @endforeach
                         </div>
 						<input type="hidden" name="kode" id="kode" value="pkt{{ $no++ }}" class="form-control">
-                        <div class="form-group col-6 col-md-3 col-lg-3">
-                            <label class="control-label">Keterangan</label>
-                            <input type="text" name="keterangan" id="keterangan" class="form-control">
-							<div class="text-danger">
-                                @error('keterangan')
+                       <div class="form-group col-6 col-md-3 col-lg-3">
+                            <label class="control-label">Pilih Nama Dosen</label>
+                            <select class="form-control" name="namaDosen" id="namaDosen">
+								<option disabled selected> Semua Nama Dosen </option>
+                                @foreach ($dosen as $data)
+                                <option value="{{ $data->id_dosen }}">{{ $data->name }}</option> 
+                                @endforeach
+                            </select>
+                            <div class="text-danger">
+                                @error('namaDosen')
                                     {{ $message }}
                                 @enderror
                             </div>
                         </div>
                     </div>
 					<div class="row">
+						<div class="form-group col-6 col-md-3 col-lg-3">
+                            <label class="control-label">Tanggal Peminjaman</label>
+                            <input type="date" name="t_peminjaman" id="t_peminjaman" class="form-control">
+                            <div class="text-danger">
+                                @error('t_peminjaman')
+                                    {{ $message }}
+                                @enderror
+                            </div>
+                        </div>
                         <div class="form-group col-6 col-md-3 col-lg-3">
-                            <label class="control-label">Jumlah Paket</label>
-                            <input type="text" name="jumlahPaket" id="jumlahPaket" class="form-control">
-							<div class="text-danger">
-                                @error('jumlahPaket')
+                            <label class="control-label">Waktu Peminjaman</label>
+                            <input type="time" name="w_peminjaman" id="w_peminjaman" class="form-control">
+                            <div class="text-danger">
+                                @error('w_peminjaman')
                                     {{ $message }}
                                 @enderror
                             </div>
@@ -87,14 +108,12 @@
 							<br/><button type="button" name="add" id="add" class="btn btn-primary mb-3">Add More</button></td> 
                         </div>
                     </div>
-					
 					<div name="add_name" id="add_name">
 					</div>
 					
-					
 					<script type="text/javascript">
 $(document).ready(function(){      
-var url = "{{ url('post_create_Paket') }}";
+var url = "{{ url('post_create_Peminjaman') }}";
 var i=1;  
 $('#add').click(function(){  
 var namaBarang = $("#namaBarang").val();

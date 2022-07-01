@@ -11,16 +11,14 @@ class peminjaman extends Model
 {
     protected $table = "peminjamans";
 	protected $primaryKey = "id";
+	public $incrementing = false;
 	protected $fillable = [
-		'kode_barang',
-		'nama_barang',
-		'kategori_barang',
-		'satuan_barang',
+		'kode_barang_peminjaman',
 		'nama_peminjam',
-		'jumlah_peminjam',
 		'tanggal_peminjaman',
 		'waktu_peminjaman',
 		'aprovals',
+		'status',
 	];
 	
 	public function allData()

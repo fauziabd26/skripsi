@@ -13,6 +13,14 @@
         <div class="card">
             <div class="card-body">
                 <div class="row mb-3">
+					@if ($message = Session::get('gagal'))
+							<div class="alert alert-danger alert-block">
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+									<span aria-hidden="true">×</span>
+								</button>
+								<strong>{{ $message }}</strong>
+							</div>
+					@endif
                     <div class="col">
                         <a href="{{ route('index_Peminjaman') }}" class="btn btn-primary" title="Back" data-toggle="tooltip">
                             <i class="fas fa-angle-left mr-2"></i> Kembali ke Data Peminjaman
@@ -21,100 +29,47 @@
                 </div>
                 <form action="{{ route('post_Peminjaman') }}" method="POST" enctype="multipart/form-data">
                     @csrf 
-					<div class="row">
-						<div class="form-group col-6 col-md-3 col-lg-3">
-                            <label class="control-label" for="Kode Barang">Pilih Kode Barang</label>
-                            <select name="kode_barang" class="form-control">
-                                <option disabled selected> Semua Kode Barang </option>
-                                @foreach ($Barang as $data)
-                                <option value="{{ $data->id }}">{{ $data->id }}</option> 
-                                @endforeach
-                            </select>
-                            <div class="text-danger">
-                               @error('Nama Barang')
-                                   {{ $message }}
-                               @enderror
-                            </div>
-                        </div>
-						<div class="form-group col-6 col-md-3 col-lg-3">
-                            <label class="control-label" for="Nama Barang">Pilih Nama Barang</label>
-                            <select name="nama_barang" class="form-control">
-                                <option disabled selected> Semua Nama Barang </option>
-                                @foreach ($Barang as $data)
-                                <option value="{{ $data->name }}">{{ $data->name }}</option> 
-                                @endforeach
-                            </select>
-                            <div class="text-danger">
-                               @error('Nama Barang')
-                                   {{ $message }}
-                               @enderror
-                            </div>
-                        </div>
-                        
-                    </div>
-					<div class="row">
-						 <div class="form-group col-6 col-md-3 col-lg-3">
-                            <label class="control-label" for="kategori_barang">Pilih Kategori Barang</label>
-                            <select name="kategori_barang" class="form-control">
-                                <option disabled> Semua Kategori </option>
-                                @foreach ($kategoris as $data)
-                                <option value="{{ $data->name }}">{{ $data->name }}</option> 
-                                @endforeach
-                            </select>
-                            <div class="text-danger">
-                               @error('kategori_barang')
-                                   {{ $message }}
-                               @enderror
-                            </div>
-                        </div>
-                        <div class="form-group col-6 col-md-3 col-lg-3">
-                            <label class="control-label" for="satuan_barang">Pilih Satuan Barang</label>
-                            <select name="satuan_barang" class="form-control">
-                                <option disabled> Satuan Barang </option>
-                                @foreach ($satuans as $data)
-                                <option value="{{ $data->name }}">{{ $data->name }}</option> 
-                                @endforeach
-                            </select>
-                            <div class="text-danger">
-                               @error('satuan_barang')
-                                   {{ $message }}
-                               @enderror
-                            </div>
-                        </div>
-                    </div>
                     <div class="row">
                         <div class="form-group col-6 col-md-3 col-lg-3">
                             <label class="control-label" for="nama_peminjam">Nama Peminjam</label>
-                            <input type="text" name="nama_peminjam" class="form-control" value="{{ old('nama_peminjam') }}">
+							<select class="form-control" name="nama_peminjam" id="nama_peminjam">
+								@foreach ($mahasiswa as $data)
+                                <option value="{{ $data->Mahasiswa_id }}">{{ $data->nim }} - {{ $data->name }}</option> 
+                                @endforeach
+                            </select>
                             <div class="text-danger">
-                               @error('nama_peminjam')
-                                   {{ $message }}
-                               @enderror
+                                @error('nama_peminjam')
+                                    {{ $message }}
+                                @enderror
                             </div>
                         </div>
                         <div class="form-group col-6 col-md-3 col-lg-3">
-                            <label class="control-label" for="jumlah_peminjam">Jumlah Peminjam</label>
-                            <input type="number" name="jumlah_peminjam" class="form-control" value="{{ old('jumlah_peminjam') }}">
+                            <label class="control-label" for="namaDosen">Nama Dosen</label>
+							<select class="form-control" name="namaDosen" id="namaDosen">
+								@foreach ($dosen as $data)
+                                <option value="{{ $data->Dosen_id }}">{{ $data->nip }} - {{ $data->name }}</option> 
+                                @endforeach
+                            </select>
                             <div class="text-danger">
-                               @error('jumlah_peminjam')
-                                   {{ $message }}
-                               @enderror
+                                @error('nama_peminjam')
+                                    {{ $message }}
+                                @enderror
                             </div>
                         </div>
                     </div>
 					 <div class="row">
                         <div class="form-group col-6 col-md-3 col-lg-3">
                             <label class="control-label" for="tanggal_peminjaman">Tanggal Peminjaman</label>
-                            <input type="date" name="tanggal_peminjaman" class="form-control" value="{{ old('tanggal_peminjaman') }}">
+                            <input type="date" name="tanggal_peminjaman" class="form-control">
                             <div class="text-danger">
-                               @error('tanggal_peminjaman')
-                                   {{ $message }}
-                               @enderror
+                                @error('tanggal_peminjaman')
+                                    {{ $message }}
+                                @enderror
                             </div>
                         </div>
 						<div class="form-group col-6 col-md-3 col-lg-3">
                             <label class="control-label" for="waktu_peminjaman">Waktu Peminjaman</label>
-                            <input type="time" name="waktu_peminjaman" class="form-control" value="{{ old('waktu_peminjaman') }}">
+                            <input type="time" name="waktu_peminjaman" class="form-control">
                             <div class="text-danger">
                                 @error('waktu_peminjaman')
                                     {{ $message }}
@@ -122,27 +77,86 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="form-group col-6 col-md-3 col-lg-3">
-                            <label class="control-label" for="aprovals">Pilih Aproval Peminjaman</label>
-                            <select name="aprovals" class="form-control">
-                                <option disabled> Aproval Peminjaman </option>
-                                <option value="Ya">Ya</option>
-                                <option value="Tidak">Tidak</option>
+					<div class="row" id="dynamic_field">
+						<div class="form-group col-6 col-md-3 col-lg-3">
+                            <label class="control-label">Pilih Nama Barang</label>
+                            <select class="form-control" name="namaBarang[]" id="namaBarang">
+                                @foreach ($Barang as $data)
+                                <option value="{{ $data->id }}">{{ $data->name }}</option> 
+                                @endforeach
                             </select>
-                            <div class="text-danger">
-                               @error('aprovals')
-                                   {{ $message }}
-                               @enderror
-                            </div>
+                        </div>
+                        <div class="form-group col-6 col-md-3 col-lg-3">
+                            <label class="control-label">jumlah barang</label>
+                            <input type="number" class="form-control" name="jumlahBarang[]" id="jumlahBarang">
+                        </div><br/>
+						<div class="col-2">
+							<br/><button type="button" name="add" id="add" class="btn btn-primary mb-3">Add More</button></td> 
                         </div>
                     </div>
+					<div name="add_name" id="add_name">
+					</div>
+							<input type="hidden" id="aproval" name="aproval" value="ya"readonly>
+							<input type="hidden" id="status" name="status" value="Dipinjam"readonly>
                     <div class="form-group">
                         <button class="btn btn-primary btn-sm">Simpan</button>
                     </div>
-                </form>
-            </div>
-        </div>
-    </div>
+					<script type="text/javascript">
+						$(document).ready(function(){      
+						var url = "{{ url('post_create_Peminjaman') }}";
+						var i=1;  
+						$('#add').click(function(){  
+						var namaBarang = $("#namaBarang").val();
+						var jumlahBarang = $("#jumlahBarang").val();
+
+						i++;  
+						$('#add_name').append('<div class="row" id="row'+i+'"><div class="form-group col-6 col-md-3 col-lg-3"><label class="control-label">Pilih Nama Barang</label><select class="form-control" name="namaBarang[]" id="namaBarang"><option value="" disabled selected> Semua Nama Barang </option>@foreach ($Barang as $data)<option value="{{ $data->id }}">{{ $data->name }}</option> @endforeach</select>@error('barangID.0') <span class="text-danger error">{{ $message }}</span>@enderror</div><div class="form-group col-6 col-md-3 col-lg-3"><label class="control-label">jumlah barang</label><input type="number" class="form-control" name="jumlahBarang[]" id="jumlahBarang">@error('jumlah.0') <span class="text-danger error">{{ $message }}</span>@enderror</div><br/><div class="col-2" id="'+i+'"><br/><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove">Remove</button></td></div></div>');
+
+						});  
+						$(document).on('click', '.btn_remove', function(){  
+						var button_id = $(this).attr("id");   
+						$('#row'+button_id+'').remove();  
+						});  
+						$.ajaxSetup({
+						headers: {
+						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+						}
+						});
+						$('#submit').click(function(){            
+						$.ajax({  
+						url:"{{ url('post_create_Paket') }}",  
+						method:"POST",  
+						data:$('#add_name').serialize(),
+						type:'json',
+						success:function(data)  
+						{
+						if(data.error){
+						display_error_messages(data.error);
+						}else{
+						i=1;
+						$('.dynamic-added').remove();
+						$('#add_name')[0].reset();
+						$(".show-success-message").find("ul").html('');
+						$(".show-success-message").css('display','block');
+						$(".show-error-message").css('display','none');
+						$(".show-success-message").find("ul").append('<li>Todos Has Been Successfully Inserted.</li>');
+						}
+						}  
+						});  
+						});  
+						function display_error_messages(msg) {
+						$(".show-error-message").find("ul").html('');
+						$(".show-error-message").css('display','block');
+						$(".show-success-message").css('display','none');
+						$.each( msg, function( key, value ) {
+						$(".show-error-message").find("ul").append('<li>'+value+'</li>');
+						});
+						}
+						});  
+					</script>
+				</form>
+			</div>
+		</div>
+	</div>
 </section>
 @endsection

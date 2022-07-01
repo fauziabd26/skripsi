@@ -11,6 +11,7 @@ class pengembalian extends Model
 {
     protected $table = "pengembalians";
 	protected $primaryKey = "id";
+	public $incrementing = false;
 	protected $fillable = [
 		'nama_barang',
 		'nama_peminjam',

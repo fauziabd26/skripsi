@@ -15,20 +15,14 @@ class CreateAprovalsTable extends Migration
     {
         Schema::create('aprovals', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('nama_peminjam');
-            $table->string('jumlah_peminjaman');
+            $table->uuid('id_dosen');
+            $table->uuid('nama_peminjam');
+            $table->integer('kode_barang_peminjaman');
             $table->date('tanggal_peminjaman');
-            $table->uuid('barang_id');
-            $table->uuid('kategori_id');
-            $table->uuid('satuan_id');
-            $table->uuid('user_id');
-            $table->foreign('barang_id')->references('id')->on('barangs')
+            $table->time('waktu_peminjaman');
+            $table->foreign('id_dosen')->references('id')->on('users')
                 ->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('kategori_id')->references('id')->on('kategoris')
-                ->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('satuan_id')->references('id')->on('satuans')
-                ->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')
+            $table->foreign('nama_peminjam')->references('id')->on('users')
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->softDeletes();
             $table->rememberToken();

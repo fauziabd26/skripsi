@@ -14,9 +14,33 @@
             <div class="card-body">
                 <div class="row mb-3">
                     <div class="col">
+						@if ($message = Session::get('sukses'))
+							<div class="alert alert-success alert-block">
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+									<span aria-hidden="true">×</span>
+								</button>
+								<strong>{{ $message }}</strong>
+							</div>
+						@endif
+						@if ($message = Session::get('gagal'))
+							<div class="alert alert-danger alert-block">
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+									<span aria-hidden="true">×</span>
+								</button>
+								<strong>{{ $message }}</strong>
+							</div>
+						@endif
+						@if ($message = Session::get('kosong'))
+							<div class="alert alert-danger alert-block">
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+									<span aria-hidden="true">×</span>
+								</button>
+								<strong>{{ $message }}</strong>
+							</div>
+						@endif
                         <a href="{{ route('tambah_Peminjaman') }}" class="btn btn-primary" title="Tambah" data-toggle="tooltip">
                             <i class="fas fa-plus mr-2"></i> Tambah Data Peminjaman
-                        </a>
+                        </a>&emsp;
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -24,10 +48,7 @@
                         <thead class="thead-dark" align="center">
                             <tr>
                                 <th>NO</th>
-								<th>Kode Barang</th>
-                                <th>Nama Barang</th>
                                 <th>Nama Peminjam</th>
-                                <th>Jumlah Peminjaman</th>
                                 <th>Tanggal Peminjaman</th>
 								<th>Waktu Peminjaman</th>
                                 <th>AKSI</th>
@@ -36,23 +57,23 @@
                         <?php 
 							$no = 1;
 						?>
-                        @foreach($data as $b)
+                        @foreach($data as $p)
                         <tr>
                             <td align="center">{{ $no++ }}</td>
-                            <td align="center">{{ $b->kode_barang }}</td>
-                            <td align="center">{{ $b->nama_barang }}</td>
-                            <td align="center">{{ $b->nama_peminjam }}</td>
-                            <td align="center">{{ $b->jumlah_peminjam }}</td>
-							<td align="center">{{ $b->tanggal_peminjaman }}</td>
-							<td align="center">{{ $b->waktu_peminjaman }}</td>
+						@foreach($mahasiswa as $m)
+						<?php if ($m->Mahasiswa_id == $p->nama_peminjam) { ?>
+                            <td align="center">{{ $m->name }}</td>
+						<?php } ?>
+                        @endforeach
+							<td align="center">{{ $p->tanggal_peminjaman }}</td>
+							<td align="center">{{ $p->waktu_peminjaman }}</td>
                             <td align="center">
-                                <button class="btn btn-success btn-sm mr-2" data-toggle="modal" data-target="#modal-lihat<?php echo $b['id']; ?>"><i class="fa fa-eye" aria-hidden="true"> Lihat</i></button>
-                                <a href="/Peminjaman/edit/{{$b->id}}" class="btn btn-warning btn-sm mr-2" title="Edit" data-toggle="tooltip"><i class="fa fa-pen" aria-hidden="true"> Edit</i></a>
-                                <a href="/Peminjaman/delete/{{$b->id}}" class="btn btn-danger btn-sm mr-2" title="Hapus" data-toggle="tooltip" onclick="return confirm('Anda yakin mau menghapus item ini ?')"><i class="fa fa-trash" aria-hidden="true"> Hapus</i></a>
+                                <button class="btn btn-success btn-sm mr-2" data-toggle="modal" data-target="#modal-lihat<?php echo $p['id']; ?>"><i class="fa fa-eye" aria-hidden="true"> Lihat</i></button>
+                                <a href="/Peminjaman/edit/{{$p->id}}" class="btn btn-warning btn-sm mr-2" title="Edit" data-toggle="tooltip"><i class="fa fa-pen" aria-hidden="true"> Edit</i></a>
+                                <a href="/Peminjaman/delete/{{$p->id}}" class="btn btn-danger btn-sm mr-2" title="Hapus" data-toggle="tooltip" onclick="return confirm('Anda yakin mau menghapus item ini ?')"><i class="fa fa-trash" aria-hidden="true"> Hapus</i></a>
                             </td>
                         </tr>
                         @endforeach
-                        
                     </table>
                 </div>
             </div>
@@ -61,8 +82,8 @@
 </section>
 <!-- Modal Lihat -->
 <?php if (!empty($data)) { ?>
-    <?php foreach ($data as $b) : ?>
-        <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="modal-lihat<?php echo $b['id']; ?>" class="modal fade">
+    <?php foreach ($data as $p) : ?>
+        <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="modal-lihat<?php echo $p['id']; ?>" class="modal fade">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -72,15 +93,50 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p>Kode Barang      		&emsp;&emsp;&emsp;&emsp;&emsp;: {{ $b->kode_barang }}</p>
-						<p>Nama Barang      		&emsp;&emsp;&emsp;&emsp;&ensp;: {{ $b->nama_barang }}</p>
-						<p>Kategori Barang  		&emsp;&emsp;&emsp;&ensp;: {{ $b->kategori_barang }}</p>
-						<p>Satuan Barang    		&emsp;&ensp;&emsp;&emsp;&ensp;: {{ $b->satuan_barang }}</p>
-						<p>Nama Peminjam    		&emsp;&ensp;&emsp;&emsp;: {{ $b->nama_peminjam }}</p>
-						<p>Jumlah Peminjaman  		&emsp;&emsp;: {{ $b->jumlah_peminjam }}</p>
-						<p>Tanggal Peminjaman  		&emsp;&ensp;: {{ $b->tanggal_peminjaman }}</p>
-						<p>waktu Peminjaman  		&emsp;&emsp;: {{ $b->waktu_peminjaman }}</p>
-						<p>Aproval(Persetujuan)  	&emsp;: {{ $b->aprovals }}</p>
+						<div class="container-fluid">
+						@foreach($peminjaman as $bp)
+						@foreach($barang as $b)
+							<?php if ($p->kode_barang_peminjaman == $bp->kode && $bp->id_barang == $b->id) { ?>
+                            <div class="row">
+                                <div class="col-md-4">Nama Barang</div>
+                                <div class="col-md-6 ms-auto">{{ $b->name }} Jumlah {{ $bp->jumlah }}</div>
+                            </div><br>
+							<?php } ?>
+                        @endforeach
+                        @endforeach
+						@foreach($mahasiswa as $m)
+						<?php if ($m->Mahasiswa_id == $p->nama_peminjam) { ?>
+							<div class="row">
+                                <div class="col-md-4">Nama Peminjam</div>
+                                <div class="col-md-6 ms-auto">{{ $m->name }}</div>
+                            </div><br>
+						<?php } ?>
+                        @endforeach
+						@foreach($dosen as $d)
+						<?php if ($d->Dosen_id == $p->id_dosen) { ?>
+							<div class="row">
+                                <div class="col-md-4">Dosen</div>
+                                <div class="col-md-6 ms-auto">{{ $d->name }}</div>
+                            </div><br>
+						<?php } ?>
+                        @endforeach
+                            <div class="row">
+                                <div class="col-md-4">Tanggal Peminjaman</div>
+                                <div class="col-md-6 ms-auto">{{ $p->tanggal_peminjaman }}</div>
+                            </div><br>
+							<div class="row">
+                                <div class="col-md-4">waktu Peminjaman</div>
+                                <div class="col-md-6 ms-auto">{{ $p->waktu_peminjaman }}</div>
+                            </div><br>
+							<div class="row">
+                                <div class="col-md-4">Aproval(Persetujuan)</div>
+                                <div class="col-md-6 ms-auto">{{ $p->aprovals }}</div>
+                            </div><br>
+							<div class="row">
+                                <div class="col-md-4">Status</div>
+                                <div class="col-md-6 ms-auto">{{ $p->status }}</div>
+                            </div><br>
+						</div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>

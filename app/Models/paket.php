@@ -7,14 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 
-class Paket extends Model
+class paket extends Model
 {
     protected $table = "pakets";
+	public $incrementing = false;
 	protected $primaryKey = "id";
 	protected $fillable = [
 		'nama',
-		'barang',
+		'kode',
 		'keterangan',
+		'jumlah',
 	];
 	
 	public function allData()
