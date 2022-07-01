@@ -54,7 +54,7 @@
                             <td align="center">{{ $data->tggl_masuk }}</td>
                             <td align="center">{{ $data->stok_awal }}</td>
                             <td align="center">{{ $data->nama_konsumen }} </td>
-                            <td>
+                            <td align="center" style="width: 30%;">
                                 <button type="button" class="btn btn-success btn-sm mr-2" data-toggle="modal" data-target="#modal-lihat-{{ $data->id }}"><i class="fa fa-eye"> Lihat</i></button>
                                 <a href="/barang_masuk/delete{{ $data->id }}" class="btn btn-danger btn-sm mr-2" title="Hapus" data-toggle="tooltip" onclick="return confirm('Anda yakin mau menghapus {{ $data->barang->name }} ?')"><i class="fa fa-trash" aria-hidden="true"> Hapus</i></a>
                             </td>

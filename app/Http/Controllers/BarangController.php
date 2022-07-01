@@ -56,21 +56,16 @@ class BarangController extends Controller
         'stok'          => 'required|min:0',
         'kategori_id'   => 'required',
         'satuan_id'     => 'required',
-        'file'          => 'required|mimes:jpeg,jpg,png|max:2048kb',
+        'file'          => 'mimes:jpeg,jpg,png|max:2048kb',
         ],[
             'name.required'         =>'Nama Barang tidak boleh kosong',
             'stok.required'         =>'stok tidak boleh kosong',
             'stok.min'              =>'stok minimal 0',
             'kategori_id.required'  =>'Kategori Barang tidak boleh kosong',
             'satuan_id.required'    =>'Satuan Barang tidak boleh kosong',
-            'file.required'         =>'Gambar Barang tidak boleh kosong',
             'file.mimes'            =>'Format gambar harus jpeg/jpg/png',
             'file.max'              =>'Ukuran Max Foto Barang 2 Mb',
         ]);
-        //upload gambar
-        $file      = $request->file('file');
-        $imageName  = time() . "_" . $file->getClientOriginalName();
-        $file->move(public_path('img/barang/'), $imageName);
 
         
         $data = new Barang();
@@ -79,9 +74,22 @@ class BarangController extends Controller
         $data->stok         = $request->stok;
         $data->kategori_id  = $request->kategori_id;
         $data->satuan_id    = $request->satuan_id;
-        $data->file         = $imageName;
         $data->created_at = date('Y-m-d');
         $data->updated_at = date('Y-m-d');
+
+        if (empty($request->file('file')))
+        {
+            $data->file = NULL;
+        }
+        else
+        {
+            //upload gambar
+            $file      = $request->file('file');
+            $fileName  = time() . "_" . $file->getClientOriginalName();
+            $file->move(public_path('img/barang/'), $fileName);
+            $data->file = $fileName;
+
+        }
         $data->save();
 
         return redirect()->route('index_barang')->with('pesan','Data Berhasil Disimpan');

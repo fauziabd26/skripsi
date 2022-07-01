@@ -24,10 +24,10 @@ class BarangMasukController extends Controller
      */
     public function index()
     {
-        $kategoris = Kategori::all();
-        $satuans = Satuan::all();
-        $datas = BarangMasuk::with('barang','kategori','satuan')->paginate(5);
-        $barang = Barang::with('kategori','satuan')->paginate(5);
+        $kategoris  = Kategori::all();
+        $satuans    = Satuan::all();
+        $datas      = BarangMasuk::with('barang','kategori','satuan')->paginate(5);
+        $barang     = Barang::with('kategori','satuan')->paginate(5);
         return view('barangmasuk.index', compact('datas','satuans','kategoris','barang'));
     }
 
@@ -70,10 +70,8 @@ class BarangMasukController extends Controller
             'file.mimes'            =>'Format gambar harus jpeg/jpg/png',
             'file.max'              =>'Ukuran Max Foto Barang 2 Mb'
         ]);
-        //upload gambar
-        $file      = $request->file('file');
-        $imageName  = time() . "_" . $file->getClientOriginalName();
-        $file->move(public_path('img/barang/'), $imageName);
+
+        
         
         $barang = new Barang;
         $barang->id             = Uuid::uuid4()->getHex();
@@ -81,7 +79,19 @@ class BarangMasukController extends Controller
         $barang->stok           = $request->stok;
         $barang->kategori_id    = $request->kategori_id;
         $barang->satuan_id      = $request->satuan_id;
-        $barang->file           = $imageName;
+        if (empty($request->file('file')))
+        {
+            $barang->file = NULL;
+        }
+        else
+        {
+            //upload gambar
+            $file      = $request->file('file');
+            $fileName  = time() . "_" . $file->getClientOriginalName();
+            $file->move(public_path('img/barang/'), $fileName);
+            $barang->file = $fileName;
+
+        }
         
         $data = new BarangMasuk;
         $data->id               = Uuid::uuid4()->getHex();
@@ -134,14 +144,12 @@ class BarangMasukController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($barang_id)
     {
         try {
-            $data =DB::table('barangs')
-                    ->join('barang_masuks','barang_masuks.id', '=','barangs.id')
-                    ->where('barangs.id', $id); 
-            DB::table('barang_masuks')->where('barang_id', $id)->delete();                           
-                $data->delete();    
+            $barangmasuk = BarangMasuk::find($barang_id);
+            $barangmasuk->barang()->delete();
+            $barangmasuk->delete();                           
         return redirect()->route('index_barang_masuk')->with('delete', 'Data Berhasil Dihapus');
         } catch (\Throwable $th) {
             return redirect()->route('index_barang_masuk')->withErrors('Data gagal Dihapus');
