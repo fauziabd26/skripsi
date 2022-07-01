@@ -10,6 +10,7 @@ use App\Models\aproval;
 use App\Models\Dosen;
 use App\Models\peminjaman;
 use App\Models\Kategori;
+use App\Models\pengembalian;
 use App\Models\Satuan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -38,8 +39,10 @@ class HomeController extends Controller
         $mahasiswa = Mahasiswa::count();
         $barang = Barang::count();
         $dosen = Dosen::count();
+        $pengembalian = pengembalian::count();
+        $peminjaman = peminjaman::count();
 
-        return view('dashboard.index', compact('user','mahasiswa','barang','dosen'));
+        return view('dashboard.index', compact('user','mahasiswa','barang','dosen','peminjaman','pengembalian'));
     }
 
     public function index_kategori()

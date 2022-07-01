@@ -7,6 +7,7 @@ use App\Models\BarangMasuk;
 use App\Models\Kategori;
 use App\Models\Satuan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
 
 class BarangMasukController extends Controller
@@ -136,9 +137,12 @@ class BarangMasukController extends Controller
     public function destroy($id)
     {
         try {
-            $barangmasuk = BarangMasuk::find($id);
-            $barangmasuk->delete();
-            return redirect()->route('index_barang_masuk')->with('delete', 'Data Berhasil Dihapus');
+            $data =DB::table('barangs')
+                    ->join('barang_masuks','barang_masuks.id', '=','barangs.id')
+                    ->where('barangs.id', $id); 
+            DB::table('barang_masuks')->where('barang_id', $id)->delete();                           
+                $data->delete();    
+        return redirect()->route('index_barang_masuk')->with('delete', 'Data Berhasil Dihapus');
         } catch (\Throwable $th) {
             return redirect()->route('index_barang_masuk')->withErrors('Data gagal Dihapus');
         }

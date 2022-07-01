@@ -30,9 +30,14 @@ Route::put('/user/profile/update/{user}', [UserController::class, 'updateUserPro
 Route::get('profile', 'UserController@edit')->name('profile.edit');
 Route::patch('profile', 'UserController@update')->name('profile.update');
 
+
 //Route Ubah Password
 Route::get('password', 'UserController@editPassword')->name('user.password.edit');
 Route::patch('password', 'UserController@updatePassword')->name('user.password.update');
+Route::get('forgot-password', 'UserController@forgotPassword')->name('user.password.forgot');
+Route::post('/forgot-password', 'UserController@postEmail')->name('store.forgot.password');
+Route::get('/reset-password/{token}', 'UserController@getPassword');
+Route::post('/reset-password', 'UserController@updateResetPassword')->name('reset.password.update');
 
 //Route Dashboard
 use App\Http\Controllers\HomeController;

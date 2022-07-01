@@ -80,8 +80,8 @@ class BarangController extends Controller
         $data->kategori_id  = $request->kategori_id;
         $data->satuan_id    = $request->satuan_id;
         $data->file         = $imageName;
-        $data->created_at = date('Y-m-d H:i:s');
-        $data->updated_at = date('Y-m-d H:i:s');
+        $data->created_at = date('Y-m-d');
+        $data->updated_at = date('Y-m-d');
         $data->save();
 
         return redirect()->route('index_barang')->with('pesan','Data Berhasil Disimpan');

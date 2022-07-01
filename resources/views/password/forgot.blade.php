@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
   <link rel="icon" href="{{asset('stisla')}}/img/polindra.png" type="image" sizes="16x16">
-  <title>Login &mdash; SILK</title>
+  <title>Forgot Password &mdash; Keperawatan Polindra</title>
 
   <!-- General CSS Files -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 
   <!-- CSS Libraries -->
-  <link rel="stylesheet" href="{{asset('stisla')}}/node_modules/bootstrap-social/bootstrap-social.css">
+  <link rel="stylesheet" href="{{asset('stisla')}}/node_modules/selectric/public/selectric.css">
 
   <!-- Template CSS -->
   <link rel="stylesheet" href="{{asset('stisla')}}/assets/css/style.css">
@@ -23,64 +23,41 @@
     <section class="section">
       <div class="container mt-5">
         <div class="row">
-          <div class="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4">
+          <div class="col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-8 offset-lg-2 col-xl-8 offset-xl-2">
             <div class="login-brand">
-              <a href="{{route('login')}}">
+              <a href="{{ route('user.password.forgot') }}">
                 <img src="{{URL::asset('stisla/img/polindra.png')}}" alt="logo" width="100" class="shadow-light rounded-circle">
               </a>
             </div>
 
             <div class="card card-primary">
-              <div class="card-header"><h4>Login</h4></div>
-              @if (session('alert-success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                  <strong>Success</strong> {{ session('alert-success') }}.
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                  </button>
-                </div>
-                @elseif (session('error'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                  <strong>Gagal</strong> {{ session('error') }}.
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                  </button>
-                </div>
-              @endif
-              <div class="card-body">
-                <form method="POST" action="{{ route('post_login') }}">
-                  @csrf
-                  <div class="form-group">
-                    <label for="name">Nama Lengkap</label>
-                    <input id="name" type="text" class="form-control" name="name" tabindex="1" value="{{ old('name') }}" required autocomplete="username" autofocus>
-                    <div class="text-danger">
-                        @error('name')
-                        {{ $message }}
-                        @enderror
-                      </div>
-                  </div>
+              <div class="card-header"><h4>Forgot Password Aplikasi Keperawatan Polindra</h4></div>
 
-                  <div class="form-group">
-                    <div class="d-block">
-                    	<label for="password" class="control-label">Password</label>
-                        <div class="float-right">
-                          <a href="{{ route('user.password.forgot') }}" class="text-small">
-                          Forgot Password?
-                          </a>
+              <div class="card-body">
+                @if (session('message'))
+                         <div class="alert alert-success" role="alert">
+                            {{ session('message') }}
+                        </div>
+                @endif
+                <form action="{{ route('store.forgot.password') }}" method="POST">
+                @csrf
+                <div class="row">       
+                    <div class="form-group col-6">
+                        <label for="email" class="control-label">Email Address</label>
+                        <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" placeholder="Masukkan Alamat Email">
+                        <div class="text-danger">
+                          @error('email')
+                            {{ $message }}
+                          @enderror
                         </div>
                     </div>
-                    <input id="password" type="password" class="form-control" name="password" tabindex="2" required>
-                    <div class="text-danger">
-                        @error('password')
-                        {{ $message }}
-                        @enderror
-                      </div>
-                  </div>
-                  <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-lg btn-block" tabindex="4">
-                      Login
-                    </button>
-                  </div>
+                </div>
+                    <div class="form-group">
+                      <a href="{{ route('login') }}" class="btn btn-primary btn-sm" title="Back" data-toggle="tooltip">
+                        Kembali ke Login
+                      </a>
+                      <button type="submit" class="btn btn-primary btn-sm">SEND PASSWORD RESET LINK</button>
+                    </div>
                 </form>
               </div>
             </div>
@@ -102,11 +79,14 @@
   <script src="{{asset('stisla')}}/assets/js/stisla.js"></script>
 
   <!-- JS Libraries -->
+  <script src="{{asset('stisla')}}/node_modules/jquery-pwstrength/jquery.pwstrength.min.js"></script>
+  <script src="{{asset('stisla')}}/node_modules/selectric/public/jquery.selectric.min.js"></script>
 
   <!-- Template JS File -->
   <script src="{{asset('stisla')}}/assets/js/scripts.js"></script>
   <script src="{{asset('stisla')}}/assets/js/custom.js"></script>
 
   <!-- Page Specific JS File -->
+  <script src="{{asset('stisla')}}/assets/js/page/auth-register.js"></script>
 </body>
 </html>
