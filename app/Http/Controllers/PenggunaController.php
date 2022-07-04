@@ -19,7 +19,8 @@ use Session;
 use Ramsey\Uuid\Uuid;
 use App\Models\Dosen;
 use App\Models\Mahasiswa;
-use App\Models\User;
+use App\Models\User; 
+use Illuminate\Support\Facades\Auth;
 
 class PenggunaController extends Controller
 {
@@ -44,25 +45,45 @@ class PenggunaController extends Controller
     {
         $data = aproval::join('users', 'users.id', '=', 'aprovals.nama_peminjam')
         ->get(['aprovals.*', 'users.id as id_Mahasiswa']);
+		$dosen = Dosen::join('users', 'users.dosen_id', '=', 'dosens.id')
+		->get(['dosens.*', 'users.id as id_dosen']);
         $peminjaman = barang_peminjaman::allData();
 		$mahasiswa = Mahasiswa::join('users', 'users.mahasiswa_id', '=', 'mahasiswas.id')
 		->get(['mahasiswas.*', 'users.id as Mahasiswa_id']);
         $barang = Barang::join('kategoris', 'kategoris.id', '=', 'barangs.kategori_id')
         ->join('satuans', 'satuans.id', '=', 'barangs.satuan_id')
         ->get(['barangs.*', 'kategoris.name as k_name', 'satuans.name as s_name']);
-        return view('Pengguna.Dosen.index', compact('data','peminjaman','barang','mahasiswa'));
+        return view('Pengguna.Dosen.index', compact('data','peminjaman','barang','mahasiswa','dosen'));
     }
 	
 	public function indexaproval()
     {
-       $data = aproval::get();
-       return view('Aproval.index', compact('data'));
+        $data = aproval::join('users', 'users.id', '=', 'aprovals.nama_peminjam')
+        ->get(['aprovals.*', 'users.id as id_Mahasiswa']);
+		$dosen = Dosen::join('users', 'users.dosen_id', '=', 'dosens.id')
+		->get(['dosens.*', 'users.id as id_dosen']);
+        $peminjaman = barang_peminjaman::allData();
+		$mahasiswa = Mahasiswa::join('users', 'users.mahasiswa_id', '=', 'mahasiswas.id')
+		->get(['mahasiswas.*', 'users.id as Mahasiswa_id']);
+        $barang = Barang::join('kategoris', 'kategoris.id', '=', 'barangs.kategori_id')
+        ->join('satuans', 'satuans.id', '=', 'barangs.satuan_id')
+        ->get(['barangs.*', 'kategoris.name as k_name', 'satuans.name as s_name']);
+       return view('Aproval.index', compact('data','peminjaman','barang','mahasiswa','dosen'));
     }
 	
 	public function indexPengembalian(){
-		$data = peminjaman::get();
+		$mahasiswa = Mahasiswa::join('users', 'users.mahasiswa_id', '=', 'mahasiswas.id')
+		->get(['mahasiswas.*', 'users.id as Mahasiswa_id']);
+		$dosen = Dosen::join('users', 'users.dosen_id', '=', 'dosens.id')
+		->get(['dosens.*', 'users.id as id_dosen']);
+        $peminjaman = barang_peminjaman::allData();
+		$data = peminjaman::join('users', 'users.id', '=', 'peminjamans.nama_peminjam')
+        ->get(['peminjamans.*', 'users.id as id_Mahasiswa']);
 		$data1 = kondisi::get();
-		return view('Pengguna.Mahasiswa.Pengembalian.index', compact('data','data1'));
+        $barang = Barang::join('kategoris', 'kategoris.id', '=', 'barangs.kategori_id')
+        ->join('satuans', 'satuans.id', '=', 'barangs.satuan_id')
+        ->get(['barangs.*', 'kategoris.name as k_name', 'satuans.name as s_name']);
+		return view('Pengguna.Mahasiswa.Pengembalian.index', compact('data','data1','mahasiswa','dosen','peminjaman','barang'));
 	}
 	public function indexpaket()
     {
@@ -178,35 +199,50 @@ class PenggunaController extends Controller
 	
 	public function storeaproval(Request $request,$id)
     {
-        peminjaman::create([
-			'kode_barang' => $request->k_barang,
-			'nama_barang' => $request->n_barang,
-			'kategori_barang' => $request->kategori_b,
-			'satuan_barang' => $request->s_barang,
-			'nama_peminjam' => $request->n_peminjam,
-			'jumlah_peminjam' => $request->j_peminjam,
-			'tanggal_peminjaman' => $request->t_peminjaman,
-			'waktu_peminjaman' => $request->w_peminjaman,
-			'aprovals' => $request->aproval,
-			
-		]);
+        $peminjaman = new peminjaman;
+		$peminjaman->id = Uuid::uuid4()->getHex();
+		$peminjaman->kode_barang_peminjaman = $request->k_barang;
+		$peminjaman->id_dosen = $request->id_dosen;
+		$peminjaman->nama_peminjam = $request->n_peminjam;
+		$peminjaman->tanggal_peminjaman = $request->t_peminjaman;
+		$peminjaman->waktu_peminjaman = $request->w_peminjaman;
+		$peminjaman->aprovals = $request->aproval;
+		$peminjaman->status = $request->status;
+		$peminjaman->save();
+		
+		$del = aproval::findorfail($id);
+		$del->delete();
 		
 		Session::flash('sukses','Data Berhasil disetujui dan Terkirim');
-		return redirect('PenggunaDosen');
+		return redirect('Aproval');
     }
 	
 	public function storepengembalian(Request $request)
     {
-        pengembalian::create([
-			'nama_barang' => $request->n_barang,
-			'nama_peminjam' => $request->n_peminjam,
-			'jumlah_pengembalian' => $request->j_Pengembalian,
-			'tanggal_peminjaman' => $request->t_peminjaman,
-			'waktu_peminjaman' => $request->w_peminjaman,
-			'tanggal_pengembalian' => $request->t_Pengembalian,
-			'kondisi' => $request->kondisi,
-			
-		]);
+			Request()->validate([
+				't_Pengembalian'       			=> 'required',
+				'j_Pengembalian'       			=> 'required',
+				'kondisi'         				=> 'required',
+				],[
+					't_Pengembalian.required'       =>'Tanggal Tidak Boleh Kosong',
+					'j_Pengembalian.required'   	=>'Jumlah Tidak Boleh Kosong',
+					'kondisi.required' 				=>'Kondisi Tidak Boleh Kosong',
+				]);
+        $pengembalian = new pengembalian;
+		$pengembalian->id = Uuid::uuid4()->getHex();
+		$pengembalian->peminjaman_id = $request->n_peminjam;
+		$pengembalian->tanggal_pengembalian = $request->t_Pengembalian;
+		$pengembalian->jumlah_pengembalian = $request->j_Pengembalian;
+		$pengembalian->kondisi_id = $request->kondisi;
+		
+		$id_peminjaman = $request->n_peminjam;
+		
+		$peminjaman = peminjaman::findorfail($id_peminjaman);
+		$peminjaman->status = "Dikembalikan";
+		
+		$peminjaman->save();
+		$pengembalian->save();
+		
 		Session::flash('sukses','Data Pengembalian Berhasil Terkirim');
 		return redirect('PenggunaMahasiswaPengembalian');
     }
@@ -280,6 +316,27 @@ class PenggunaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroyAproval($id)
+    {
+		$del = aproval::findorfail($id);
+		$kode = $del->kode_barang_peminjaman;
+		$barang_peminjaman = barang_peminjaman::all();
+		foreach ($barang_peminjaman as $key => $value) {
+			if($value->kode == $kode){
+				$id_barang = $value->id_barang;
+				$barang = Barang::findorfail($id_barang);
+				$barang->stok += $value->jumlah;
+				$barang->save();
+			}
+		}
+		foreach ($barang_peminjaman as $key => $value) {
+			if($value->kode == $kode){
+				$value->delete();
+			}
+		}
+		$del->delete();
+		return redirect('PenggunaDosen');
+    }
+    public function destroyAprovalAdmin($id)
     {
 		$del = aproval::findorfail($id);
 		$kode = $del->kode_barang_peminjaman;

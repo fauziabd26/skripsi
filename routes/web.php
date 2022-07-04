@@ -110,63 +110,67 @@ Route::get('/barang_masuk/delete{id}', [BarangMasukController::class, 'destroy']
 
 //Route Peminjaman
 use App\Http\Controllers\PeminjamanController;
-Route::get('Peminjaman', [PeminjamanController::class, 'index'])->name('index_Peminjaman');
-Route::get('Peminjaman/add', [PeminjamanController::class, 'create'])->name('tambah_Peminjaman');
-Route::post('Peminjaman/post', [PeminjamanController::class, 'store'])->name('post_Peminjaman');
-Route::get('Peminjaman/edit/{id}', [PeminjamanController::class, 'edit']);
-Route::put('Peminjaman/update/{id}', [PeminjamanController::class, 'update']);
-Route::get('Peminjaman/delete/{id}', [PeminjamanController::class, 'destroy']);
-Route::get('Peminjaman/edit/deletebarang/{id}', [PeminjamanController::class, 'destroypeminjamanbarang'])->name('kembali');
-Route::get('PeminjamanPaket', [PeminjamanController::class, 'indexpaket'])->name('Peminjaman_paket');
-Route::get('PeminjamanPaket/edit/{id}', [PeminjamanController::class, 'editPaket'])->name('Peminjaman_paket_edit');
-Route::put('PeminjamanPaket/edit/post/{id}', [PeminjamanController::class, 'editPaketpos'])->name('Peminjaman_paket_edit_post');
-Route::get('PeminjamanPaket/delete/{id}', [PeminjamanController::class, 'destroypeminjamanpaket']);
-Route::post('/laporan_pdf_peminjaman', 'PeminjamanController@cetakpertanggal');
-Route::get('/laporan_excel_peminjaman', 'PeminjamanController@export');
-Route::get('/laporan_Peminjaman', [PeminjamanController::class,'indexlaporan'])->name('index_laporan_peminjaman');
-Route::get('/laporan_Peminjaman_Paket', [PeminjamanController::class,'indexlaporanPaket'])->name('index_laporan_peminjaman_paket');
-Route::post('/laporan_pdf_paket', 'PeminjamanController@cetakpertanggalpaket');
-Route::get('/laporan_excel_paket', 'PeminjamanController@exportpaket');
+Route::get('Peminjaman', [PeminjamanController::class, 'index'])->name('index_Peminjaman')->middleware('admin');
+Route::get('Peminjaman/add', [PeminjamanController::class, 'create'])->name('tambah_Peminjaman')->middleware('admin');
+Route::post('Peminjaman/post', [PeminjamanController::class, 'store'])->name('post_Peminjaman')->middleware('admin');
+Route::get('Peminjaman/edit/{id}', [PeminjamanController::class, 'edit'])->middleware('admin');
+Route::put('Peminjaman/update/{id}', [PeminjamanController::class, 'update'])->middleware('admin');
+Route::get('Peminjaman/delete/{id}', [PeminjamanController::class, 'destroy'])->middleware('admin');
+Route::get('Peminjaman/edit/deletebarang/{id}', [PeminjamanController::class, 'destroypeminjamanbarang'])->name('kembali')->middleware('admin');
+Route::get('PeminjamanPaket', [PeminjamanController::class, 'indexpaket'])->name('Peminjaman_paket')->middleware('admin');
+Route::get('PeminjamanPaket/edit/{id}', [PeminjamanController::class, 'editPaket'])->name('Peminjaman_paket_edit')->middleware('admin');
+Route::put('PeminjamanPaket/edit/post/{id}', [PeminjamanController::class, 'editPaketpos'])->name('Peminjaman_paket_edit_post')->middleware('admin');
+Route::get('PeminjamanPaket/delete/{id}', [PeminjamanController::class, 'destroypeminjamanpaket'])->middleware('admin');
+Route::post('/laporan_pdf_peminjaman', 'PeminjamanController@cetakpertanggal')->middleware('admin');
+Route::get('/laporan_excel_peminjaman', 'PeminjamanController@export')->middleware('admin');
+Route::get('/laporan_Peminjaman', [PeminjamanController::class,'indexlaporan'])->name('index_laporan_peminjaman')->middleware('admin');
+Route::get('/laporan_Peminjaman_Paket', [PeminjamanController::class,'indexlaporanPaket'])->name('index_laporan_peminjaman_paket')->middleware('admin');
+Route::post('/laporan_pdf_paket', 'PeminjamanController@cetakpertanggalpaket')->middleware('admin');
+Route::get('/laporan_excel_paket', 'PeminjamanController@exportpaket')->middleware('admin');
 
 //Route Pengembalian
 use App\Http\Controllers\PengembalianController;
-Route::get('Pengembalian', [PengembalianController::class, 'index'])->name('index_Pengembalian');
-Route::get('Pengembalian/add', [PengembalianController::class, 'create'])->name('tambah_Pengembalian');
-Route::post('Pengembalian/post', [PengembalianController::class, 'store'])->name('post_Pengembalian');
-Route::get('Pengembalian/edit/{id}', [PengembalianController::class, 'edit']);
-Route::put('Pengembalian/update/{id}', [PengembalianController::class, 'update']);
-Route::get('Pengembalian/delete/{id}', [PengembalianController::class, 'destroy']);
+Route::get('Pengembalian', [PengembalianController::class, 'index'])->name('index_Pengembalian')->middleware('admin');
+Route::get('Pengembalian/add', [PengembalianController::class, 'create'])->name('tambah_Pengembalian')->middleware('admin');
+Route::post('Pengembalian/post', [PengembalianController::class, 'store'])->name('post_Pengembalian')->middleware('admin');
+Route::get('Pengembalian/edit/{id}', [PengembalianController::class, 'edit'])->middleware('admin');
+Route::put('Pengembalian/update/{id}', [PengembalianController::class, 'update'])->middleware('admin');
+Route::get('Pengembalian/delete/{id}', [PengembalianController::class, 'destroy'])->middleware('admin');
+Route::get('/laporan_Pengembalian', [PengembalianController::class,'indexlaporan'])->name('laporan_Pengembalian')->middleware('admin');
+Route::post('/laporan_pdf_Pengembalian', 'PengembalianController@cetakpertanggal')->middleware('admin');
+Route::get('/laporan_excel_Pengembalian', 'PengembalianController@export')->middleware('admin');
 
 //Route Pengguna Mahasiswa
 use App\Http\Controllers\PenggunaController;
-Route::get('PenggunaMahasiswa', [PenggunaController::class, 'index'])->name('index_Peminjaman_pengguna');
-Route::get('PenggunaMahasiswa/add/', [PenggunaController::class, 'create'])->name('create_Peminjaman');
-Route::post('PenggunaMahasiswa/add/', [PenggunaController::class, 'store'])->name('post_create_Peminjaman');
-Route::get('PenggunaMahasiswa/edit/{id}', [PenggunaController::class, 'edit']);
-Route::put('PenggunaMahasiswa/update/{id}', [PenggunaController::class, 'update']);
-Route::get('PenggunaMahasiswapaket', [PenggunaController::class, 'indexpaket'])->name('index_paket_pengguna');
-Route::post('PenggunaMahasiswapaket/add/{id}', [PenggunaController::class, 'storepaket'])->name('index_Peminjaman_paket');
+Route::get('PenggunaMahasiswa', [PenggunaController::class, 'index'])->name('index_Peminjaman_pengguna')->middleware('mahasiswa');
+Route::get('PenggunaMahasiswa/add/', [PenggunaController::class, 'create'])->name('create_Peminjaman')->middleware('mahasiswa');
+Route::post('PenggunaMahasiswa/add/', [PenggunaController::class, 'store'])->name('post_create_Peminjaman')->middleware('mahasiswa');
+Route::get('PenggunaMahasiswa/edit/{id}', [PenggunaController::class, 'edit'])->middleware('mahasiswa');
+Route::put('PenggunaMahasiswa/update/{id}', [PenggunaController::class, 'update'])->middleware('mahasiswa');
+Route::get('PenggunaMahasiswapaket', [PenggunaController::class, 'indexpaket'])->name('index_paket_pengguna')->middleware('mahasiswa');
+Route::post('PenggunaMahasiswapaket/add/{id}', [PenggunaController::class, 'storepaket'])->name('index_Peminjaman_paket')->middleware('mahasiswa');
 
-Route::get('PenggunaMahasiswaPengembalian', [PenggunaController::class, 'indexPengembalian']);
-Route::post('PenggunaMahasiswaPengembalian/add', [PenggunaController::class, 'storepengembalian']);
+Route::get('PenggunaMahasiswaPengembalian', [PenggunaController::class, 'indexPengembalian'])->middleware('mahasiswa');
+Route::post('PenggunaMahasiswaPengembalian/add', [PenggunaController::class, 'storepengembalian'])->middleware('mahasiswa');
 
 //Route Pengguna Dosen
-Route::get('PenggunaDosen', [PenggunaController::class, 'indexdosen']);
-Route::post('PenggunaDosen/add', [PenggunaController::class, 'storedosen']);
-Route::get('PenggunaDosen/delete/{id}', [PenggunaController::class, 'destroyAproval']);
+Route::get('PenggunaDosen', [PenggunaController::class, 'indexdosen'])->name('Aproval')->middleware('dosen');
+Route::post('PenggunaDosen/add', [PenggunaController::class, 'storedosen'])->middleware('dosen');
+Route::get('PenggunaDosen/delete/{id}', [PenggunaController::class, 'destroyAproval'])->middleware('dosen');
 
 //Route Aproval
-Route::get('Aproval', [PenggunaController::class, 'indexaproval']);
-Route::post('Aproval/add/{id}', [PenggunaController::class, 'storeaproval']);
+Route::get('Aproval', [PenggunaController::class, 'indexaproval'])->name('index_aproval')->middleware('admin');
+Route::post('Aproval/add/{id}', [PenggunaController::class, 'storeaproval'])->middleware('admin');
+Route::get('Aproval/delete/{id}', [PenggunaController::class, 'destroyAprovalAdmin'])->middleware('admin');
 
 //Route paket barang
 use App\Http\Controllers\PaketController;
-Route::get('paket', [PaketController::class, 'index'])->name('index_Paket');
-Route::get('paket/add', [PaketController::class, 'create'])->name('create_Paket');
-Route::post('paket/add/post', [PaketController::class, 'store'])->name('post_create_Paket');
-Route::get('paket/edit/{id}', [PaketController::class, 'edit_paket'])->name('edit_Paket');
-Route::put('paket/edit/post/{id}', [PaketController::class, 'updatePaket'])->name('post_update_Paket');
-Route::get('paket/delete/{id}', [PaketController::class, 'destroy']);
-Route::get('paket/edit/deletebarang/{id}', [PaketController::class, 'destroypaketbarang'])->name('kembali');
+Route::get('paket', [PaketController::class, 'index'])->name('index_Paket')->middleware('admin');
+Route::get('paket/add', [PaketController::class, 'create'])->name('create_Paket')->middleware('admin');
+Route::post('paket/add/post', [PaketController::class, 'store'])->name('post_create_Paket')->middleware('admin');
+Route::get('paket/edit/{id}', [PaketController::class, 'edit_paket'])->name('edit_Paket')->middleware('admin');
+Route::put('paket/edit/post/{id}', [PaketController::class, 'updatePaket'])->name('post_update_Paket')->middleware('admin');
+Route::get('paket/delete/{id}', [PaketController::class, 'destroy'])->middleware('admin');
+Route::get('paket/edit/deletebarang/{id}', [PaketController::class, 'destroypaketbarang'])->name('kembali')->middleware('admin');
 
 

@@ -3,10 +3,10 @@
 @section('content')
 <section class="section">
     <div class="section-header">
-        <h1>Data Peminjaman</h1>
+        <h1>Data Aproval</h1>
         <div class="section-header-breadcrumb">
             <div class="breadcrumb-item active"><a href="/">Dashboard</a></div>
-            <div class="breadcrumb-item">Peminjaman</div>
+            <div class="breadcrumb-item">Data Aproval</div>
         </div>
     </div>
     <div class="section-body">
@@ -50,7 +50,7 @@
                             <td align="center">
 								<button class="btn btn-success btn-sm mr-2" data-toggle="modal" data-target="#modal-lihat<?php echo $p['id']; ?>"><i class="fa fa-eye" aria-hidden="true"> Lihat</i></button>
 								<button class="btn btn-success btn-sm mr-2" data-toggle="modal" data-target="#modal-pinjam<?php echo $p['id']; ?>"><i class="fa fa-check" aria-hidden="true"> Setuju</i></button>
-								<a href="/PenggunaDosen/delete/{{$p->id}}" onclick="return confirm('Apakah Anda Yakin Tidak Menyetujui Data Ini?');" class="btn btn-danger btn-sm"><i class="fa fa-ban">Tidak</i></a>
+								<a href="/Aproval/delete/{{$p->id}}" onclick="return confirm('Apakah Anda Yakin Tidak Menyetujui Data Ini?');" class="btn btn-danger btn-sm"><i class="fa fa-ban">Tidak</i></a>
                             </td>
                         </tr>
                         @endforeach
@@ -68,9 +68,6 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Data Peminjaman </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
                     </div>
                     <div class="modal-body">
 						<div class="container-fluid">
@@ -132,13 +129,10 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Data Peminjaman </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
                     </div>
 					
 						
-					<form action="/PenggunaDosen/add/{{$p->id}}" method="POST">
+					<form action="/Aproval/add/{{$p->id}}" method="POST">
 						@csrf
                     <div class="modal-body">
 						<div class="container-fluid">

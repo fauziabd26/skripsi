@@ -35,9 +35,10 @@
                 <ul class="dropdown-menu">
                   <li class="menu-header">Pilih Menu</li>
                   <li><a class="nav-link" href="{{ route('index_Peminjaman') }}">Data Peminjaman</a></li>
+                  <li><a class="nav-link" href="{{ route('index_Pengembalian') }}">Data Pengembalian</a></li>
                   <li><a class="nav-link" href="{{ route('Peminjaman_paket') }}">Data Peminjaman Paket</a></li>
                   <li><a class="nav-link" href="{{ route('index_Paket') }}">Data Paket</a></li>
-                  <li><a class="nav-link" href="{{ route('Aproval') }}">Data Aproval</a></li>
+                  <li><a class="nav-link" href="{{ route('index_aproval') }}">Data Aproval</a></li>
                 </ul>
               </li>
               <li class="nav-item dropdown">
@@ -45,6 +46,7 @@
                 <ul class="dropdown-menu">
                   <li><a class="nav-link" href="{{ route('index_laporan_barang') }}">Laporan Barang</a></li>
 				  <li><a class="nav-link" href="{{ route('index_laporan_peminjaman') }}">Laporan Peminjaman</a></li>
+				  <li><a class="nav-link" href="{{ route('laporan_Pengembalian') }}">Laporan Pengembalian</a></li>
 				  <li><a class="nav-link" href="{{ route('index_laporan_peminjaman_paket') }}">Laporan Paket</a></li>
                 </ul>
               </li>
@@ -55,9 +57,6 @@
               <li class="menu-header">Pilih Menu</li>   
               <li class="nav-item dropdown">
                 <a href="{{url('/PenggunaDosen')}}" ><i class="fas fa-address-book"></i> <span>Peminjaman</span></a>
-              </li>
-              <li class="nav-item dropdown">
-                <a href="#" ><i class="fas fa-address-book"></i> <span>Approve</span></a>
               </li>
               @elseif (auth()->user()->role_id == "3")
               <li class="menu-header">Pilih Menu</li>   

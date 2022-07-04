@@ -37,42 +37,24 @@
 							$no = 1;
 						?>
                         @foreach($data as $p)
-						<?php if (Auth::user()->id == $p->id_dosen) { ?>
-						
-                        <tr>
-                            <td align="center">{{ $no++ }}</td>
-						@foreach($mahasiswa as $m)
-						<?php if ($m->Mahasiswa_id == $p->id_Mahasiswa) { ?>
-                            <td align="center">{{ $m->name }}</td>
-						<?php } ?>
-                        @endforeach
-							<td align="center">{{ $p->tanggal_peminjaman }}</td>
-							<td align="center">{{ $p->waktu_peminjaman }}</td>
-                            <td align="center">
-								<button class="btn btn-success btn-sm mr-2" data-toggle="modal" data-target="#modal-lihat<?php echo $p['id']; ?>"><i class="fa fa-eye" aria-hidden="true"> Lihat</i></button>
-								<button class="btn btn-success btn-sm mr-2" data-toggle="modal" data-target="#modal-pinjam<?php echo $p['id']; ?>"><i class="fa fa-check" aria-hidden="true"> Setuju</i></button>
-								<a href="/PenggunaDosen/delete/{{$p->id}}" onclick="return confirm('Apakah Anda Yakin Tidak Menyetujui Data Ini?');" class="btn btn-danger btn-sm"><i class="fa fa-ban">Tidak</i></a>
-                            </td>
-                        </tr>
-						<?php } ?>
-						<?php if (Auth::user()->id != $p->id_dosen) { ?>
-						
-                        <tr>
-                            <td align="center">{{ $no++ }}</td>
-						@foreach($mahasiswa as $m)
-						<?php if ($m->Mahasiswa_id == $p->id_Mahasiswa) { ?>
-                            <td align="center">{{ $m->name }}</td>
-						<?php } ?>
-                        @endforeach
-							<td align="center">{{ $p->tanggal_peminjaman }}</td>
-							<td align="center">{{ $p->waktu_peminjaman }}</td>
-                            <td align="center">
-								<button class="btn btn-success btn-sm mr-2" data-toggle="modal" data-target="#modal-lihat<?php echo $p['id']; ?>"><i class="fa fa-eye" aria-hidden="true"> Lihat</i></button>
-								<button class="btn btn-success btn-sm mr-2" data-toggle="modal" data-target="#modal-pinjam<?php echo $p['id']; ?>"><i class="fa fa-check" aria-hidden="true"> Setuju</i></button>
-								<a href="/PenggunaDosen/delete/{{$p->id}}" onclick="return confirm('Apakah Anda Yakin Tidak Menyetujui Data Ini?');" class="btn btn-danger btn-sm"><i class="fa fa-ban">Tidak</i></a>
-                            </td>
-                        </tr>
-						<?php } ?>
+							<?php if (Auth::user()->id == $p->id_dosen ) { ?>
+							
+								<tr>
+									<td align="center">{{ $no++ }}</td>
+								@foreach($mahasiswa as $m)
+								<?php if ($m->Mahasiswa_id == $p->id_Mahasiswa) { ?>
+									<td align="center">{{ $m->name }}</td>
+								<?php } ?>
+								@endforeach
+									<td align="center">{{ $p->tanggal_peminjaman }}</td>
+									<td align="center">{{ $p->waktu_peminjaman }}</td>
+									<td align="center">
+										<button class="btn btn-success btn-sm mr-2" data-toggle="modal" data-target="#modal-lihat<?php echo $p['id']; ?>"><i class="fa fa-eye" aria-hidden="true"> Lihat</i></button>
+										<button class="btn btn-success btn-sm mr-2" data-toggle="modal" data-target="#modal-pinjam<?php echo $p['id']; ?>"><i class="fa fa-check" aria-hidden="true"> Setuju</i></button>
+										<a href="/PenggunaDosen/delete/{{$p->id}}" onclick="return confirm('Apakah Anda Yakin Tidak Menyetujui Data Ini?');" class="btn btn-danger btn-sm"><i class="fa fa-ban">Tidak</i></a>
+									</td>
+								</tr>
+							<?php } ?>
                         @endforeach
                     </table>
                 </div>
@@ -88,9 +70,6 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Data Peminjaman </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
                     </div>
                     <div class="modal-body">
 						<div class="container-fluid">
@@ -152,9 +131,6 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Data Peminjaman </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
                     </div>
 					
 						

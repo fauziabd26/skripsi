@@ -83,7 +83,7 @@
                     <h4>Data Peminjaman</h4>
                   </div>
                   <div class="card-body">
-                  <div class="count"></div>
+                  <div class="count">{{$peminjaman}}</div>
                   </div>
                 </div>
               </div>
@@ -98,7 +98,7 @@
                     <h4>Data Pengembalian</h4>
                   </div>
                   <div class="card-body">
-                  <div class="count">0</div>
+                  <div class="count">{{$pengembalian}}</div>
                   </div>
                 </div>
               </div>
@@ -178,7 +178,7 @@
                     <h4>Data Peminjaman</h4>
                   </div>
                   <div class="card-body">
-                  <div class="count"></div>
+                  <div class="count">{{$peminjaman}}</div>
                   </div>
                 </div>
               </div>
@@ -193,7 +193,7 @@
                     <h4>Data Pengembalian</h4>
                   </div>
                   <div class="card-body">
-                  <div class="count">0</div>
+                  <div class="count">{{$pengembalian}}</div>
                   </div>
                 </div>
               </div>

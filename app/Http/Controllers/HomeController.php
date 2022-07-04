@@ -14,6 +14,7 @@ use App\Models\Satuan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Stmt\Do_;
+use App\Models\pengembalian;
 class HomeController extends Controller
 {
     /**
@@ -38,8 +39,10 @@ class HomeController extends Controller
         $mahasiswa = Mahasiswa::count();
         $barang = Barang::count();
         $dosen = Dosen::count();
+        $peminjaman = peminjaman::count();
+        $pengembalian = pengembalian::count();
 
-        return view('dashboard.index', compact('user','mahasiswa','barang','dosen'));
+        return view('dashboard.index', compact('user','mahasiswa','barang','dosen','peminjaman','pengembalian'));
     }
 
     public function index_kategori()
