@@ -4,43 +4,53 @@
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
   <link rel="icon" href="{{asset('stisla')}}/img/polindra.png" type="image" sizes="16x16">
-  <title>SILK &mdash; POLINDRA</title>
+  <title>Forgot Password &mdash; Keperawatan Polindra</title>
 
   <!-- General CSS Files -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 
   <!-- CSS Libraries -->
-  <link rel="stylesheet" href="{{asset('stisla')}}/node_modules/jqvmap/dist/jqvmap.min.css">
-  <link rel="stylesheet" href="{{asset('stisla')}}/node_modules/weathericons/css/weather-icons.min.css">
-  <link rel="stylesheet" href="{{asset('stisla')}}/node_modules/weathericons/css/weather-icons-wind.min.css">
-  <link rel="stylesheet" href="{{asset('stisla')}}/node_modules/summernote/dist/summernote-bs4.css">
+  <link rel="stylesheet" href="{{asset('stisla')}}/node_modules/selectric/public/selectric.css">
 
   <!-- Template CSS -->
   <link rel="stylesheet" href="{{asset('stisla')}}/assets/css/style.css">
   <link rel="stylesheet" href="{{asset('stisla')}}/assets/css/components.css">
-  
-  
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/js/bootstrap.min.js"></script> -->
-  <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 
 <body>
   <div id="app">
-    <div class="main-wrapper">
-       <!-- header menu -->
-       @include('layouts.header')
-       <!-- sidebar menu -->
-       @include('layouts.sidebar')
-      <!-- Main Content -->
-      <div class="main-content">
-      @show
-      @yield('content')
+    <section class="section">
+      <div class="container mt-5">
+        <div class="row">
+          <div class="col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-8 offset-lg-2 col-xl-8 offset-xl-2">
+            <div class="login-brand">
+              <img src="{{URL::asset('stisla/img/polindra.png')}}" alt="logo" width="100" class="shadow-light rounded-circle">
+            </div>
+
+            <div class="card card-primary">
+              <div class="card-header"><h4>Forgot Password Keperawatan Polindra</h4></div>
+
+              <div class="card-body">
+              <div class="card-header">Verify Your Email Address</div>
+                   <div class="card-body">
+                    @if (session('resent'))
+                         <div class="alert alert-success" role="alert">
+                            {{ __('A fresh verification link has been sent to your email address.') }}
+                        </div>
+                    @endif
+                    <a href="http://127.0.0.1:8000/reset-password/{{$token}}">Click Here</a>.
+                </div>
+            </div>
+              </div>
+            </div>
+            <div class="simple-footer">
+              Copyright &copy; POLINDRA 2022
+            </div>
+          </div>
+        </div>
       </div>
-       <!-- footer menu -->
-       @include('layouts.footer')
-    </div>
+    </section>
   </div>
 
   <!-- General JS Scripts -->
@@ -52,18 +62,14 @@
   <script src="{{asset('stisla')}}/assets/js/stisla.js"></script>
 
   <!-- JS Libraries -->
-  <script src="{{asset('stisla')}}/node_modules/simpleweather/jquery.simpleWeather.min.js"></script>
-  <script src="{{asset('stisla')}}/node_modules/chart.js/dist/Chart.min.js"></script>
-  <script src="{{asset('stisla')}}/node_modules/jqvmap/dist/jquery.vmap.min.js"></script>
-  <script src="{{asset('stisla')}}/node_modules/jqvmap/dist/maps/jquery.vmap.world.js"></script>
-  <script src="{{asset('stisla')}}/node_modules/summernote/dist/summernote-bs4.js"></script>
-  <script src="{{asset('stisla')}}/node_modules/chocolat/dist/js/jquery.chocolat.min.js"></script>
+  <script src="{{asset('stisla')}}/node_modules/jquery-pwstrength/jquery.pwstrength.min.js"></script>
+  <script src="{{asset('stisla')}}/node_modules/selectric/public/jquery.selectric.min.js"></script>
 
   <!-- Template JS File -->
   <script src="{{asset('stisla')}}/assets/js/scripts.js"></script>
   <script src="{{asset('stisla')}}/assets/js/custom.js"></script>
 
   <!-- Page Specific JS File -->
-  <script src="{{asset('stisla')}}/assets/js/page/index-0.js"></script>
+  <script src="{{asset('stisla')}}/assets/js/page/auth-register.js"></script>
 </body>
 </html>

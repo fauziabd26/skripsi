@@ -89,10 +89,6 @@
                     <div class="modal-body">
 					<div class="container-fluid">
                             <div class="row">
-                                <div class="col-md-4">Kode Paket</div>
-                                <div class="col-md-4 ms-auto"><?= $b['id'] ?></div>
-                            </div><br>
-                            <div class="row">
                                 <div class="col-md-4">Nama Paket</div>
                                 <div class="col-md-6 ms-auto"><?= $b['nama'] ?></div>
                             </div><br>

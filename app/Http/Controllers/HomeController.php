@@ -10,11 +10,11 @@ use App\Models\aproval;
 use App\Models\Dosen;
 use App\Models\peminjaman;
 use App\Models\Kategori;
+use App\Models\pengembalian;
 use App\Models\Satuan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Stmt\Do_;
-use App\Models\pengembalian;
 class HomeController extends Controller
 {
     /**

@@ -30,9 +30,14 @@ Route::put('/user/profile/update/{user}', [UserController::class, 'updateUserPro
 Route::get('profile', 'UserController@edit')->name('profile.edit');
 Route::patch('profile', 'UserController@update')->name('profile.update');
 
+
 //Route Ubah Password
 Route::get('password', 'UserController@editPassword')->name('user.password.edit');
 Route::patch('password', 'UserController@updatePassword')->name('user.password.update');
+Route::get('forgot-password', 'UserController@forgotPassword')->name('user.password.forgot');
+Route::post('/forgot-password', 'UserController@postEmail')->name('store.forgot.password');
+Route::get('/reset-password/{token}', 'UserController@getPassword');
+Route::post('/reset-password', 'UserController@updateResetPassword')->name('reset.password.update');
 
 //Route Dashboard
 use App\Http\Controllers\HomeController;
@@ -147,7 +152,7 @@ Route::get('PenggunaMahasiswa/add/', [PenggunaController::class, 'create'])->nam
 Route::post('PenggunaMahasiswa/add/', [PenggunaController::class, 'store'])->name('post_create_Peminjaman')->middleware('mahasiswa');
 Route::get('PenggunaMahasiswa/edit/{id}', [PenggunaController::class, 'edit'])->middleware('mahasiswa');
 Route::put('PenggunaMahasiswa/update/{id}', [PenggunaController::class, 'update'])->middleware('mahasiswa');
-Route::get('PenggunaMahasiswapaket', [PenggunaController::class, 'indexpaket'])->name('index_paket_pengguna')->middleware('mahasiswa');
+Route::get('PenggunaMahasiswapaket', [PenggunaController::class, 'indexpaket'])->name('index_paket_pengguna')->middleware('multi');
 Route::post('PenggunaMahasiswapaket/add/{id}', [PenggunaController::class, 'storepaket'])->name('index_Peminjaman_paket')->middleware('mahasiswa');
 
 Route::get('PenggunaMahasiswaPengembalian', [PenggunaController::class, 'indexPengembalian'])->middleware('mahasiswa');
@@ -157,6 +162,7 @@ Route::post('PenggunaMahasiswaPengembalian/add', [PenggunaController::class, 'st
 Route::get('PenggunaDosen', [PenggunaController::class, 'indexdosen'])->name('Aproval')->middleware('dosen');
 Route::post('PenggunaDosen/add', [PenggunaController::class, 'storedosen'])->middleware('dosen');
 Route::get('PenggunaDosen/delete/{id}', [PenggunaController::class, 'destroyAproval'])->middleware('dosen');
+
 
 //Route Aproval
 Route::get('Aproval', [PenggunaController::class, 'indexaproval'])->name('index_aproval')->middleware('admin');

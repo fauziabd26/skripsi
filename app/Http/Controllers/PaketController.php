@@ -225,15 +225,6 @@ class PaketController extends Controller
 	 
 	 public function updatePaket(Request $request, $id)
     {
-		Request()->validate([
-				'namaPaket'       			=> 'required',
-				'keterangan'       			=> 'required',
-				'jumlahPaket'         		=> 'required',
-				],[
-					'namaPaket.required'       	=>'Nama Tidak Boleh Kosong',
-					'keterangan.required'  	 	=>'Keterangan Tidak Boleh Kosong',
-					'jumlahPaket.required'     	=>'Jumlah Paket Tidak Boleh Kosong',
-				]);
 		foreach ($request->id_bp as $key => $value) {
 			$id_bp1 = $request->id_bp[$key];
 			$barang_peminjaman3 = barang_paket::findorfail($id_bp1);
@@ -248,7 +239,6 @@ class PaketController extends Controller
 		if ($barang1 >= 0){
 			$kode = barang_paket::all()->last();
 			$kem = paket::findorfail($id);
-			$kem->id = Uuid::uuid4()->getHex();
 			$kem->nama = $request->nama_paket;
 			$kem->keterangan = $request->keterangan;
 				$barang_peminjaman0 = barang_paket::all();
