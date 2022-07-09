@@ -132,7 +132,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Peminjaman </h5>
+                        <h5 class="modal-title">Pengembalian </h5>
                     </div>
 					
 						
