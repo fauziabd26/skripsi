@@ -11,7 +11,14 @@ use App\Models\peminjaman;
 use App\Models\pengembalian;
 use Illuminate\Http\Request;
 use DB;
-use Session;
+use Session;;
+use Ramsey\Uuid\Uuid;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\PengembalianExport;
+use App\Models\Dosen;
+use App\Models\Mahasiswa;
+use App\Models\User;
+use App\Models\barang_peminjaman;
 
 class PengembalianController extends Controller
 {
@@ -22,9 +29,21 @@ class PengembalianController extends Controller
      */
     public function index()
     {
-        $data = pengembalian::get();
+        $data = pengembalian::join('peminjamans', 'peminjamans.id', '=', 'pengembalians.peminjaman_id')
+        ->join('kondisis', 'kondisis.id', '=', 'pengembalians.kondisi_id')
+        ->get(['pengembalians.*', 'peminjamans.id as id_Peminjaman', 'kondisis.name as id_kondisi', 'kondisis.id as idkondisi']);
 		$data1 = kondisi::get();
-        return view('Pengembalian.index', compact('data','data1'));
+		$mahasiswa = Mahasiswa::join('users', 'users.mahasiswa_id', '=', 'mahasiswas.id')
+		->get(['mahasiswas.*', 'users.id as Mahasiswa_id']);
+		$dosen = Dosen::join('users', 'users.dosen_id', '=', 'dosens.id')
+		->get(['dosens.*', 'users.id as id_dosen']);
+        $peminjamanbarang = barang_peminjaman::allData();
+        $barang = Barang::join('kategoris', 'kategoris.id', '=', 'barangs.kategori_id')
+        ->join('satuans', 'satuans.id', '=', 'barangs.satuan_id')
+        ->get(['barangs.*', 'kategoris.name as k_name', 'satuans.name as s_name']);
+		$peminjaman = peminjaman::join('users', 'users.id', '=', 'peminjamans.nama_peminjam')
+        ->get(['peminjamans.*', 'users.id as id_Mahasiswa']);
+        return view('Pengembalian.index', compact('data','data1','mahasiswa','dosen','peminjamanbarang','barang','peminjaman'));
     }
 
     /**
@@ -34,8 +53,18 @@ class PengembalianController extends Controller
      */
     public function create()
     {
-        $data = kondisi::get();
-		return view('Pengembalian.add', compact('data'));
+		$mahasiswa = Mahasiswa::join('users', 'users.mahasiswa_id', '=', 'mahasiswas.id')
+		->get(['mahasiswas.*', 'users.id as Mahasiswa_id']);
+		$dosen = Dosen::join('users', 'users.dosen_id', '=', 'dosens.id')
+		->get(['dosens.*', 'users.id as id_dosen']);
+        $peminjaman = barang_peminjaman::allData();
+		$data = peminjaman::join('users', 'users.id', '=', 'peminjamans.nama_peminjam')
+        ->get(['peminjamans.*', 'users.id as id_Mahasiswa']);
+		$data1 = kondisi::get();
+        $barang = Barang::join('kategoris', 'kategoris.id', '=', 'barangs.kategori_id')
+        ->join('satuans', 'satuans.id', '=', 'barangs.satuan_id')
+        ->get(['barangs.*', 'kategoris.name as k_name', 'satuans.name as s_name']);
+		return view('Pengembalian.add', compact('data','data1','mahasiswa','dosen','peminjaman','barang'));
     }
 
     /**
@@ -46,18 +75,32 @@ class PengembalianController extends Controller
      */
     public function store(Request $request)
     {
-		 pengembalian::create([
-			'nama_barang' => $request->nama_barang,
-			'nama_peminjam' => $request->nama_peminjam,
-			'jumlah_pengembalian' => $request->jumlah_pengembalian,
-			'tanggal_peminjaman' => $request->tanggal_peminjaman,
-			'waktu_peminjaman' => $request->waktu_peminjaman,
-			'tanggal_pengembalian' => $request->tanggal_pengembalian,
-			'kondisi' => $request->kondisi,
-			
-		]);
-		Session::flash('sukses','Data Pengembalian Berhasil Ditambah');
-		return redirect('Pengembalian');
+			Request()->validate([
+				't_Pengembalian'       			=> 'required',
+				'j_Pengembalian'       			=> 'required',
+				'kondisi'         				=> 'required',
+				],[
+					't_Pengembalian.required'       =>'Tanggal Tidak Boleh Kosong',
+					'j_Pengembalian.required'   	=>'Jumlah Tidak Boleh Kosong',
+					'kondisi.required' 				=>'Kondisi Tidak Boleh Kosong',
+				]);
+        $pengembalian = new pengembalian;
+		$pengembalian->id = Uuid::uuid4()->getHex();
+		$pengembalian->peminjaman_id = $request->n_peminjam;
+		$pengembalian->tanggal_pengembalian = $request->t_Pengembalian;
+		$pengembalian->jumlah_pengembalian = $request->j_Pengembalian;
+		$pengembalian->kondisi_id = $request->kondisi;
+		
+		$id_peminjaman = $request->n_peminjam;
+		
+		$peminjaman = peminjaman::findorfail($id_peminjaman);
+		$peminjaman->status = "Dikembalikan";
+		
+		$peminjaman->save();
+		$pengembalian->save();
+		
+		Session::flash('sukses','Data Pengembalian Berhasil Terkirim');
+		return redirect()->back();
 	}
 
     /**
@@ -93,8 +136,21 @@ class PengembalianController extends Controller
      */
     public function update(Request $request, $id)
     {
+			Request()->validate([
+				't_Pengembalian'       			=> 'required',
+				'j_Pengembalian'       			=> 'required',
+				'kondisi'         				=> 'required',
+				],[
+					't_Pengembalian.required'       =>'Tanggal Tidak Boleh Kosong',
+					'j_Pengembalian.required'   	=>'Jumlah Tidak Boleh Kosong',
+					'kondisi.required' 				=>'Kondisi Tidak Boleh Kosong',
+				]);
 		$kem = pengembalian::findorfail($id);
-        $kem->update($request->all());
+		$kem->tanggal_pengembalian = $request->t_Pengembalian;
+		$kem->jumlah_pengembalian = $request->j_Pengembalian;
+		$kem->kondisi_id = $request->kondisi;
+		
+        $kem->update();
 		Session::flash('sukses','Data Berhasil di Edit');
         return redirect('Pengembalian');
     }
@@ -105,9 +161,70 @@ class PengembalianController extends Controller
      * @param  \App\Models\barang  $barang
      * @return \Illuminate\Http\Response
      */
+	 
+	 
+    public function indexlaporan()
+    {
+        $data = pengembalian::join('peminjamans', 'peminjamans.id', '=', 'pengembalians.peminjaman_id')
+        ->join('kondisis', 'kondisis.id', '=', 'pengembalians.kondisi_id')
+        ->get(['pengembalians.*', 'peminjamans.id as id_Peminjaman', 'kondisis.name as id_kondisi', 'kondisis.id as idkondisi']);
+		$data1 = kondisi::get();
+		$mahasiswa = Mahasiswa::join('users', 'users.mahasiswa_id', '=', 'mahasiswas.id')
+		->get(['mahasiswas.*', 'users.id as Mahasiswa_id']);
+		$dosen = Dosen::join('users', 'users.dosen_id', '=', 'dosens.id')
+		->get(['dosens.*', 'users.id as id_dosen']);
+        $peminjamanbarang = barang_peminjaman::allData();
+        $barang = Barang::join('kategoris', 'kategoris.id', '=', 'barangs.kategori_id')
+        ->join('satuans', 'satuans.id', '=', 'barangs.satuan_id')
+        ->get(['barangs.*', 'kategoris.name as k_name', 'satuans.name as s_name']);
+		$peminjaman = peminjaman::join('users', 'users.id', '=', 'peminjamans.nama_peminjam')
+        ->get(['peminjamans.*', 'users.id as id_Mahasiswa']);
+        return view('laporan.indexPengembalian', compact('data','data1','mahasiswa','dosen','peminjamanbarang','barang','peminjaman'));
+    }
+	
+	
+    public function cetakpertanggal(Request $request)
+    {        
+        $tglawal=$request->tglawal;
+        $tglakhir=$request->tglakhir;
+        $pengembalian = pengembalian::whereBetween('tanggal_pengembalian',[$request->tglawal, $request->tglakhir])
+        ->latest()->join('peminjamans', 'peminjamans.id', '=', 'pengembalians.peminjaman_id')
+        ->join('kondisis', 'kondisis.id', '=', 'pengembalians.kondisi_id')
+        ->get(['pengembalians.*', 'peminjamans.id as id_Peminjaman', 'kondisis.name as id_kondisi', 'kondisis.id as idkondisi']);
+		$peminjaman = peminjaman::join('users', 'users.id', '=', 'peminjamans.nama_peminjam')
+        ->get(['peminjamans.*', 'users.id as id_Mahasiswa']);
+        $peminjamanbarang = barang_peminjaman::all();
+		$barang = barang::join('kategoris', 'kategoris.id', '=', 'barangs.kategori_id')
+        ->join('satuans', 'satuans.id', '=', 'barangs.satuan_id')
+        ->get(['barangs.*', 'kategoris.name as k_name', 'satuans.name as s_name']);
+		$dosen = Dosen::join('users', 'users.dosen_id', '=', 'dosens.id')
+		->get(['dosens.*', 'users.id as Dosen_id']);
+		$mahasiswa = Mahasiswa::join('users', 'users.mahasiswa_id', '=', 'mahasiswas.id')
+		->get(['mahasiswas.*', 'users.id as Mahasiswa_id']);
+        
+        return view('Pengembalian.cetakpdf', compact('peminjaman','peminjamanbarang','pengembalian','barang','tglawal','tglakhir','dosen','mahasiswa'));            
+        
+    }
+	
+    public function export(Request $request) 
+    {
+        $tglawal=$request->tglawal;
+        $tglakhir=$request->tglakhir;
+        $pengembalian = pengembalian::whereBetween('tanggal_pengembalian',[$request->tglawal, $request->tglakhir])
+        ->latest()
+        ->get();
+		
+        return Excel::download(new PengembalianExport($tglawal, $tglakhir), 'Laporan_Pengembalian.xlsx');
+    }
+	
     public function destroy($id)
     {
         $del = pengembalian::findorfail($id);
+		$idsementara = $del->peminjaman_id;
+        $peminjaman = peminjaman::findorfail($idsementara);
+		$peminjaman->status = "Dipinjam";
+		
+		$peminjaman->save();
 		$del->delete();
 		return redirect('Pengembalian');
     }

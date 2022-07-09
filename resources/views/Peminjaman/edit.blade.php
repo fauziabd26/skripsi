@@ -44,7 +44,6 @@
 						@foreach($mahasiswa as $m)
 						<?php if ($m->Mahasiswa_id == $kem->nama_peminjam) { ?>
 							<select class="form-control" name="nama_peminjam" id="nama_peminjam">
-                                <option value="{{ $kem->nama_peminjam }}" selected>{{ $m->name }}</option> 
 								@foreach ($mahasiswa as $data)
                                 <option value="{{ $data->Mahasiswa_id }}">{{ $data->name }}</option> 
                                 @endforeach
@@ -59,10 +58,8 @@
                         </div>
 						<div class="form-group col-6 col-md-3 col-lg-3"> 
                             <label class="control-label">Nama Dosen</label>
-						@foreach($dosen as $d)
-						<?php if ($m->Mahasiswa_id == $kem->nama_peminjam) { ?>
                             <select class="form-control" name="namaDosen" id="namaDosen">
-                                <option value="{{ $kem->id_dosen }}" selected>{{ $d->name }}</option> 
+						<?php if ($m->Mahasiswa_id == $kem->nama_peminjam ) { ?>
                                 @foreach ($dosen as $datad)
                                 <option value="{{ $datad->Dosen_id }}">{{ $datad->name }}</option> 
                                 @endforeach
@@ -73,7 +70,6 @@
                                 @enderror
                             </div>
 						<?php } ?>
-                        @endforeach
                         </div>
                     </div>
 					 <div class="row">

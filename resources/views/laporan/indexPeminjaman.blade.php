@@ -79,7 +79,7 @@
                 <div class="row mb-3">
                     <div class="col">
                             <div class="alert alert-primary">
-                                <i class="fa fa-exclamation-triangle"></i> Data Barang Belum tersedia
+                                <i class="fa fa-exclamation-triangle"></i> Data Peminjaman Belum tersedia
                             </div>
                     </div>
                 </div>

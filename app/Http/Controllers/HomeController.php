@@ -39,8 +39,8 @@ class HomeController extends Controller
         $mahasiswa = Mahasiswa::count();
         $barang = Barang::count();
         $dosen = Dosen::count();
-        $pengembalian = pengembalian::count();
         $peminjaman = peminjaman::count();
+        $pengembalian = pengembalian::count();
 
         return view('dashboard.index', compact('user','mahasiswa','barang','dosen','peminjaman','pengembalian'));
     }

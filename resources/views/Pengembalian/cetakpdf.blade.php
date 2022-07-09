@@ -19,7 +19,7 @@
                 border-top: 1px solid #000;
             }
         </style>
-        @if (count($peminjaman))
+        @if (count($pengembalian))
         <div class="row">
             <div class="col-md-12">
                 <div class="card-body">
@@ -35,42 +35,60 @@
                     </table>
                     <hr class="line-title">
                         <p align="center">
-                            Laporan Data Peminjaman Paket
+                            Laporan Data Pengembalian Barang
                         </p>
                         <p align="center">
                             Periode <b>{{ date('d F Y', strtotime($tglawal)) }} s/d {{ date('d F Y', strtotime($tglakhir)) }}</b>
                         </p>
                     </hr>
                     <table class="table table-bordered">
-                        <thead class="thead-dark" align="center">
-                                <tr>
-                                <th>NO</th>
-                                <th>Nama Paket</th>
-                                <th>Nama Peminjam</th>
-                                <th>Jumlah</th>
-                                <th>Tanggal</th>
-                                <th>Waktu</th>
-                            </tr>
-                        </thead>
-                        <?php $no = 1;?>
-                        @foreach($peminjaman as $data)
+                            <thead class="thead-dark" align="center">
+								<tr>
+									<th>NO</th>
+									<th>Nama Peminjam</th>
+									<th>Nim Peminjam</th>
+									<th>Kelas Peminjam</th>
+									<th>Jumlah Pengembalian</th>
+									<th>Tanggal Pengembalian</th>
+									<th>Nama Barang</th>
+									<th>Kondisi Barang</th>
+								</tr>
+							</thead>
+                         <?php 
+							$no = 1;
+						?>
+                        @foreach($pengembalian as $b)
                         <tr>
                             <td align="center">{{ $no++ }}</td>
-							@foreach($paket as $p)
-							<?php if ($data->kode_paket == $p->id) { ?>
-                            <td align="center">{{ $p->nama }}</td>
+						@foreach($mahasiswa as $m)
+						@foreach($peminjaman as $p)
+						<?php if ($m->Mahasiswa_id == $p->id_Mahasiswa && $b->id_Peminjaman == $p->id) { ?>
+                            <td align="center">{{ $m->name }}</td>
+                            <td align="center">{{ $m->nim }}</td>
+                            <td align="center">{{ $m->kelas }}</td>
+						<?php } ?>
+                        @endforeach
+                        @endforeach
+                            <td align="center">{{ $b->jumlah_pengembalian }}</td>
+							<td align="center">{{ $b->tanggal_pengembalian }}</td>
+							<td align="center">
+						@foreach($peminjaman as $p)
+						@foreach($peminjamanbarang as $bp)
+						@foreach($barang as $ba)
+							<?php if ($b->id_Peminjaman == $p->id && $p->kode_barang_peminjaman == $bp->kode && $bp->id_barang == $ba->id) { ?>
+                                {{ $ba->name }} 
 							<?php } ?>
-							@endforeach
-                            <td align="center">{{ $data->nama_peminjam }}</td>
-                            <td align="center">{{ $data->jumlah_peminjaman }}</td>
-                            <td align="center">{{ $data->tanggal_peminjaman }}</td>
-                            <td align="center">{{ $data->waktu_peminjaman }}</td>
+                        @endforeach
+                        @endforeach
+                        @endforeach
+							<td align="center">{{ $b->id_kondisi }}</td>
+							</td>
                         </tr>
                         @endforeach
                     </table>
                 </div>
                 @else
-                <b>Laporan Peminjaman Paket Periode {{ date('d F Y', strtotime($tglawal)) }} s/d {{ date('d F Y', strtotime($tglakhir)) }} Belum tersedia</b>        
+                <b>Laporan Pengembalian Barang Periode {{ date('d F Y', strtotime($tglawal)) }} s/d {{ date('d F Y', strtotime($tglakhir)) }} Belum tersedia</b>        
                 @endif
             </div>
         </div>

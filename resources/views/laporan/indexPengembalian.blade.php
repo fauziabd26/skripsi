@@ -3,10 +3,10 @@
 @section('content')
 <section class="section">
     <div class="section-header">
-        <a href="{{ route('index_laporan_barang') }}"><h1>Laporan Data Peminjam Paket</h1></a>
+        <a href="{{ route('index_laporan_barang') }}"><h1>Laporan Data Pengembalian</h1></a>
         <div class="section-header-breadcrumb">
             <div class="breadcrumb-item active"><a href="/">Dashboard</a></div>
-            <div class="breadcrumb-item">Laporan Paket</div>
+            <div class="breadcrumb-item">Laporan Pengembalian</div>
         </div>
     </div>
     <div class="section-body">
@@ -31,31 +31,49 @@
                     </div>
                     @endif
                     @if (count($peminjaman))
-                    <div class="table-responsive">
-                        <table id="example1" class="table table-bordered table-hover">
+                <div class="table-responsive">
+                    <table id="example1" class="table table-bordered table-hover">
                             <thead class="thead-dark" align="center">
-                                <tr>
-                                <th>NO</th>
-                                <th>Nama Paket</th>
-                                <th>Nama Peminjam</th>
-                                <th>Jumlah</th>
-                                <th>Tanggal</th>
-                                <th>Waktu</th>
-                            </tr>
-                        </thead>
-                        <?php $no = 1;?>
-                        @foreach($peminjaman as $data)
+								<tr>
+									<th>NO</th>
+									<th>Nama Peminjam</th>
+									<th>Nim Peminjam</th>
+									<th>Kelas Peminjam</th>
+									<th>Jumlah Pengembalian</th>
+									<th>Tanggal Pengembalian</th>
+									<th>Nama Barang</th>
+									<th>Kondisi Barang</th>
+								</tr>
+							</thead>
+                         <?php 
+							$no = 1;
+						?>
+                        @foreach($data as $b)
                         <tr>
                             <td align="center">{{ $no++ }}</td>
-							@foreach($paket as $p)
-							<?php if ($data->kode_paket == $p->id) { ?>
-                            <td align="center">{{ $p->nama }}</td>
+						@foreach($mahasiswa as $m)
+						@foreach($peminjaman as $p)
+						<?php if ($m->Mahasiswa_id == $p->id_Mahasiswa && $b->id_Peminjaman == $p->id) { ?>
+                            <td align="center">{{ $m->name }}</td>
+                            <td align="center">{{ $m->nim }}</td>
+                            <td align="center">{{ $m->kelas }}</td>
+						<?php } ?>
+                        @endforeach
+                        @endforeach
+                            <td align="center">{{ $b->jumlah_pengembalian }}</td>
+							<td align="center">{{ $b->tanggal_pengembalian }}</td>
+							<td align="center">
+						@foreach($peminjaman as $p)
+						@foreach($peminjamanbarang as $bp)
+						@foreach($barang as $ba)
+							<?php if ($b->id_Peminjaman == $p->id && $p->kode_barang_peminjaman == $bp->kode && $bp->id_barang == $ba->id) { ?>
+                                {{ $ba->name }} 
 							<?php } ?>
-							@endforeach
-                            <td align="center">{{ $data->nama_peminjam }}</td>
-                            <td align="center">{{ $data->jumlah_peminjaman }}</td>
-                            <td align="center">{{ $data->tanggal_peminjaman }}</td>
-                            <td align="center">{{ $data->waktu_peminjaman }}</td>
+                        @endforeach
+                        @endforeach
+                        @endforeach
+							<td align="center">{{ $b->id_kondisi }}</td>
+							</td>
                         </tr>
                         @endforeach
                     </table>
@@ -66,7 +84,7 @@
                 <div class="row mb-3">
                     <div class="col">
                             <div class="alert alert-primary">
-                                <i class="fa fa-exclamation-triangle"></i> Data Peminjam Paket Belum tersedia
+                                <i class="fa fa-exclamation-triangle"></i> Data Pengembalian Belum tersedia
                             </div>
                     </div>
                 </div>
@@ -80,7 +98,7 @@
 <div class="modal fade" id="modalPdf" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="/laporan_pdf_paket" method="POST" target="_blank">
+            <form action="/laporan_pdf_Pengembalian" method="POST" target="_blank">
                 @csrf           
                 <div class="card-header">
                     <div class="form-group mr-3">
@@ -116,7 +134,7 @@
 <!-- Modal Print Excel-->
 <div class="modal fade" id="modalExcel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <form action="/laporan_excel_paket" method="GET">
+        <form action="/laporan_excel_Pengembalian" method="GET">
             @csrf           
             <div class="modal-content">
                 <div class="card-header">

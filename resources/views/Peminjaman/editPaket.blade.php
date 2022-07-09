@@ -30,7 +30,7 @@
 								<strong>{{ $message }}</strong>
 							</div>
 					@endif
-                        <a href="{{ route('index_Peminjaman') }}" class="btn btn-primary" title="Back" data-toggle="tooltip">
+                        <a href="{{ route('Peminjaman_paket') }}" class="btn btn-primary" title="Back" data-toggle="tooltip">
                             <i class="fas fa-angle-left mr-2"></i> Kembali ke Data peminjaman
                         </a>
                     </div>
@@ -53,7 +53,7 @@
 							<?php if ($kem->kode_paket == $data->id_paket) { ?>
                             <label class="control-label" for="nama_paket">Nama Paket</label>
                             <select name="nama_paket" class="form-control">
-                                <option value="{{ $data->id }}" selected disabled> {{ $data->nama }} </option>
+                                <option value="{{ $data->id }}" selected> {{ $data->nama }} </option>
                                 @foreach ($paket as $data1)
                                 <option value="{{ $data1->id }}">{{ $data1->nama }}</option> 
                                 @endforeach
