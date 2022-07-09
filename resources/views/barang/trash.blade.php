@@ -64,9 +64,9 @@
                             <td align="center">{{ $no++ }}</td>
                             <td align="center">{{ $data->name }}</td>
                             <td align="center">{{ $data->stok }}</td>
-                            <td align="center">{{ $data->kategori->name }}</td>
-                            <td align="center">{{ $data->satuan->name }}</td>
-                            <td>
+                            <td align="center">{{ !empty($data->kategori) ? $data->kategori->name:'' }}</td>
+                            <td align="center">{{ !empty($data->satuan) ? $data->satuan->name:'' }}</td>
+                            <td align="center" style="width: 30%;">
 								<a href="/barang/kembalikan/{{ $data->id }}" class="btn btn-success btn-sm mr-2">Restore</a>
 								<a href="/barang/hapus_permanen/{{ $data->id }}" class="btn btn-danger btn-sm mr-2">Hapus Permanen</a>
 							</td>
@@ -78,8 +78,8 @@
                 @else
                 <div class="row mb-3">
                     <div class="col">
-                        <div class="alert alert-primary">
-                            <i class="fa fa-exclamation-triangle"></i> Data Barang Belum terhapus
+                        <div class="alert alert-primary" style="width:21%;">
+                            <i class="fa fa-exclamation-triangle"></i> Data Belum terhapus
                         </div>
                     </div>
                 </div>

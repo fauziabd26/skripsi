@@ -42,18 +42,17 @@ Route::post('/reset-password', 'UserController@updateResetPassword')->name('rese
 //Route Dashboard
 use App\Http\Controllers\HomeController;
 Route::get('/', [HomeController::class, 'index'])->name('dashboard');
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('barang', [HomeController::class, 'index_barang'])->name('index_barang')->middleware('admin');
-Route::get('kategori', 'HomeController@index_kategori')->name('index_kategori');
+Route::get('kategori', [HomeController::class, 'index_kategori'])->name('index_kategori');
 
 //Route Mahasiswa
 use App\Http\Controllers\MahasiswaController;
 Route::get('mahasiswa', [MahasiswaController::class, 'index'])->name('index_mahasiswa')->middleware('admin');
 Route::get('mahasiswa/add', [MahasiswaController::class, 'create'])->name('tambah_mahasiswa')->middleware('admin');
 Route::post('/mahasiswa/post', [MahasiswaController::class, 'store'])->name('post_mahasiswa')->middleware('admin');
-Route::get('/mahasiswa/edit/{id}', [MahasiswaController::class, 'edit'])->name('edit_mahasiswa')->middleware('admin');
-Route::put('/mahasiswa/update/{id}', [MahasiswaController::class, 'update'])->name('update_mahasiswa')->middleware('admin');
 Route::get('/mahasiswa/delete{id}', [MahasiswaController::class, 'destroy'])->name('destroy_mahasiswa')->middleware('admin');
+Route::get('search_mahasiswa', [MahasiswaController::class, 'search'])->name('cari_mahasiswa');
 
 //Route Admin
 use App\Http\Controllers\RegisterController;
@@ -68,8 +67,6 @@ use App\Http\Controllers\DosenController;
 Route::get('dosen', [DosenController::class, 'index'])->name('index_dosen')->middleware('admin');
 Route::get('dosen/add', [DosenController::class, 'create'])->name('tambah_dosen')->middleware('admin');
 Route::post('/dosen/post', [DosenController::class, 'store'])->name('post_dosen')->middleware('admin');
-Route::get('/dosen/edit/{id}', [DosenController::class, 'edit'])->name('edit_dosen')->middleware('admin');
-Route::put('/dosen/update/{id}', [DosenController::class, 'update'])->name('update_dosen')->middleware('admin');
 Route::get('/dosen/delete{id}', [DosenController::class, 'destroy'])->name('destroy_dosen')->middleware('admin');
 
 //Route Barang
@@ -95,7 +92,8 @@ use App\Http\Controllers\KategoriController;
 Route::get('/kategori/add', [KategoriController::class, 'create'])->name('tambah_kategori')->middleware('admin');
 Route::post('/kategori/post', [KategoriController::class, 'store'])->name('post_kategori')->middleware('admin');
 Route::get('/kategori/edit/{id}', [KategoriController::class, 'edit'])->name('edit_kategori')->middleware('admin');
-
+Route::put('/kategori/update/{id}', [KategoriController::class, 'update'])->name('update_kategori')->middleware('admin');
+Route::get('/kategori/delete{id}', [KategoriController::class, 'destroy'])->name('delete_kategori')->middleware('admin');
 
 //Route Satuan
 use App\Http\Controllers\SatuanController;

@@ -1,4 +1,4 @@
-@extends('layouts.main')
+
 
 @section('content')
 <section class="section">
@@ -31,7 +31,7 @@
                     </div>
                     @endif
                 </div>
-                    @if (session('pesan'))
+                @if (session('pesan'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         <strong>Success</strong> {{ session('pesan') }}.
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -87,11 +87,14 @@
                 @else
                 <div class="row mb-3">
                     <div class="col">
-                            <div class="alert alert-primary">
-                                <i class="fa fa-exclamation-triangle"></i> Data Barang Belum tersedia
-                            </div>
+                        <div class="alert alert-primary" style="width: 26%;">
+                            <i class="fa fa-exclamation-triangle"></i> Data Barang Belum tersedia
+                        </div>
                     </div>
                 </div>
+                <a class="btn btn-primary" href="{{ route('index_recycle_bin') }}">
+                    <i class="fas fa-recycle"></i> Recycle Bin
+                </a>
                 @endif
             </div>
         </div>
@@ -158,7 +161,7 @@
                     </select>
                 </div>
                 <div class="input-group mb-3">
-                    <input type="file" name="file" class="form-control">
+                    <input type="file" name="file" class="form-control" accept=".xml,.xls, .xlsx">
                     <button type="submit" class="btn btn-primary mb-1">Submit</button>
                 </div>
             </form>

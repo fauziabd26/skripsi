@@ -42,12 +42,11 @@
                         <?php $no = 1;?>
                         @foreach($dosen as $data)
                         <tr>
-                            <td align="center">{{ $no++ }}</td>
-                            <td align="center">{{ $data->nip }}</td>
+                            <td align="center" style="width: 1%;">{{ $no++ }}</td>
+                            <td align="center" style="width: 15%;">{{ $data->nip }}</td>
                             <td align="center">{{ $data->name }}</td>
-                            <td align="center">{{ $data->keterangan }}</td>
-                            <td align="center">
-                                <a href="/dosen/edit/{{ $data->id }}" class="btn btn-warning btn-sm mr-2" title="Edit" data-toggle="tooltip"><i class="fa fa-pen" aria-hidden="true"> Edit</i></a>
+                            <td align="center" style="width: 15%;">{{ $data->keterangan }}</td>
+                            <td align="center" style="width: 15%;">
                                 <a href="/dosen/delete{{ $data->id }}" class="btn btn-danger btn-sm mr-2" title="Hapus" data-toggle="tooltip" onclick="return confirm('Anda yakin mau menghapus {{ $data->name }} ?')"><i class="fa fa-trash" aria-hidden="true"> Hapus</i></a>
                             </td>
                         </tr>
@@ -57,7 +56,7 @@
                 @else
                 <div class="row mb-3">
                     <div class="col">
-                            <div class="alert alert-primary">
+                            <div class="alert alert-primary" style="width: 26%;">
                                 <i class="fa fa-exclamation-triangle"></i> Data Dosen Belum tersedia
                             </div>
                     </div>

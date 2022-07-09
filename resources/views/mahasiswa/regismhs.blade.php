@@ -10,6 +10,27 @@
         </div>
     </div>
     <div class="section-body">
+    @if (session("success"))
+                <div class="alert alert-success alert-dismissible show fade">
+                    <div class="alert-body">
+                        <button class="close" data-dismiss="alert">
+                            <span>×</span>
+                        </button>
+
+                        {{ session("success") }}
+                    </div>
+                </div>
+                @elseif (session("error"))
+                <div class="alert alert-danger alert-dismissible show fade">
+                    <div class="alert-body">
+                        <button class="close" data-dismiss="alert">
+                            <span>×</span>
+                        </button>
+
+                        {{ session("error") }}
+                    </div>
+                </div>
+                @endif
         <div class="card">
             <div class="card-body">
                 <div class="row mb-3">
@@ -24,7 +45,7 @@
                     <div class="row">
                         <div class="form-group col-6 col-md-3 col-lg-3">    
                             <label class="control-label" for="nim">Nim</label>
-                            <input type="number" name="nim" class="form-control" value="{{ old('nim') }}">
+                            <input type="number" inputmode="numeric" name="nim" class="form-control" value="{{ old('nim') }}" autofocus>
                             <div class="text-danger">
                                @error('nim')
                                    {{ $message }}

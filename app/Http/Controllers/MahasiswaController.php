@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Mahasiswa;
+use App\Models\Pengguna;
 use App\Models\User;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MahasiswaController extends Controller
 {
@@ -20,7 +22,7 @@ class MahasiswaController extends Controller
     }
      public function index()
     {
-        $mahasiswa = Mahasiswa::all();
+        $mahasiswa = Mahasiswa::with('user')->get();
         return view('mahasiswa.index', compact('mahasiswa'));
     }
 
@@ -43,7 +45,7 @@ class MahasiswaController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'nim'                   => 'required|unique:mahasiswas,nim',
+            'nim'                   => 'required|numeric|unique:mahasiswas,nim',
             'name'                  => 'required',
             'kelas'                 => 'required',            
             'password'              => 'required|confirmed|min:8|max:255',
@@ -64,22 +66,23 @@ class MahasiswaController extends Controller
             'password_confirmation.min'             =>'Password min 8 karakter',
         ]);
 
+        
+        $data = new User;
+        $data->id           = Uuid::uuid4()->getHex();
+        $data->name         = $request->name;
+        $data->password     = bcrypt($request->password);
+        $data->role_id      = 3;
+        
         $mahasiswa = new Mahasiswa;
         $mahasiswa->id      = Uuid::uuid4()->getHex();
         $mahasiswa->nim     = $request->nim;
         $mahasiswa->name    = $request->name;
         $mahasiswa->kelas   = $request->kelas;
+        $mahasiswa->user_id = $data->id;
 
-        $data = new User;
-        $data->id           = Uuid::uuid4()->getHex();
-        $data->mahasiswa_id = $mahasiswa->id;
-        $data->name         = $mahasiswa->name;
-        $data->password     = bcrypt($request->password);
-        $data->role_id      = 3;
-
-        $mahasiswa->save();
         $data->save();
-        return redirect()->route('index_mahasiswa')->with('alert-success','Data Mahasiswa dan akun mahasiswa berhasil dibuat!');
+        $mahasiswa->save();
+        return redirect()->route('index_mahasiswa')->with('pesan','Data Mahasiswa dan akun mahasiswa berhasil dibuat!');
     }
 
     /**
@@ -101,8 +104,7 @@ class MahasiswaController extends Controller
      */
     public function edit(mahasiswa $mahasiswa, $id)
     {
-        $mahasiswa = Mahasiswa::findOrFail($id);
-        return view('mahasiswa.edit',compact('mahasiswa'));
+       //
     }
 
     /**
@@ -114,14 +116,7 @@ class MahasiswaController extends Controller
      */
     public function update(Request $request, Mahasiswa $mahasiswa, $id)
     {
-        $mahasiswa = Mahasiswa::findOrFail($id);
-
-        $mahasiswa->nim     = $request->nim;
-        $mahasiswa->name    = $request->name;
-        $mahasiswa->kelas   = $request->kelas;
-        $mahasiswa->update();
-        return redirect()->route('index_mahasiswa')->with('pesan', 'Data berhasil diubah');
-
+       //
     }
 
     /**
@@ -130,14 +125,22 @@ class MahasiswaController extends Controller
      * @param  \App\Models\mahasiswa  $mahasiswa
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Mahasiswa $mahasiswa, $id)
+    public function destroy(Mahasiswa $mahasiswa, $user_id)
     {
         try {
-            $mahasiswa = Mahasiswa::find($id);
+            $mahasiswa = Mahasiswa::find($user_id);
+            $mahasiswa->user()->delete();
             $mahasiswa->delete();
             return redirect()->route('index_mahasiswa')->with('delete', 'Data Berhasil Dihapus');
         } catch (\Throwable $th) {
             return redirect()->route('index_mahasiswa')->withErrors('Data gagal Dihapus');
         }
+    }
+
+    public function search(Request $request)
+    {
+        $keyword = $request->search;
+        $mahasiswa = Mahasiswa::where('name', 'like', "%" . $keyword . "%")->paginate(5);
+        return view('mahasiswa.index', compact('mahasiswa'))->with('i', (request()->input('page', 1) - 1) * 5);
     }
 }

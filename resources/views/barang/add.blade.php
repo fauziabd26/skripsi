@@ -6,6 +6,7 @@
         <h1>Tambah Data Barang</h1>
         <div class="section-header-breadcrumb">
             <div class="breadcrumb-item active"><a href="/">Dashboard</a></div>
+            <div class="breadcrumb-item">Data Barang</div>
             <div class="breadcrumb-item">Tambah Data Barang</div>
         </div>
     </div>
@@ -24,7 +25,7 @@
                     <div class="row">
                         <div class="form-group col-6 col-md-3 col-lg-3">    
                             <label class="control-label" for="name">Nama Barang</label>
-                            <input type="text" name="name" class="form-control" value="{{ old('name') }}">
+                            <input type="text" name="name" class="form-control" value="{{ old('name') }}" autofocus>
                             <div class="text-danger">
                                 @error('name')
                                     {{ $message }}
@@ -72,7 +73,7 @@
                     <div class="row">
                         <div class="form-group col-6 col-md-3 col-lg-3">
                             <label class="control-label" for="file">Gambar Barang</label>
-                            <input type="file" name="file" class="form-control" value="{{ old('file') }}">
+                            <input type="file" name="file" class="form-control" accept=".jpg, .png, .jpeg" value="{{ old('file') }}">
                             <div class="text-danger">
                                @error('file')
                                    {{ $message }}

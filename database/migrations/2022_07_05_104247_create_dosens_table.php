@@ -18,7 +18,10 @@ class CreateDosensTable extends Migration
             $table->string('nip');
             $table->string('name');
             $table->string('keterangan')->nullable();
-            
+            $table->uuid('user_id');
+
+            $table->foreign('user_id')->references('id')->on('users')
+            ->onUpdate('cascade')->onDelete('cascade');
             $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();

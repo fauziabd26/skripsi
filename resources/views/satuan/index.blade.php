@@ -60,7 +60,7 @@
                 @else
                 <div class="row mb-3">
                     <div class="col">
-                            <div class="alert alert-primary">
+                            <div class="alert alert-primary" style="width: 26%;">
                                 <i class="fa fa-exclamation-triangle"></i> Data Satuan Belum tersedia
                             </div>
                     </div>

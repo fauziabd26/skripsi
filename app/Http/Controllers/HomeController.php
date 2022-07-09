@@ -50,17 +50,11 @@ class HomeController extends Controller
         $kategori = Kategori::all();
         return view('kategori.index', compact('kategori'));
     }
-    public function index_mahasiswa()
-    {
-        $mahasiswa = Mahasiswa::all();
-        return view('dashboardmhs.dashboardmhs', compact('mahasiswa'));
-    }
     public function index_barang()
     {
         $kategoris = Kategori::all();
         $satuans = Satuan::all();
-        $barang = Barang::with('kategori','satuan')->paginate(5);
-        //dd($barang);
+        $barang = Barang::with('kategori','satuan')->latest()->paginate(5);
         return view('barang.index', compact('barang','satuans','kategoris'));
     }
     public function index_dosen()

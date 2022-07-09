@@ -18,6 +18,10 @@ class CreateMahasiswasTable extends Migration
             $table->string('nim');
             $table->string('name');
             $table->string('kelas');
+            $table->uuid('user_id')->nullable();
+            
+            $table->foreign('user_id')->references('id')->on('users')
+                  ->onUpdate('cascade')->onDelete('cascade');
             $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();

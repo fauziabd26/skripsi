@@ -93,7 +93,6 @@ class KategoriController extends Controller
         $kategori->name = $request->name;
         $kategori->save();
         return redirect('/kategori')->with('pesan', 'Data berhasil diubah');
-
     }
 
     /**

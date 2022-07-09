@@ -6,17 +6,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Mahasiswa extends Model
+class Pengguna extends Model
 {
     use HasFactory, SoftDeletes;
     public $incrementing = false;
-    protected $table = 'mahasiswas';
+    protected $table = 'users';
     protected $fillable = [
-        'id', 'nim', 'name', 'kelas','user_id' 
+        'id',
+        'name',
+        'email',
+        'password',
+        'mahasiswa_id',
+        'dosen_id',
+        'role_id',
+        
     ];
-    public function user()
+    public function mahasiswa()
     {
-        return $this->belongsTo('App\Models\User', 'id');
+        return $this->belongsTo(Mahasiswa::class);
     }
-
 }

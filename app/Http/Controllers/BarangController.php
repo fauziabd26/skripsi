@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\BarangExport;
 use App\Imports\BarangImport;
 use App\Models\Barang;
+use App\Models\BarangMasuk;
 use App\Models\Kategori;
 use App\Models\Satuan;
 use Carbon\Carbon;
@@ -227,11 +228,18 @@ class BarangController extends Controller
     public function trash()
     {
     	$barang = Barang::onlyTrashed()->get();
-    	return view('barang.trash', ['barang' => $barang]); 
+    	$barangmasuk = BarangMasuk::onlyTrashed()->get();
+    	$kategori = Kategori::onlyTrashed()->get();
+    	$satuan = Satuan::onlyTrashed()->get();
+    	return view('barang.trash', compact('barang','barangmasuk','kategori','satuan')); 
     }
     public function kembalikan($id)
     {
     	$barang = Barang::onlyTrashed()->where('id',$id);
+    	$barangmasuk = BarangMasuk::onlyTrashed()->where('id',$id);
+    	$kategori = Kategori::onlyTrashed()->where('id',$id);
+        $kategori->restore();
+        $barangmasuk->restore();
     	$barang->restore();
     	return redirect()->route('index_recycle_bin')->with('success', 'Data Berhasil Dikembalikan');
     }

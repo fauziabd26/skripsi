@@ -64,21 +64,21 @@ class DosenController extends Controller
             'password_confirmation.min'             =>'Password min 8 karakter',
         ]);
 
+        $data = new User;
+        $data->id           = Uuid::uuid4()->getHex();
+        $data->name         = $request->name;
+        $data->password     = bcrypt($request->password);
+        $data->role_id      = 2;
+
         $dosen = new Dosen();
         $dosen->id          = Uuid::uuid4()->getHex();
         $dosen->nip         = $request->nip;
         $dosen->name        = $request->name;
         $dosen->keterangan  = $request->keterangan;
+        $dosen->user_id = $data->id;
 
-        $data = new User();
-        $data->id           = Uuid::uuid4()->getHex();
-        $data->dosen_id     = $dosen->id;
-        $data->name         = $dosen->name;
-        $data->password     = bcrypt($request->password);
-        $data->role_id      = 2;
-
-        $dosen->save();
         $data->save();
+        $dosen->save();
         return redirect()->route('index_dosen')->with('alert-success','Data dosen dan akun dosen berhasil dibuat!');
     }
 
@@ -131,10 +131,11 @@ class DosenController extends Controller
      * @param  \App\Models\Dosen  $dosen
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Dosen $dosen, $id)
+    public function destroy(Dosen $dosen, $user_id)
     {
         try {
-            $dosen = Dosen::find($id);
+            $dosen = Dosen::find($user_id);
+            $dosen->user()->delete();
             $dosen->delete();
             return redirect()->route('index_dosen')->with('delete', 'Data Berhasil Dihapus');
         } catch (\Throwable $th) {

@@ -44,12 +44,9 @@
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-file"></i></i> <span>Laporan</span></a>
                 <ul class="dropdown-menu">
                   <li><a class="nav-link" href="{{ route('index_laporan_barang') }}">Laporan Barang</a></li>
-				  <li><a class="nav-link" href="{{ route('index_laporan_peminjaman') }}">Laporan Peminjaman</a></li>
-				  <li><a class="nav-link" href="{{ route('index_laporan_peminjaman_paket') }}">Laporan Paket</a></li>
+                  <li><a class="nav-link" href="{{ route('index_laporan_peminjaman') }}">Laporan Peminjaman</a></li>
+                  <li><a class="nav-link" href="{{ route('index_laporan_peminjaman_paket') }}">Laporan Paket</a></li>
                 </ul>
-              </li>
-              <li class="nav-item dropdown">
-                <li><a class="nav-link" href="{{ route('index_recycle_bin') }}">Recycle Bin</a></li>
               </li>
               @elseif (auth()->user()->role_id == "2")
               <li class="menu-header">Pilih Menu</li>   
