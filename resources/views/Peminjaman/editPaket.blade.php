@@ -49,13 +49,10 @@
                             </div>
                         </div>
                         <div class="form-group col-6 col-md-3 col-lg-3">
-						@foreach ($paket as $data)
-							<?php if ($kem->kode_paket == $data->id_paket) { ?>
                             <label class="control-label" for="nama_paket">Nama Paket</label>
                             <select name="nama_paket" class="form-control">
-                                <option value="{{ $data->id }}" selected> {{ $data->nama }} </option>
                                 @foreach ($paket as $data1)
-                                <option value="{{ $data1->id }}">{{ $data1->nama }}</option> 
+                                    <option value="{{ $data1->id }}">{{ $data1->nama }}</option> 
                                 @endforeach
                             </select>
                             <div class="text-danger">
@@ -63,8 +60,6 @@
                                     {{ $message }}
                                 @enderror
                             </div>
-							<?php } ?>
-						@endforeach
                         </div>
                     </div>
 					 <div class="row">
