@@ -342,6 +342,7 @@ class PeminjamanController extends Controller
 					$barang = barang::findorfail($value);
 					$barang->stok -= $request->jumlahBarang[$key];
 					$barang->save();
+					$barang_peminjaman->id = Uuid::uuid4()->getHex();
 					$barang_peminjaman->id_barang = $request->namaBarang[$key];
 					$barang_peminjaman->kode = $request->kode_bp;
 					$barang_peminjaman->jumlah = $request->jumlahBarang[$key];
