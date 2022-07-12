@@ -175,6 +175,6 @@ Route::post('paket/add/post', [PaketController::class, 'store'])->name('post_cre
 Route::get('paket/edit/{id}', [PaketController::class, 'edit_paket'])->name('edit_Paket')->middleware('admin');
 Route::put('paket/edit/post/{id}', [PaketController::class, 'updatePaket'])->name('post_update_Paket')->middleware('admin');
 Route::get('paket/delete/{id}', [PaketController::class, 'destroy'])->middleware('admin');
-Route::get('paket/edit/deletebarang/{id}', [PaketController::class, 'destroypaketbarang'])->name('kembali')->middleware('admin');
+Route::get('paket/edit/deletebarang/{id}', [PaketController::class, 'destroypaketbarang'])->name('kembali_')->middleware('admin');
 
 

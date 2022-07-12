@@ -34,7 +34,7 @@
                         </div>
                         <div class="form-group col-6 col-md-3 col-lg-3">
                             <label class="control-label" for="stok">Stok Barang</label>
-                            <input type="number" min="0" name="stok" class="form-control" value="{{ old('stok') }}">
+                            <input type="number" name="stok" class="form-control" value="{{ old('stok') }}">
                             <div class="text-danger">
                                 @error('stok')
                                     {{ $message }}

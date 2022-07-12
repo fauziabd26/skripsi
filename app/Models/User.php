@@ -10,7 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use SoftDeletes, HasFactory;
+    use SoftDeletes, HasFactory, HasApiTokens;
     public $incrementing = false;
     protected $table = 'users';
     protected $fillable = [
