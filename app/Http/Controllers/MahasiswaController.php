@@ -129,7 +129,7 @@ class MahasiswaController extends Controller
     {
         try {
             $mahasiswa = Mahasiswa::find($user_id);
-            $mahasiswa->user()->delete();
+            $mahasiswa->user->delete();
             $mahasiswa->delete();
             return redirect()->route('index_mahasiswa')->with('delete', 'Data Berhasil Dihapus');
         } catch (\Throwable $th) {

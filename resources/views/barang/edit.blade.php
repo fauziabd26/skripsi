@@ -34,7 +34,7 @@
                         </div>
                         <div class="form-group col-6 col-md-3 col-lg-3">
                             <label class="control-label" for="stok">Stok Barang</label>
-                            <input type="number" name="stok" class="form-control" value="{{ $barang->stok }}">
+                            <input type="number" name="stok" min="0" class="form-control" value="{{ $barang->stok }}">
                             <div class="text-danger">
                                @error('stok')
                                    {{ $message }}
@@ -77,7 +77,7 @@
                     <div class="row">
                         <div class="form-group col-6 col-md-3 col-lg-3">
                             <label class="control-label" for="file">Ganti Gambar Barang</label>
-                            <input type="file" name="file" class="form-control">
+                            <input type="file" name="file" accept=".jpg, .png, .jpeg" class="form-control">
                             <div class="text-danger">
                                 @error('file')
                                     {{ $message }}

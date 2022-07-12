@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\BarangController;
 use App\Http\Controllers\Api\BarangMasukController;
 use App\Http\Controllers\Api\DosenController;
 use App\Http\Controllers\Api\KategoriController;
+use App\Http\Controllers\Api\loginController;
 use App\Http\Controllers\Api\MahasiswaController;
 use App\Http\Controllers\Api\SatuanController;
 use App\Http\Controllers\Api\UserController;
@@ -69,3 +70,6 @@ Route::delete('barang_masuk/{id}', [BarangMasukController::class, 'destroy']);
 
 //Api User
 Route::get('user', [UserController::class, 'index']);
+Route::post('registerAdmin', [loginController::class, 'registerAdmin']);
+Route::post('login', [loginController::class, 'login']);
+Route::post('logout', [loginController::class, 'logout']);

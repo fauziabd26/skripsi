@@ -133,17 +133,18 @@ class BarangController extends Controller
     {
         Request()->validate([
             'name'          => 'required',
-            'stok'          => 'required',
+            'stok'          => 'required|numeric|min:1',
             'kategori_id'   => 'required',
             'satuan_id'     => 'required',
             'file'          => 'mimes:jpeg,jpg,png|max:2048kb',
         ],[
-            'name.required'     =>'Nama Barang tidak boleh kosong',
-            'stok.required'     =>'stok tidak boleh kosong',
-            'kategori_id.required' =>'Kategori Barang tidak boleh kosong',
-            'satuan_id.required'   =>'Satuan Barang tidak boleh kosong',
-            'file.mimes'        =>'Format gambar harus jpeg/jpg/png',
-            'file.max'          =>'Ukuran Max Foto Barang 2 Mb',
+            'name.required'         =>'Nama Barang tidak boleh kosong',
+            'stok.required'         =>'stok tidak boleh kosong',
+            'stok.min'              =>'stok minimal 1',
+            'kategori_id.required'  =>'Kategori Barang tidak boleh kosong',
+            'satuan_id.required'    =>'Satuan Barang tidak boleh kosong',
+            'file.mimes'            =>'Format gambar harus jpeg/jpg/png',
+            'file.max'              =>'Ukuran Max Foto Barang 2 Mb',
             
         ]);
         $barang = Barang::findOrFail($id);
