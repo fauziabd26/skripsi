@@ -158,7 +158,7 @@ Route::post('PenggunaMahasiswaPengembalian/add', [PenggunaController::class, 'st
 
 //Route Pengguna Dosen
 Route::get('PenggunaDosen', [PenggunaController::class, 'indexdosen'])->name('Aproval')->middleware('dosen');
-Route::post('PenggunaDosen/add', [PenggunaController::class, 'storedosen'])->middleware('dosen');
+Route::post('PenggunaDosen/add/{id}', [PenggunaController::class, 'storedosen'])->middleware('dosen');
 Route::get('PenggunaDosen/delete/{id}', [PenggunaController::class, 'destroyAproval'])->middleware('dosen');
 
 

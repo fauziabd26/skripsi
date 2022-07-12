@@ -192,18 +192,36 @@ class PeminjamanController extends Controller
         $barang = Barang::join('kategoris', 'kategoris.id', '=', 'barangs.kategori_id')
         ->join('satuans', 'satuans.id', '=', 'barangs.satuan_id')
         ->get(['barangs.*', 'kategoris.name as k_name', 'satuans.name as s_name']);
-        $paket = paket::join('peminjaman_pakets', 'peminjaman_pakets.kode_paket', '=', 'pakets.id')
-        ->get(['pakets.*', 'peminjaman_pakets.kode_paket as id_paket']);
+        $paket = paket::all();
 		return view('peminjaman.editPaket', compact('kem','paket','barang'));
     }
 	public function editPaketpos(Request $request, $id)
     {
         $kem = peminjaman_paket::findorfail($id);
+		$idP = $kem->kode_paket;
+		$idP1 = $request->nama_paket;
+		
+		if ($kem->kode_paket == $request->nama_paket){
+			$paket = paket::findorfail($idP);
+			$jpp = $kem->jumlah_peminjaman - $request->jumlahPaket;
+			$paket->jumlah += $jpp;
+			$paket->save();
+		}
+		else{
+			$paket1 = paket::findorfail($idP);
+			$paket1->jumlah += $kem->jumlah_peminjaman;
+			$paket1->save();
+			
+			$paket2 = paket::findorfail($idP1);
+			$paket2->jumlah -= $request->jumlahPaket;
+			$paket2->save();
+		}
 		$kem->kode_paket = $request->nama_paket;
 		$kem->nama_peminjam = $request->nama_peminjam;
 		$kem->jumlah_peminjaman = $request->jumlahPaket;
 		$kem->tanggal_peminjaman = $request->tanggal_peminjaman;
 		$kem->waktu_peminjaman = $request->waktu_peminjaman;
+        
 		$kem->save();
 		Session::flash('sukses','Data peminjaman Berhasil Ditambah');
 		return redirect('PeminjamanPaket');
