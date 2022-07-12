@@ -39,10 +39,13 @@ class loginController extends Controller
                     'password' => Hash::make($request->password),
                     'role_id' => 1,
                  ]);
+                 $token = $user->createToken('auth_token')->plainTextToken;
                  $response =[
                     'status' => true,                   
                     'message' => 'User Admin Created',
-                    'data' => $user
+                    'data' => $user,
+                    'access_token' => $token, 
+                    'token_type' => 'Bearer'
                  ];
             return response()->json($response, Response::HTTP_CREATED);
             }
@@ -54,101 +57,33 @@ class loginController extends Controller
                 ],502);
             }
     }
-    
-    /*
 
-    // method for user logout and delete token
-    public function logout()
+    public function login(Request $request)
     {
-        auth()->user()->tokens()->delete();
-
-        return [
-            'message' => 'You have successfully logged out and the token was successfully deleted'
-        ];
-    } */
-
-    /* public function __invoke(Request $request)
-    {
-        //set validation
-        $validator = Validator::make($request->all(), [
-            'name'     => 'required',
-            'password'  => 'required'
-        ]);
-
-        //if validation fails
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+        if (!Auth::attempt($request->only('name', 'password')))
+        {
+            return response()
+                ->json(['message' => 'Unauthorized'], 401);
         }
 
-        //get credentials from request
-        $credentials = $request->only('name', 'password');
+        $user = User::where('name', $request['name'])->firstOrFail();
 
-        //if auth failed
-        if(!$token = auth()->guard('api')->attempt($credentials)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Email atau Password Anda salah'
-            ], 401);
-        }
+        $token = $user->createToken('auth_token')->plainTextToken;
 
-        //if auth success
-        return response()->json([
-            'success' => true,
-            'user'    => auth()->guard('api')->user(),    
-            'token'   => $token   
-        ], 200);
-    } */
-
-    public function login(Request $request) {
-        $validate = Validator::make($request->all(), [
-            'name' => 'required',
-            'password' => 'required',
-        ]);
-
-        if ($validate->fails()) {
-            $respon = [
-                'status' => 'error',
-                'msg' => 'Validator error',
-                'errors' => $validate->errors(),
-                'content' => null,
-            ];
-            return response()->json($respon, 200);
-        }
-        try{
-           if(auth()->attempt(array('name' => $request['name'], 'password' => $request['password'])))
-           {$tokenResult = $request->user()->createToken('token-auth')->planTextToken;
-           $respon = [
-            'status' => 'success' ,
-            'msg' => 'Login successfully',
-            'errors' => null,
-            'content' => [
-                'status_code' => 200,
-                'access_token' =>$tokenResult,
-                'token_type' => 'Bearer',
-            ]
-            ];
-        }
-        return response()->json($respon, 200);
-        }
-        catch(QueryException $e){
-           /*  return response()->json([
-                'status' => false,
-
-                'message' => "Failed" . $e->errorInfo
-            ],502); */
-            return response()->json(['error'=>'Unauthorised'], 401);
-        }
-        
+        return response()
+            ->json(['message' => 'Hi '.$user->name.', welcome to home','access_token' => $token, 'token_type' => 'Bearer', ]);
     }
 
-    public function logout()
-	{
-		auth()->user->tokens()->delete();
-
-        return [
-            'message' => 'You have successfully logged out and the token was successfully deleted'
+    public function logout(Request $request) {
+        if ($request->user()) { 
+            $request->user()->tokens()->delete();
+        }
+        $respon = [
+            'status' => 'success',
+            'msg' => 'Logout successfully',
         ];
-	}
+        return response()->json($respon, 200);
+    }
 
     /**
      * Display a listing of the resource.

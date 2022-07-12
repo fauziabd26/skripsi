@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePersonalAccessTokens extends Migration
+class CreatePersonalAccessTokensTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,10 +14,10 @@ class CreatePersonalAccessTokens extends Migration
     public function up()
     {
         Schema::create('personal_access_tokens', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id();
             // $table->morphs('tokenable');
             $table->string('tokenable_type');
-            $table->integer('tokenable_id')->unsigned();
+            $table->uuid('tokenable_id');
             $table->foreign('tokenable_id')->references('id')->on('users');
             // end table morphs
             $table->string('name');
