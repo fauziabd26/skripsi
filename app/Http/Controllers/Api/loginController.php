@@ -107,8 +107,8 @@ class loginController extends Controller
 
         if ($validate->fails()) {
             $respon = [
-                'status' => 'error',
-                'msg' => 'Validator error',
+                'success' => false,
+                'message' => 'Validator error',
                 'errors' => $validate->errors(),
                 'content' => null,
             ];
@@ -117,16 +117,14 @@ class loginController extends Controller
         try{
            if(auth()->attempt(array('name' => $request['name'], 'password' => $request['password'])))
            {$tokenResult = $request->user()->createToken('token-auth')->planTextToken;
-           $respon = [
-            'status' => 'success' ,
-            'msg' => 'Login successfully',
+           $respon = json([
+            'success' => true,
+            'message' => 'Login successfully',
             'errors' => null,
-            'content' => [
-                'status_code' => 200,
-                'access_token' =>$tokenResult,
-                'token_type' => 'Bearer',
-            ]
-            ];
+            'status_code' => 200,
+            'access_token' =>$tokenResult,
+            'token_type' => 'Bearer'
+            ]);
         }
         return response()->json($respon, 200);
         }
