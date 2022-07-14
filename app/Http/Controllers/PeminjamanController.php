@@ -58,10 +58,10 @@ class PeminjamanController extends Controller
      */
     public function create()
     {
-		$dosen = Dosen::join('users', 'users.dosen_id', '=', 'dosens.id')
-		->get(['dosens.*', 'users.id as Dosen_id']);
-		$mahasiswa = Mahasiswa::join('users', 'users.mahasiswa_id', '=', 'mahasiswas.id')
-		->get(['mahasiswas.*', 'users.id as Mahasiswa_id']);
+		$dosen = Dosen::join('users', 'users.id', '=', 'dosens.user_id')
+		->get(['dosens.*', 'users.id as user_id']);
+		$mahasiswa = Mahasiswa::join('users', 'mahasiswas.user_id', '=', 'users.id')
+		->get(['mahasiswas.*', 'users.id as user_id']);
         $kategoris = kategori::get();
 		$satuans = Satuan::get();
 		$Barang = Barang::get();

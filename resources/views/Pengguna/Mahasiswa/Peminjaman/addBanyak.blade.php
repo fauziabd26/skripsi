@@ -42,10 +42,10 @@
 					<div class="row">
                         <div class="form-group col-6 col-md-3 col-lg-3">
                             @foreach ($mahasiswa as $datanama)
-							<?php if (Auth::user()->id == $datanama->id_Mahasiswa) { ?>
+							<?php if (Auth::user()->id == $datanama->user_id) { ?>
                             <label class="control-label">Nama Peminjam</label>
                             <select class="form-control" name="n_peminjam" id="n_peminjam">
-								<option value="{{ $datanama->id_Mahasiswa }}" selected> {{ $datanama->name }} </option>
+								<option value="{{ $datanama->id }}" selected> {{ $datanama->name }} </option>
                             </select>
 							<div class="text-danger">
                                 @error('n_peminjam')
@@ -61,7 +61,7 @@
                             <select class="form-control" name="namaDosen" id="namaDosen">
 								<option disabled selected> Semua Nama Dosen </option>
                                 @foreach ($dosen as $data)
-                                <option value="{{ $data->id_dosen }}">{{ $data->name }}</option> 
+                                <option value="{{ $data->id}}">{{ $data->name }}</option> 
                                 @endforeach
                             </select>
                             <div class="text-danger">

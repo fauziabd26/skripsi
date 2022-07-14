@@ -101,10 +101,10 @@ class PenggunaController extends Controller
     public function create()
     {
         $Barang = Barang::get();
-		$dosen = Dosen::join('users', 'users.dosen_id', '=', 'dosens.id')
-		->get(['dosens.*', 'users.id as id_dosen']);
-		$mahasiswa = Mahasiswa::join('users', 'users.mahasiswa_id', '=', 'mahasiswas.id')
-		->get(['mahasiswas.*', 'users.id as id_Mahasiswa']);
+		$dosen = Dosen::join('users', 'users.id', '=', 'dosens.user_id')
+		->get(['dosens.*', 'users.id as user_id']);
+		$mahasiswa = Mahasiswa::join('users', 'mahasiswas.user_id', '=', 'users.id')
+		->get(['mahasiswas.*', 'users.id as user_id']);
 		return view('Pengguna.Mahasiswa.Peminjaman.addBanyak', compact('Barang','dosen','mahasiswa'));
     }
 
