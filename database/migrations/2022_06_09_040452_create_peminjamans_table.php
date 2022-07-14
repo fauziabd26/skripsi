@@ -20,7 +20,7 @@ class CreatePeminjamansTable extends Migration
             $table->uuid('nama_peminjam');
             $table->date('tanggal_peminjaman');
             $table->time('waktu_peminjaman');
-            $table->enum('approvals', ['Ya', 'Tidak']);
+            $table->enum('aprovals', ['Ya', 'Tidak']);
             $table->enum('status', ['Dipinjam', 'Dikembalikan']);
             $table->foreign('id_dosen')->references('id')->on('users')
                 ->onUpdate('cascade')->onDelete('cascade');

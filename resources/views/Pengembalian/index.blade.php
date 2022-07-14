@@ -79,6 +79,27 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Data Pengembalian </h5>
+					
+						@foreach($peminjaman as $p)
+						@foreach($peminjamanbarang as $bp)
+						@foreach($barang as $ba)
+							
+							<?php if ($b->id_Peminjaman == $p->id && $p->kode_barang_peminjaman == $bp->kode && $bp->id_barang == $ba->id) { ?>
+								
+								@foreach($databarang as $db)
+									<?php 
+										$jumlah1 = 0;
+										$jumlah1 = $jumlah1 + $bp->jumlah;
+									?>
+								<?php if ($db->jumlah_pengembalian != $jumlah1) { ?>
+									
+									<div class="col-md-4">Data Pengembalian Tidak Sesuai</div>
+								<?php } ?>
+								@endforeach
+							<?php } ?>
+                        @endforeach
+                        @endforeach
+                        @endforeach
                     </div>
                     <div class="modal-body">
                         <div class="container-fluid">
@@ -88,7 +109,7 @@
 							<?php if ($b->id_Peminjaman == $p->id && $p->kode_barang_peminjaman == $bp->kode && $bp->id_barang == $ba->id) { ?>
                             <div class="row">
                                 <div class="col-md-4">Nama Barang</div>
-                                <div class="col-md-6 ms-auto">{{ $ba->name }}</div>
+                                <div class="col-md-6 ms-auto">{{ $ba->name }} Jumlah {{ $bp->jumlah }}</div>
                             </div><br>
 							<?php } ?>
                         @endforeach

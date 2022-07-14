@@ -34,8 +34,8 @@ class PengembalianExport implements FromView, ShouldAutoSize
             'peminjaman' => peminjaman::join('users', 'users.id', '=', 'peminjamans.nama_peminjam')->get(['peminjamans.*', 'users.id as id_Mahasiswa']),
 			'peminjamanbarang' => barang_peminjaman::all(),
 			'barang' => barang::join('kategoris', 'kategoris.id', '=', 'barangs.kategori_id')->join('satuans', 'satuans.id', '=', 'barangs.satuan_id')->get(['barangs.*', 'kategoris.name as k_name', 'satuans.name as s_name']),
-			'dosen' => Dosen::join('users', 'users.dosen_id', '=', 'dosens.id')->get(['dosens.*', 'users.id as Dosen_id']),
-			'mahasiswa' => Mahasiswa::join('users', 'users.mahasiswa_id', '=', 'mahasiswas.id')->get(['mahasiswas.*', 'users.id as Mahasiswa_id']),
+			'dosen' => Dosen::join('users', 'users.id', '=', 'dosens.user_id')->get(['dosens.*', 'users.id as Dosen_id']),
+			'mahasiswa' => Mahasiswa::join('users', 'users.id', '=', 'mahasiswas.user_id')->get(['mahasiswas.*', 'users.id as Mahasiswa_id']),
 			
 			]);
     }

@@ -34,9 +34,9 @@ class PeminjamanExport implements FromView, ShouldAutoSize
                    ->get(),
             'barangP' => barang_peminjaman::all(),
             'barang' => barang::all(),
-			'dosen' => Dosen::join('users', 'users.dosen_id', '=', 'dosens.id')
+			'dosen' => Dosen::join('users', 'users.id', '=', 'dosens.user_id')
 			->get(['dosens.*', 'users.id as Dosen_id']),
-			'mahasiswa' => Mahasiswa::join('users', 'users.mahasiswa_id', '=', 'mahasiswas.id')
+			'mahasiswa' => Mahasiswa::join('users', 'users.id', '=', 'mahasiswas.user_id')
 			->get(['mahasiswas.*', 'users.id as Mahasiswa_id']),
 			]);
     }

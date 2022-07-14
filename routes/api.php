@@ -73,3 +73,8 @@ Route::get('user', [UserController::class, 'index']);
 Route::post('registerAdmin', [loginController::class, 'registerAdmin']);
 Route::post('login', [loginController::class, 'login']);
 Route::post('logout', [loginController::class, 'logout']);
+
+//Api Peminjaman
+Route::get('Peminjaman', [PenggunaAPIController::class, 'indexAPI']);
+Route::get('PeminjamanDosen', [PenggunaAPIController::class, 'indexdosenAPI']);
+Route::get('Pengembalian', [PenggunaAPIController::class, 'indexPengembalian']);

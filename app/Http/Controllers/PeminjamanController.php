@@ -31,9 +31,9 @@ class PeminjamanController extends Controller
     {
         $data = peminjaman::join('users', 'users.id', '=', 'peminjamans.nama_peminjam')
         ->get(['peminjamans.*', 'users.id as id_Mahasiswa']);
-		$dosen = Dosen::join('users', 'users.dosen_id', '=', 'dosens.id')
+		$dosen = Dosen::join('users', 'users.id', '=', 'dosens.user_id')
 		->get(['dosens.*', 'users.id as Dosen_id']);
-		$mahasiswa = Mahasiswa::join('users', 'users.mahasiswa_id', '=', 'mahasiswas.id')
+		$mahasiswa = Mahasiswa::join('users', 'users.id', '=', 'mahasiswas.user_id')
 		->get(['mahasiswas.*', 'users.id as Mahasiswa_id']);
         $peminjaman = barang_peminjaman::get();
         $barang = Barang::join('kategoris', 'kategoris.id', '=', 'barangs.kategori_id')
@@ -58,9 +58,9 @@ class PeminjamanController extends Controller
      */
     public function create()
     {
-		$dosen = Dosen::join('users', 'users.dosen_id', '=', 'dosens.id')
+		$dosen = Dosen::join('users', 'users.id', '=', 'dosens.user_id')
 		->get(['dosens.*', 'users.id as Dosen_id']);
-		$mahasiswa = Mahasiswa::join('users', 'users.mahasiswa_id', '=', 'mahasiswas.id')
+		$mahasiswa = Mahasiswa::join('users', 'users.id', '=', 'mahasiswas.user_id')
 		->get(['mahasiswas.*', 'users.id as Mahasiswa_id']);
         $kategoris = kategori::get();
 		$satuans = Satuan::get();
@@ -174,9 +174,9 @@ class PeminjamanController extends Controller
     public function edit($id)
     {
         $kem = peminjaman::findorfail($id);
-		$dosen = Dosen::join('users', 'users.dosen_id', '=', 'dosens.id')
+		$dosen = Dosen::join('users', 'users.id', '=', 'dosens.user_id')
 		->get(['dosens.*', 'users.id as Dosen_id']);
-		$mahasiswa = Mahasiswa::join('users', 'users.mahasiswa_id', '=', 'mahasiswas.id')
+		$mahasiswa = Mahasiswa::join('users', 'users.id', '=', 'mahasiswas.user_id')
 		->get(['mahasiswas.*', 'users.id as Mahasiswa_id']);
         $barang = Barang::join('kategoris', 'kategoris.id', '=', 'barangs.kategori_id')
         ->join('satuans', 'satuans.id', '=', 'barangs.satuan_id')
@@ -371,9 +371,9 @@ class PeminjamanController extends Controller
         $peminjaman = peminjaman::all();
         $barangP = barang_peminjaman::all();
 		$barang = barang::all();
-		$dosen = Dosen::join('users', 'users.dosen_id', '=', 'dosens.id')
+		$dosen = Dosen::join('users', 'users.id', '=', 'dosens.user_id')
 		->get(['dosens.*', 'users.id as Dosen_id']);
-		$mahasiswa = Mahasiswa::join('users', 'users.mahasiswa_id', '=', 'mahasiswas.id')
+		$mahasiswa = Mahasiswa::join('users', 'users.id', '=', 'mahasiswas.user_id')
 		->get(['mahasiswas.*', 'users.id as Mahasiswa_id']);
         return view('laporan.indexPeminjaman', compact('barangP','peminjaman','barang','dosen','mahasiswa'));
     }
@@ -392,9 +392,9 @@ class PeminjamanController extends Controller
         ->get();
         $barangP = barang_peminjaman::all();
 		$barang = barang::all();
-		$dosen = Dosen::join('users', 'users.dosen_id', '=', 'dosens.id')
+		$dosen = Dosen::join('users', 'users.id', '=', 'dosens.user_id')
 		->get(['dosens.*', 'users.id as Dosen_id']);
-		$mahasiswa = Mahasiswa::join('users', 'users.mahasiswa_id', '=', 'mahasiswas.id')
+		$mahasiswa = Mahasiswa::join('users', 'users.id', '=', 'mahasiswas.user_id')
 		->get(['mahasiswas.*', 'users.id as Mahasiswa_id']);
         
         return view('Peminjaman.cetakpdf', compact('barangP','peminjaman','barang','tglawal','tglakhir','dosen','mahasiswa'));            

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\barang;
 use App\Models\Kategori;
 use App\Models\Satuan;
@@ -19,10 +20,14 @@ use Session;
 use Ramsey\Uuid\Uuid;
 use App\Models\Dosen;
 use App\Models\Mahasiswa;
-use App\Models\User; 
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\BarangResource;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
 
-class PenggunaController extends Controller
+class PenggunaAPIController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -33,57 +38,34 @@ class PenggunaController extends Controller
     {
         $this->aproval = new aproval();
     }
-    public function index()
+    public function indexAPI()
     {
-        $barang = Barang::join('kategoris', 'kategoris.id', '=', 'barangs.kategori_id')
+        $data = Barang::join('kategoris', 'kategoris.id', '=', 'barangs.kategori_id')
         ->join('satuans', 'satuans.id', '=', 'barangs.satuan_id')
-        ->get(['barangs.*', 'kategoris.name as k_name', 'satuans.name as s_name']);
-        return view('Pengguna.Mahasiswa.Peminjaman.index', compact('barang'));
+        ->get(['barangs.*', 'kategoris.name as kategori_name', 'satuans.name as satuan_name']);
+        return response()->json($data, 200);
     }
 	
-	 public function indexdosen()
+	 public function indexdosenAPI()
     {
-        $data = aproval::join('users', 'users.id', '=', 'aprovals.nama_peminjam')
-        ->get(['aprovals.*', 'users.id as id_Mahasiswa']);
-		$dosen = Dosen::join('users', 'users.id', '=', 'dosens.user_id')
-		->get(['dosens.*', 'users.id as id_dosen']);
-        $peminjaman = barang_peminjaman::allData();
-		$mahasiswa = Mahasiswa::join('users', 'users.id', '=', 'mahasiswas.user_id')
-		->get(['mahasiswas.*', 'users.id as Mahasiswa_id']);
-        $barang = Barang::join('kategoris', 'kategoris.id', '=', 'barangs.kategori_id')
-        ->join('satuans', 'satuans.id', '=', 'barangs.satuan_id')
-        ->get(['barangs.*', 'kategoris.name as k_name', 'satuans.name as s_name']);
-        return view('Pengguna.Dosen.index', compact('data','peminjaman','barang','mahasiswa','dosen'));
-    }
-	
-	public function indexaproval()
-    {
-        $data = aproval::join('users', 'users.id', '=', 'aprovals.nama_peminjam')
-        ->get(['aprovals.*', 'users.id as id_Mahasiswa']);
-		$dosen = Dosen::join('users', 'users.id', '=', 'dosens.user_id')
-		->get(['dosens.*', 'users.id as id_dosen']);
-        $peminjaman = barang_peminjaman::allData();
-		$mahasiswa = Mahasiswa::join('users', 'users.id', '=', 'mahasiswas.user_id')
-		->get(['mahasiswas.*', 'users.id as Mahasiswa_id']);
-        $barang = Barang::join('kategoris', 'kategoris.id', '=', 'barangs.kategori_id')
-        ->join('satuans', 'satuans.id', '=', 'barangs.satuan_id')
-        ->get(['barangs.*', 'kategoris.name as k_name', 'satuans.name as s_name']);
-       return view('Aproval.index', compact('data','peminjaman','barang','mahasiswa','dosen'));
+		$data = aproval::join('barang_peminjamans', 'barang_peminjamans.kode', '=', 'aprovals.kode_barang_peminjaman')
+        ->join('barangs','barangs.id','=','barang_peminjamans.id_barang')
+        ->join('users', 'users.id', '=', 'aprovals.nama_peminjam')
+        ->join('mahasiswas', 'mahasiswas.id', '=', 'users.mahasiswa_id')
+        ->get(['aprovals.*', 'mahasiswas.name as Nama_Mahasiswa','mahasiswas.nim as Nim_Mahasiswa','mahasiswas.kelas as Kelas_Mahasiswa','barangs.name as nama_barang','barang_peminjamans.jumlah as jumlah_barang']);
+		
+        return response()->json($data, 200);
     }
 	
 	public function indexPengembalian(){
-		$mahasiswa = Mahasiswa::join('users', 'users.id', '=', 'mahasiswas.user_id')
-		->get(['mahasiswas.*', 'users.id as Mahasiswa_id']);
-		$dosen = Dosen::join('users', 'users.id', '=', 'dosens.user_id')
-		->get(['dosens.*', 'users.id as id_dosen']);
-        $peminjaman = barang_peminjaman::allData();
 		$data = peminjaman::join('users', 'users.id', '=', 'peminjamans.nama_peminjam')
-        ->get(['peminjamans.*', 'users.id as id_Mahasiswa']);
-		$data1 = kondisi::get();
-        $barang = Barang::join('kategoris', 'kategoris.id', '=', 'barangs.kategori_id')
-        ->join('satuans', 'satuans.id', '=', 'barangs.satuan_id')
-        ->get(['barangs.*', 'kategoris.name as k_name', 'satuans.name as s_name']);
-		return view('Pengguna.Mahasiswa.Pengembalian.index', compact('data','data1','mahasiswa','dosen','peminjaman','barang'));
+        ->join('mahasiswas', 'mahasiswas.id', '=', 'users.mahasiswa_id')
+        ->join('barang_peminjamans', 'barang_peminjamans.kode', '=', 'peminjamans.kode_barang_peminjaman')
+        ->join('barangs','barangs.id','=','barang_peminjamans.id_barang')
+		->where('peminjamans.status', '=', 'Dipinjam')
+        ->get(['peminjamans.*', 'mahasiswas.name as Nama_Mahasiswa','mahasiswas.nim as Nim_Mahasiswa','mahasiswas.kelas as Kelas_Mahasiswa','barangs.name as nama_barang','barang_peminjamans.jumlah as jumlah_barang']);
+		
+        return response()->json($data, 200);
 	}
 	public function indexpaket()
     {
@@ -101,9 +83,9 @@ class PenggunaController extends Controller
     public function create()
     {
         $Barang = Barang::get();
-		$dosen = Dosen::join('users', 'users.id', '=', 'dosens.user_id')
+		$dosen = Dosen::join('users', 'users.dosen_id', '=', 'dosens.id')
 		->get(['dosens.*', 'users.id as id_dosen']);
-		$mahasiswa = Mahasiswa::join('users', 'users.id', '=', 'mahasiswas.user_id')
+		$mahasiswa = Mahasiswa::join('users', 'users.mahasiswa_id', '=', 'mahasiswas.id')
 		->get(['mahasiswas.*', 'users.id as id_Mahasiswa']);
 		return view('Pengguna.Mahasiswa.Peminjaman.addBanyak', compact('Barang','dosen','mahasiswa'));
     }
