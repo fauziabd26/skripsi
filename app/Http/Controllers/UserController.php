@@ -144,4 +144,5 @@ class UserController extends Controller
        return redirect('/login')->with('alert-success', 'Your password has been changed!');
    
      }
+     
 }

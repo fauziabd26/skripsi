@@ -15,12 +15,12 @@ use App\Models\barang_paket;
 use App\Models\barang_peminjaman;
 use Illuminate\Http\Request;
 use DB;
-use Session;
 use Ramsey\Uuid\Uuid;
 use App\Models\Dosen;
 use App\Models\Mahasiswa;
 use App\Models\User; 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class PenggunaController extends Controller
 {

@@ -42,7 +42,27 @@ class HomeController extends Controller
         $peminjaman = peminjaman::count();
         $pengembalian = pengembalian::count();
 
-        return view('dashboard.index', compact('user','mahasiswa','barang','dosen','peminjaman','pengembalian'));
+        $stok=Barang::select(DB :: raw("CAST(SUM(stok)as int)as stok"))
+                ->GroupBy(DB :: raw("Month(created_at)"))
+                ->pluck('stok');
+        $bulan=Barang::select(DB :: raw("MONTHNAME(created_at)as bulan"))
+                ->GroupBy(DB :: raw("MONTHNAME(created_at)"))
+                ->pluck('bulan');
+
+                $online = User::select("*")
+                            ->whereNotNull('last_seen')
+                            ->orderBy('last_seen', 'DESC')
+                            ->paginate(5);
+
+        return view('dashboard.index', compact('user','mahasiswa','barang','dosen','peminjaman','pengembalian','stok','bulan','online'));
+    }
+
+    public function grafik()
+    {
+        $stok=Barang::select(DB :: raw("CAST(SUM(stok)as int)as stok"),DB :: raw("MONTHNAME(created_at)as bulan"))  
+                ->GroupBy('stok','bulan')
+                ->get();
+        return response()->json($stok,200);
     }
 
     public function index_kategori()
@@ -62,6 +82,4 @@ class HomeController extends Controller
         $dosen = Dosen::all();
         return view('DashboardDosen.DashboardDosen', compact('dosen'));
     }
-    
-    
 }
