@@ -30,7 +30,6 @@ Route::put('/user/profile/update/{user}', [UserController::class, 'updateUserPro
 Route::get('profile', 'UserController@edit')->name('profile.edit');
 Route::patch('profile', 'UserController@update')->name('profile.update');
 
-
 //Route Ubah Password
 Route::get('password', 'UserController@editPassword')->name('user.password.edit');
 Route::patch('password', 'UserController@updatePassword')->name('user.password.update');
@@ -42,6 +41,7 @@ Route::post('/reset-password', 'UserController@updateResetPassword')->name('rese
 //Route Dashboard
 use App\Http\Controllers\HomeController;
 Route::get('/', [HomeController::class, 'index'])->name('dashboard');
+Route::get('stok', [HomeController::class, 'grafik']);
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('barang', [HomeController::class, 'index_barang'])->name('index_barang')->middleware('admin');
 Route::get('kategori', [HomeController::class, 'index_kategori'])->name('index_kategori');
