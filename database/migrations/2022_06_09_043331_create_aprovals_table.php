@@ -20,6 +20,7 @@ class CreateAprovalsTable extends Migration
             $table->integer('kode_barang_peminjaman');
             $table->date('tanggal_peminjaman');
             $table->time('waktu_peminjaman');
+            $table->string('Keterangan');
             $table->foreign('id_dosen')->references('id')->on('users')
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('nama_peminjam')->references('id')->on('users')

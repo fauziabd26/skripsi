@@ -7,6 +7,7 @@
                                 <th>Jumlah</th>
                                 <th>Tanggal</th>
                                 <th>Waktu</th>
+                                <th>Keterangan</th>
                             </tr>
                         </thead>
                         <?php $no = 1;?>
@@ -22,6 +23,7 @@
                             <td align="center">{{ $data->jumlah_peminjaman }}</td>
                             <td align="center">{{ $data->tanggal_peminjaman }}</td>
                             <td align="center">{{ $data->waktu_peminjaman }}</td>
+                            <td align="center">{{ $data->Keterangan }}</td>
                         </tr>
                         @endforeach
 </table>

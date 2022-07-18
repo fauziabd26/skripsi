@@ -5,6 +5,7 @@ namespace App\Exports;
 use App\Models\peminjaman;
 use App\Models\pengembalian;
 use App\Models\barang_peminjaman;
+use App\Models\barang_pengembalian;
 use App\Models\Barang;
 use App\Models\Dosen;
 use App\Models\Mahasiswa;
@@ -30,12 +31,13 @@ class PengembalianExport implements FromView, ShouldAutoSize
     public function view(): View
     {
         return view('pengembalian.cetakexcel', [
-			'pengembalian' => pengembalian::whereDate('tanggal_pengembalian', '>=', $this->tglawal)->whereDate('tanggal_pengembalian', '<=', $this->tglakhir)->join('peminjamans', 'peminjamans.id', '=', 'pengembalians.peminjaman_id')->join('kondisis', 'kondisis.id', '=', 'pengembalians.kondisi_id')->get(['pengembalians.*', 'peminjamans.id as id_Peminjaman', 'kondisis.name as id_kondisi', 'kondisis.id as idkondisi']),
+			'pengembalian' => pengembalian::whereDate('tanggal_pengembalian', '>=', $this->tglawal)->whereDate('tanggal_pengembalian', '<=', $this->tglakhir)->join('peminjamans', 'peminjamans.id', '=', 'pengembalians.peminjaman_id')->join('kondisis', 'kondisis.id', '=', 'pengembalians.kondisi_id')->get(['pengembalians.*', 'peminjamans.Dikembalikan as Dikembalikan', 'peminjamans.id as id_Peminjaman', 'kondisis.name as id_kondisi', 'kondisis.id as idkondisi']),
             'peminjaman' => peminjaman::join('users', 'users.id', '=', 'peminjamans.nama_peminjam')->get(['peminjamans.*', 'users.id as id_Mahasiswa']),
 			'peminjamanbarang' => barang_peminjaman::all(),
 			'barang' => barang::join('kategoris', 'kategoris.id', '=', 'barangs.kategori_id')->join('satuans', 'satuans.id', '=', 'barangs.satuan_id')->get(['barangs.*', 'kategoris.name as k_name', 'satuans.name as s_name']),
 			'dosen' => Dosen::join('users', 'users.id', '=', 'dosens.user_id')->get(['dosens.*', 'users.id as Dosen_id']),
 			'mahasiswa' => Mahasiswa::join('users', 'users.id', '=', 'mahasiswas.user_id')->get(['mahasiswas.*', 'users.id as Mahasiswa_id']),
+			'pengembalianbarang' => barang_pengembalian::join('pengembalians', 'pengembalians.kode_barang_pengembalian', '=', 'barang_pengembalians.kode')->get(['barang_pengembalians.*', 'pengembalians.peminjaman_id as peminjaman_id']),
 			
 			]);
     }

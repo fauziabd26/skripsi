@@ -181,6 +181,17 @@
                             </div>
                         </div>
                     </div>
+					 <div class="row">
+						<div class="form-group col-6 col-md-3 col-lg-3">
+                            <label class="control-label" for="Keterangan">Keterangan</label>
+                            <input type="text" name="Keterangan" class="form-control" value="{{ $kem->Keterangan }}">
+                            <div class="text-danger">
+                                @error('Keterangan')
+                                    {{ $message }}
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
 					
 					<script type="text/javascript">
 						$(document).ready(function(){      

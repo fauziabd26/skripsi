@@ -88,16 +88,6 @@
                     </div>
                    <div class="modal-body">
 						<div class="container-fluid">
-						@foreach($peminjaman as $bp)
-						@foreach($barang as $ba)
-							<?php if ($b->kode_barang_peminjaman == $bp->kode && $bp->id_barang == $ba->id) { ?>
-                            <div class="row">
-                                <div class="col-md-4">Barang</div>
-                                <div class="col-md-6 ms-auto">{{ $ba->name }} Jumlah {{ $bp->jumlah }}</div>
-                            </div><br>
-							<?php } ?>
-                        @endforeach
-                        @endforeach
 						@foreach($mahasiswa as $m)
 						<?php if ($m->Mahasiswa_id == $b->id_Mahasiswa) { ?>
 							<div class="row">
@@ -122,6 +112,31 @@
                                 <div class="col-md-4">waktu Peminjaman</div>
                                 <div class="col-md-6 ms-auto">{{ $b->waktu_peminjaman }}</div>
                             </div><br>
+							
+                    <table id="example1" class="table table-bordered table-hover">
+                        <thead class="thead-dark" align="center">
+                            <tr>
+                                <th>NO</th>
+                                <th>Nama Barang</th>
+                                <th>Jumlah</th>
+                            </tr>
+                        </thead>
+                        <?php 
+							$nobarang = 1;
+						?>
+						@foreach($peminjaman as $bp)
+						@foreach($barang as $ba)
+							<?php if ($b->kode_barang_peminjaman == $bp->kode && $bp->id_barang == $ba->id) { ?>
+                        <tr>
+                            <td align="center">{{ $nobarang++ }}</td>
+                            <td align="center">{{ $ba->name }}</td>
+                            <td align="center">{{ $bp->jumlah }}</td>
+                        </tr>
+							<?php } ?>
+                        @endforeach
+                        @endforeach
+                    </table>
+					
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -152,10 +167,19 @@
 						<div class="container-fluid">
 							<input type="hidden" id="n_peminjam" name="n_peminjam" value="<?= $b['id'] ?>"readonly><br><br>
 							
+						@foreach($peminjaman as $bp)
+						@foreach($barang as $ba)
+							<?php if ($b->kode_barang_peminjaman == $bp->kode && $bp->id_barang == $ba->id) { ?>
+							<div class="row"> 
+									<div class="col-md-4">{{ $ba->name }}</div>
+									<div class="col-md-6 ms-auto">
+										<input type="hidden" id="namaBarang[]" name="namaBarang[]" value="{{ $bp->id_barang }}">
+									</div>
+							</div><br>
 							<div class="row">
 									<div class="col-md-4">Jumlah Pengembalian</div>
 									<div class="col-md-6 ms-auto">
-										<input type="number" id="j_Pengembalian" name="j_Pengembalian">
+										<input type="number" id="j_Pengembalian[]" name="j_Pengembalian[]">
 									</div>
 									<div class="text-danger">
 										@error('j_Pengembalian')
@@ -163,6 +187,9 @@
 										@enderror
 									</div>
 							</div><br>
+							<?php } ?>
+                        @endforeach
+                        @endforeach
 							
 							<div class="row">
 									<div class="col-md-4">Tanggal Pengembalian</div>

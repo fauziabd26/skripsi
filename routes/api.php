@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\loginController;
 use App\Http\Controllers\Api\MahasiswaController;
 use App\Http\Controllers\Api\SatuanController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\PenggunaAPIController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -76,5 +77,11 @@ Route::post('logout', [loginController::class, 'logout']);
 
 //Api Peminjaman
 Route::get('Peminjaman', [PenggunaAPIController::class, 'indexAPI']);
+Route::post('Peminjaman/Add', [PenggunaAPIController::class, 'storeAPI']);
 Route::get('PeminjamanDosen', [PenggunaAPIController::class, 'indexdosenAPI']);
-Route::get('Pengembalian', [PenggunaAPIController::class, 'indexPengembalian']);
+Route::post('PeminjamanDosen/Add/{id}', [PenggunaAPIController::class, 'storedosenAPI']);
+Route::get('Pengembalian', [PenggunaAPIController::class, 'indexPengembalianAPI']);
+Route::post('Pengembalian/Add', [PenggunaAPIController::class, 'storepengembalianAPI']);
+Route::get('PeminjamanPaket', [PenggunaAPIController::class, 'indexpaketAPI']);
+Route::post('PeminjamanPaket/add/{id}', [PenggunaAPIController::class, 'storepaketAPI']);
+Route::post('PeminjamanDosen/Delete/{id}', [PenggunaAPIController::class, 'destroyAprovalAPI']);

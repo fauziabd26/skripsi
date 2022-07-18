@@ -107,6 +107,10 @@
                                 <div class="col-md-4">Waktu Peminjaman</div>
                                 <div class="col-md-6 ms-auto"><?= $b['waktu_peminjaman'] ?></div>
                             </div><br>
+                            <div class="row">
+                                <div class="col-md-4">Keterangan</div>
+                                <div class="col-md-6 ms-auto"><?= $b['Keterangan'] ?></div>
+                            </div><br>
                         </div>
                     </div>
                     <div class="modal-footer">

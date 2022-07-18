@@ -13,6 +13,7 @@ use App\Models\paket;
 use App\Models\peminjaman_paket;
 use App\Models\barang_paket;
 use App\Models\barang_peminjaman;
+use App\Models\barang_pengembalian;
 use Illuminate\Http\Request;
 use DB;
 use Session;
@@ -140,6 +141,7 @@ class PenggunaController extends Controller
 		$aproval->id_dosen = $request->namaDosen;
 		$aproval->tanggal_peminjaman = $request->t_peminjaman;
 		$aproval->waktu_peminjaman = $request->w_peminjaman;
+		$aproval->Keterangan = $request->Keterangan;
 		if(!empty($kode)){
 			$aproval->kode_barang_peminjaman = $kode+1;
 		}if(empty($kode)){
@@ -179,6 +181,7 @@ class PenggunaController extends Controller
 	
 	public function storedosen(Request $request,$id)
     {
+		$del = aproval::findorfail($id);
         $peminjaman = new peminjaman;
 		$peminjaman->id = Uuid::uuid4()->getHex();
 		$peminjaman->kode_barang_peminjaman = $request->k_barang;
@@ -188,9 +191,11 @@ class PenggunaController extends Controller
 		$peminjaman->waktu_peminjaman = $request->w_peminjaman;
 		$peminjaman->aprovals = $request->aproval;
 		$peminjaman->status = $request->status;
-		$peminjaman->save();
+		$peminjaman->Diserahkan = "Belum";
+		$peminjaman->Dikembalikan = "Belum";
+		$peminjaman->Keterangan = $del->Keterangan;
 		
-		$del = aproval::findorfail($id);
+		$peminjaman->save();
 		$del->delete();
 		
 		Session::flash('sukses','Data Berhasil disetujui dan Terkirim');
@@ -199,6 +204,7 @@ class PenggunaController extends Controller
 	
 	public function storeaproval(Request $request,$id)
     {
+		$del = aproval::findorfail($id);
         $peminjaman = new peminjaman;
 		$peminjaman->id = Uuid::uuid4()->getHex();
 		$peminjaman->kode_barang_peminjaman = $request->k_barang;
@@ -208,9 +214,11 @@ class PenggunaController extends Controller
 		$peminjaman->waktu_peminjaman = $request->w_peminjaman;
 		$peminjaman->aprovals = $request->aproval;
 		$peminjaman->status = $request->status;
+		$peminjaman->Diserahkan = "Belum";
+		$peminjaman->Dikembalikan = "Belum";
+		$peminjaman->Keterangan = $del->Keterangan;
 		$peminjaman->save();
 		
-		$del = aproval::findorfail($id);
 		$del->delete();
 		
 		Session::flash('sukses','Data Berhasil disetujui dan Terkirim');
@@ -228,12 +236,31 @@ class PenggunaController extends Controller
 					'j_Pengembalian.required'   	=>'Jumlah Tidak Boleh Kosong',
 					'kondisi.required' 				=>'Kondisi Tidak Boleh Kosong',
 				]);
+		$kode = barang_pengembalian::max('kode');
         $pengembalian = new pengembalian;
 		$pengembalian->id = Uuid::uuid4()->getHex();
 		$pengembalian->peminjaman_id = $request->n_peminjam;
 		$pengembalian->tanggal_pengembalian = $request->t_Pengembalian;
-		$pengembalian->jumlah_pengembalian = $request->j_Pengembalian;
 		$pengembalian->kondisi_id = $request->kondisi;
+		if(!empty($kode)){
+			$pengembalian->kode_barang_pengembalian = $kode+1;
+		}if(empty($kode)){
+			$pengembalian->kode_barang_pengembalian = 1;
+		}
+		
+		
+		foreach ($request->namaBarang as $key => $value) {
+			$barang_pengembalian = new barang_pengembalian();
+			$barang_pengembalian->id = Uuid::uuid4()->getHex();
+			$barang_pengembalian->id_barang = $request->namaBarang[$key];
+			if(!empty($kode)){
+			$barang_pengembalian->kode = $kode+1;
+			}if(empty($kode)){
+			$barang_pengembalian->kode = 1;
+			}
+			$barang_pengembalian->jumlah = $request->j_Pengembalian[$key];
+			$barang_pengembalian->save();
+		}
 		
 		$id_peminjaman = $request->n_peminjam;
 		
@@ -260,6 +287,7 @@ class PenggunaController extends Controller
 			$peminjaman_paket->jumlah_peminjaman = $request->j_peminjam;
 			$peminjaman_paket->tanggal_peminjaman = $request->t_peminjaman;
 			$peminjaman_paket->waktu_peminjaman = $request->w_peminjaman;
+			$peminjaman_paket->Keterangan = $request->Keterangan;
 			$paket->save();
 			$peminjaman_paket->save();
 		}
@@ -355,7 +383,7 @@ class PenggunaController extends Controller
 			}
 		}
 		$del->delete();
-		return redirect('PenggunaDosen');
+			return redirect()->back();
     }
 	
 }

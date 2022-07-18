@@ -19,6 +19,9 @@ class peminjaman extends Model
 		'waktu_peminjaman',
 		'aprovals',
 		'status',
+		'Diserahkan',
+		'Dikembalikan',
+		'Keterangan',
 	];
 	
 	public function allData()

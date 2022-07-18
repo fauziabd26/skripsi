@@ -70,7 +70,10 @@
                             <td align="center">
                                 <button class="btn btn-success btn-sm mr-2" data-toggle="modal" data-target="#modal-lihat<?php echo $p['id']; ?>"><i class="fa fa-eye" aria-hidden="true"> Lihat</i></button>
                                 <a href="/Peminjaman/edit/{{$p->id}}" class="btn btn-warning btn-sm mr-2" title="Edit" data-toggle="tooltip"><i class="fa fa-pen" aria-hidden="true"> Edit</i></a>
-                                <a href="/Peminjaman/delete/{{$p->id}}" class="btn btn-danger btn-sm mr-2" title="Hapus" data-toggle="tooltip" onclick="return confirm('Anda yakin mau menghapus item ini ?')"><i class="fa fa-trash" aria-hidden="true"> Hapus</i></a>
+                                <?php if ($p->Diserahkan != "Sudah") { ?>
+									<a href="/Peminjaman/Serahkan/{{$p->id}}" class="btn btn-success btn-sm mr-2" title="Serahkan" data-toggle="tooltip"><i class="fa fa-pen" aria-hidden="true"> Diserahkan</i></a>
+                                <?php } ?>
+								<a href="/Peminjaman/delete/{{$p->id}}" class="btn btn-danger btn-sm mr-2" title="Hapus" data-toggle="tooltip" onclick="return confirm('Anda yakin mau menghapus item ini ?')"><i class="fa fa-trash" aria-hidden="true"> Hapus</i></a>
                             </td>
                         </tr>
                         @endforeach
@@ -91,16 +94,6 @@
                     </div>
                     <div class="modal-body">
 						<div class="container-fluid">
-						@foreach($peminjaman as $bp)
-						@foreach($barang as $b)
-							<?php if ($p->kode_barang_peminjaman == $bp->kode && $bp->id_barang == $b->id) { ?>
-                            <div class="row">
-                                <div class="col-md-4">Nama Barang</div>
-                                <div class="col-md-6 ms-auto">{{ $b->name }} Jumlah {{ $bp->jumlah }}</div>
-                            </div><br>
-							<?php } ?>
-                        @endforeach
-                        @endforeach
 						@foreach($mahasiswa as $m)
 						<?php if ($m->Mahasiswa_id == $p->nama_peminjam) { ?>
 							<div class="row">
@@ -133,6 +126,39 @@
                                 <div class="col-md-4">Status</div>
                                 <div class="col-md-6 ms-auto">{{ $p->status }}</div>
                             </div><br>
+							<div class="row">
+                                <div class="col-md-4">Diserahkan</div>
+                                <div class="col-md-6 ms-auto">{{ $p->Diserahkan }}</div>
+                            </div><br>
+							<div class="row">
+                                <div class="col-md-4">Keterangan</div>
+                                <div class="col-md-6 ms-auto">{{ $p->Keterangan }}</div>
+                            </div><br>
+							
+                    <table id="example1" class="table table-bordered table-hover">
+                        <thead class="thead-dark" align="center">
+                            <tr>
+                                <th>NO</th>
+                                <th>Nama Barang</th>
+                                <th>Jumlah</th>
+                            </tr>
+                        </thead>
+                        <?php 
+							$nobarang = 1;
+						?>
+						@foreach($peminjaman as $bp)
+						@foreach($barang as $b)
+							<?php if ($p->kode_barang_peminjaman == $bp->kode && $bp->id_barang == $b->id) { ?>
+                        <tr>
+                            <td align="center">{{ $nobarang++ }}</td>
+                            <td align="center">{{ $b->name }}</td>
+                            <td align="center">{{ $bp->jumlah }}</td>
+                        </tr>
+							<?php } ?>
+                        @endforeach
+                        @endforeach
+                    </table>
+						
 						</div>
                     </div>
                     <div class="modal-footer">

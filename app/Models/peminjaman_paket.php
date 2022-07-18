@@ -18,6 +18,7 @@ class peminjaman_paket extends Model
 		'jumlah_peminjaman',
 		'tanggal_peminjaman',
 		'waktu_peminjaman',
+		'Keterangan',
 	];
 	
 	public function allData()

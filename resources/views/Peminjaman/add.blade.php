@@ -77,6 +77,17 @@
                             </div>
                         </div>
                     </div>
+					 <div class="row">
+						<div class="form-group col-6 col-md-3 col-lg-3">
+                            <label class="control-label" for="waktu_peminjaman">Keterangan</label>
+                            <input type="text" name="Keterangan" class="form-control">
+                            <div class="text-danger">
+                                @error('Keterangan')
+                                    {{ $message }}
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
 					<div class="row" id="dynamic_field">
 						<div class="form-group col-6 col-md-3 col-lg-3">
                             <label class="control-label">Pilih Nama Barang</label>

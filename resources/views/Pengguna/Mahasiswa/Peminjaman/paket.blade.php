@@ -136,24 +136,42 @@
                     </div>
 					
 						
-					<form action="/PenggunaMahasiswapaket/add/{{$b->id}}" method="POST">
+					<form action="/PenggunaMahasiswapaket/add/{{$b->id}}" method="POST" name="paket">
 						@csrf
                     <div class="modal-body">
-						<input type="hidden" id="k_paket" name="k_paket" value="<?= $b['id'] ?>"readonly><br><br>
-						
-						<label>Nama Peminjam	&emsp;&emsp;&emsp;:</label>
-						<input type="text" id="n_peminjam" name="n_peminjam"><br><br>
-						
-						<label>Jumlah Peminjaman &emsp;&ensp;:</label>
-						<input type="number" id="j_peminjam" name="j_peminjam"><br><br>
-						
-						<label>Tanggal Peminjaman	&emsp;:</label>
-						<input type="date" id="t_peminjaman" name="t_peminjaman"><br><br>
-						
-						<label>waktu peminjaman	&emsp;&emsp;:</label>
-						<input type="time" id="w_peminjaman" name="w_peminjaman"><br><br>
-						
-						
+						<div class="container-fluid">
+							<input type="hidden" id="k_paket" name="k_paket" value="<?= $b['id'] ?>"readonly><br><br>
+                            <div class="row">
+                                <div class="col-md-4">Nama Peminjam</div>
+                                <div class="col-md-6 ms-auto">
+									<input type="text" id="n_peminjam" name="n_peminjam">
+								</div>
+                            </div><br>
+							<div class="row">
+                                <div class="col-md-4">Jumlah Peminjaman</div>
+                                <div class="col-md-6 ms-auto">
+									<input type="number" id="j_peminjam" name="j_peminjam">
+								</div>
+                            </div><br>
+							<div class="row">
+                                <div class="col-md-4">Tanggal Peminjaman</div>
+                                <div class="col-md-6 ms-auto">
+									<input type="date" id="t_peminjaman" name="t_peminjaman">
+								</div>
+                            </div><br>
+							<div class="row">
+                                <div class="col-md-4">waktu peminjaman</div>
+                                <div class="col-md-6 ms-auto">
+									<input type="time" id="w_peminjaman" name="w_peminjaman">
+								</div>
+                            </div><br>
+							<div class="row">
+                                <div class="col-md-4">Keterangan</div>
+                                <div class="col-md-6 ms-auto">
+									<input type="text" id="Keterangan" name="Keterangan">
+								</div>
+                            </div><br>
+						</div>
                     </div>
 					
                     <div class="modal-footer">

@@ -118,6 +118,7 @@ Route::get('Peminjaman/add', [PeminjamanController::class, 'create'])->name('tam
 Route::post('Peminjaman/post', [PeminjamanController::class, 'store'])->name('post_Peminjaman')->middleware('admin');
 Route::get('Peminjaman/edit/{id}', [PeminjamanController::class, 'edit'])->middleware('admin');
 Route::put('Peminjaman/update/{id}', [PeminjamanController::class, 'update'])->middleware('admin');
+Route::get('Peminjaman/Serahkan/{id}', [PeminjamanController::class, 'Serahkan'])->middleware('admin');
 Route::get('Peminjaman/delete/{id}', [PeminjamanController::class, 'destroy'])->middleware('admin');
 Route::get('Peminjaman/edit/deletebarang/{id}', [PeminjamanController::class, 'destroypeminjamanbarang'])->name('kembali')->middleware('admin');
 Route::get('PeminjamanPaket', [PeminjamanController::class, 'indexpaket'])->name('Peminjaman_paket')->middleware('admin');
@@ -138,6 +139,7 @@ Route::get('Pengembalian/add', [PengembalianController::class, 'create'])->name(
 Route::post('Pengembalian/post', [PengembalianController::class, 'store'])->name('post_Pengembalian')->middleware('admin');
 Route::get('Pengembalian/edit/{id}', [PengembalianController::class, 'edit'])->middleware('admin');
 Route::put('Pengembalian/update/{id}', [PengembalianController::class, 'update'])->middleware('admin');
+Route::get('Pengembalian/Kembalikan/{id}', [PengembalianController::class, 'Kembalikan'])->middleware('admin');
 Route::get('Pengembalian/delete/{id}', [PengembalianController::class, 'destroy'])->middleware('admin');
 Route::get('/laporan_Pengembalian', [PengembalianController::class,'indexlaporan'])->name('laporan_Pengembalian')->middleware('admin');
 Route::post('/laporan_pdf_Pengembalian', 'PengembalianController@cetakpertanggal')->middleware('admin');
@@ -151,7 +153,7 @@ Route::post('PenggunaMahasiswa/add/', [PenggunaController::class, 'store'])->nam
 Route::get('PenggunaMahasiswa/edit/{id}', [PenggunaController::class, 'edit'])->middleware('mahasiswa');
 Route::put('PenggunaMahasiswa/update/{id}', [PenggunaController::class, 'update'])->middleware('mahasiswa');
 Route::get('PenggunaMahasiswapaket', [PenggunaController::class, 'indexpaket'])->name('index_paket_pengguna')->middleware('multi');
-Route::post('PenggunaMahasiswapaket/add/{id}', [PenggunaController::class, 'storepaket'])->name('index_Peminjaman_paket')->middleware('mahasiswa');
+Route::post('PenggunaMahasiswapaket/add/{id}', [PenggunaController::class, 'storepaket'])->name('index_Peminjaman_paket')->middleware('multi');
 
 Route::get('PenggunaMahasiswaPengembalian', [PenggunaController::class, 'indexPengembalian'])->middleware('mahasiswa');
 Route::post('PenggunaMahasiswaPengembalian/add', [PenggunaController::class, 'storepengembalian'])->middleware('mahasiswa');

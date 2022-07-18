@@ -51,6 +51,8 @@
                                 <th>Tanggal</th>
                                 <th>Waktu</th>
                                 <th>Status</th>
+                                <th>Barang Diserahkan</th>
+                                <th>Keterangan</th>
                                 <th>Barang</th>
                             </tr>
                         </thead>
@@ -68,6 +70,7 @@
                             <td align="center">{{ $data->tanggal_peminjaman }}</td>
                             <td align="center">{{ $data->waktu_peminjaman }}</td>
                             <td align="center">{{ $data->status }}</td>
+                            <td align="center">{{ $data->Diserahkan }}</td>
                             <td align="center">
 							@foreach($barangP as $data1)
 							@foreach($barang as $data2)
@@ -78,6 +81,7 @@
 							@endforeach
 							@endforeach
 							</td>
+                            <td align="center">{{ $data->Keterangan }}</td>
                         </tr>
                         @endforeach
                     </table>

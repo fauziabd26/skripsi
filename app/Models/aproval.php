@@ -17,6 +17,7 @@ class aproval extends Model
 		'nama_peminjam',
 		'tanggal_peminjaman',
 		'waktu_peminjaman',
+		'Keterangan',
 	];
 	
 	public function allData()

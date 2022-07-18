@@ -15,7 +15,7 @@ class CreatePengembalians extends Migration
     {
         Schema::create('pengembalians', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('jumlah_pengembalian');
+            $table->string('kode_barang_pengembalian');
             $table->date('tanggal_pengembalian');
             $table->uuid('peminjaman_id');
             $table->uuid('kondisi_id');

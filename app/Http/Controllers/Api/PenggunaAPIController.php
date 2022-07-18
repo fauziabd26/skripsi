@@ -14,6 +14,7 @@ use App\Models\paket;
 use App\Models\peminjaman_paket;
 use App\Models\barang_paket;
 use App\Models\barang_peminjaman;
+use App\Models\barang_pengembalian;
 use Illuminate\Http\Request;
 use DB;
 use Session;
@@ -40,9 +41,15 @@ class PenggunaAPIController extends Controller
     }
     public function indexAPI()
     {
-        $data = Barang::join('kategoris', 'kategoris.id', '=', 'barangs.kategori_id')
-        ->join('satuans', 'satuans.id', '=', 'barangs.satuan_id')
-        ->get(['barangs.*', 'kategoris.name as kategori_name', 'satuans.name as satuan_name']);
+        $data = [
+                'Barang' => Barang::join('kategoris', 'kategoris.id', '=', 'barangs.kategori_id')
+							->join('satuans', 'satuans.id', '=', 'barangs.satuan_id')
+							->get(['barangs.*', 'kategoris.name as kategori_name', 'satuans.name as satuan_name']),
+				'Dosen' => Dosen::join('users', 'users.id', '=', 'dosens.user_id')
+							->get(['users.id as id_dosen','dosens.name']),
+            ];
+		
+		
         return response()->json($data, 200);
     }
 	
@@ -51,28 +58,30 @@ class PenggunaAPIController extends Controller
 		$data = aproval::join('barang_peminjamans', 'barang_peminjamans.kode', '=', 'aprovals.kode_barang_peminjaman')
         ->join('barangs','barangs.id','=','barang_peminjamans.id_barang')
         ->join('users', 'users.id', '=', 'aprovals.nama_peminjam')
-        ->join('mahasiswas', 'mahasiswas.id', '=', 'users.mahasiswa_id')
+        ->join('mahasiswas', 'mahasiswas.user_id', '=', 'users.id')
         ->get(['aprovals.*', 'mahasiswas.name as Nama_Mahasiswa','mahasiswas.nim as Nim_Mahasiswa','mahasiswas.kelas as Kelas_Mahasiswa','barangs.name as nama_barang','barang_peminjamans.jumlah as jumlah_barang']);
 		
         return response()->json($data, 200);
     }
 	
-	public function indexPengembalian(){
-		$data = peminjaman::join('users', 'users.id', '=', 'peminjamans.nama_peminjam')
-        ->join('mahasiswas', 'mahasiswas.id', '=', 'users.mahasiswa_id')
-        ->join('barang_peminjamans', 'barang_peminjamans.kode', '=', 'peminjamans.kode_barang_peminjaman')
-        ->join('barangs','barangs.id','=','barang_peminjamans.id_barang')
-		->where('peminjamans.status', '=', 'Dipinjam')
-        ->get(['peminjamans.*', 'mahasiswas.name as Nama_Mahasiswa','mahasiswas.nim as Nim_Mahasiswa','mahasiswas.kelas as Kelas_Mahasiswa','barangs.name as nama_barang','barang_peminjamans.jumlah as jumlah_barang']);
+	public function indexPengembalianAPI(){
+		$data = [
+                'Data_Peminjaman' => peminjaman::join('users', 'users.id', '=', 'peminjamans.nama_peminjam')
+							->join('mahasiswas', 'mahasiswas.user_id', '=', 'users.id')
+							->join('barang_peminjamans', 'barang_peminjamans.kode', '=', 'peminjamans.kode_barang_peminjaman')
+							->join('barangs','barangs.id','=','barang_peminjamans.id_barang')
+							->where('peminjamans.Dikembalikan', '=', 'Belum')
+							->get(['peminjamans.id as id_peminjaman','mahasiswas.name as Nama_Mahasiswa','mahasiswas.nim as Nim_Mahasiswa','mahasiswas.kelas as Kelas_Mahasiswa','peminjamans.tanggal_peminjaman as tanggal_peminjaman','peminjamans.waktu_peminjaman as waktu_peminjaman','barangs.id as id_barang','barangs.name as nama_barang','barang_peminjamans.jumlah as jumlah_peminjaman']),	
+				'Data_Kondisi' => kondisi::get(),
+            ];
+		
 		
         return response()->json($data, 200);
 	}
-	public function indexpaket()
+	public function indexpaketAPI()
     {
-       $data = paket::get();
-       $barang = barang::get();
-       $pbarang = barang_paket::get();
-       return view('Pengguna.Mahasiswa.Peminjaman.paket', compact('data','pbarang','barang'));
+       $data = paket::get(['pakets.id as id_paket','pakets.nama as nama_paket','pakets.kode as kode_paket', 'pakets.keterangan as keterangan_paket','pakets.jumlah as jumlah_paket']);
+        return response()->json($data, 200);
     }
 
     /**
@@ -80,15 +89,6 @@ class PenggunaAPIController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        $Barang = Barang::get();
-		$dosen = Dosen::join('users', 'users.dosen_id', '=', 'dosens.id')
-		->get(['dosens.*', 'users.id as id_dosen']);
-		$mahasiswa = Mahasiswa::join('users', 'users.mahasiswa_id', '=', 'mahasiswas.id')
-		->get(['mahasiswas.*', 'users.id as id_Mahasiswa']);
-		return view('Pengguna.Mahasiswa.Peminjaman.addBanyak', compact('Barang','dosen','mahasiswa'));
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -96,20 +96,8 @@ class PenggunaAPIController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function storeAPI(Request $request)
     {
-			Request()->validate([
-				'n_peminjam'       			=> 'required',
-				'namaDosen'       			=> 'required',
-				't_peminjaman'         		=> 'required',
-				'w_peminjaman'         		=> 'required',
-				],[
-					'n_peminjam.required'       =>'Nama Tidak Boleh Kosong',
-					'namaDosen.required'   		=>'Nama dosen Tidak Boleh Kosong',
-					't_peminjaman.required' 	=>'Tanggal Peminjaman Tidak Boleh Kosong',
-					'w_peminjaman.required' 	=>'Waktu Peminjaman Tidak Boleh Kosong',
-		
-				]);
 		foreach ($request->namaBarang as $key => $value) {
 			$barang0 = barang::findorfail($value);
 			$barang1 = $barang0->stok - $request->jumlahBarang[$key];
@@ -122,45 +110,43 @@ class PenggunaAPIController extends Controller
 		$aproval->id_dosen = $request->namaDosen;
 		$aproval->tanggal_peminjaman = $request->t_peminjaman;
 		$aproval->waktu_peminjaman = $request->w_peminjaman;
+		$aproval->Keterangan = $request->Keterangan;
 		if(!empty($kode)){
 			$aproval->kode_barang_peminjaman = $kode+1;
 		}if(empty($kode)){
 			$aproval->kode_barang_peminjaman = 1;
 		}
-		foreach ($request->namaBarang as $key => $value) {
-			if($request->namaBarang[$key] != "" && $request->jumlahBarang[$key] != ""){
-			$barang_peminjaman = new barang_peminjaman();
-			$barang = barang::findorfail($value);
-			$barang->stok -= $request->jumlahBarang[$key];
-			$barang->save();
-			$barang_peminjaman->id = Uuid::uuid4()->getHex();
-			$barang_peminjaman->id_barang = $request->namaBarang[$key];
-			if(!empty($kode)){
-			$barang_peminjaman->kode = $kode+1;
-			}if(empty($kode)){
-			$barang_peminjaman->kode = 1;
+			foreach ($request->namaBarang as $key => $value) {
+				if($request->namaBarang[$key] != "" && $request->jumlahBarang[$key] != ""){
+				$barang_peminjaman = new barang_peminjaman();
+				$barang = barang::findorfail($value);
+				$barang->stok -= $request->jumlahBarang[$key];
+				$barang->save();
+				$barang_peminjaman->id = Uuid::uuid4()->getHex();
+				$barang_peminjaman->id_barang = $request->namaBarang[$key];
+				if(!empty($kode)){
+				$barang_peminjaman->kode = $kode+1;
+				}if(empty($kode)){
+				$barang_peminjaman->kode = 1;
+				}
+				$barang_peminjaman->jumlah = $request->jumlahBarang[$key];
+				$barang_peminjaman->save();
+				}
+				else{
+					return response('[404] - Data barang tidak boleh kosong');
+				}
 			}
-			$barang_peminjaman->jumlah = $request->jumlahBarang[$key];
-			$barang_peminjaman->save();
-			}
-			else{
-				Session::flash('gagal','Data barang tidak boleh kosong');
-				return redirect()->back();
-			}
-		}
-		
-		Session::flash('sukses','Data Berhasil Terkirim');
 		}
 		else{
-			Session::flash('gagal','Maaf Barang Sedang Tidak ada atau kurang');
-			return redirect()->back();
+			return response('[404] - Maaf Barang Sedang Tidak ada atau kurang');
 		}
 		$aproval->save();
-		return redirect('PenggunaMahasiswa');
+		return response('[200] - Data Berhasil Disimpan');
     }
 	
-	public function storedosen(Request $request,$id)
+	public function storedosenAPI(Request $request,$id)
     {
+		$del = aproval::findorfail($id);
         $peminjaman = new peminjaman;
 		$peminjaman->id = Uuid::uuid4()->getHex();
 		$peminjaman->kode_barang_peminjaman = $request->k_barang;
@@ -168,56 +154,47 @@ class PenggunaAPIController extends Controller
 		$peminjaman->nama_peminjam = $request->n_peminjam;
 		$peminjaman->tanggal_peminjaman = $request->t_peminjaman;
 		$peminjaman->waktu_peminjaman = $request->w_peminjaman;
-		$peminjaman->aprovals = $request->aproval;
-		$peminjaman->status = $request->status;
+		$peminjaman->aprovals = "Ya";
+		$peminjaman->status = "Dipinjam";
+		$peminjaman->Diserahkan = "Belum";
+		$peminjaman->Dikembalikan = "Belum";
+		$peminjaman->Keterangan = $del->Keterangan;
 		$peminjaman->save();
 		
-		$del = aproval::findorfail($id);
 		$del->delete();
 		
-		Session::flash('sukses','Data Berhasil disetujui dan Terkirim');
-		return redirect('PenggunaDosen');
+		return response('[200] - Data Berhasil Disimpan');
     }
 	
-	public function storeaproval(Request $request,$id)
+	public function storepengembalianAPI(Request $request)
     {
-        $peminjaman = new peminjaman;
-		$peminjaman->id = Uuid::uuid4()->getHex();
-		$peminjaman->kode_barang_peminjaman = $request->k_barang;
-		$peminjaman->id_dosen = $request->id_dosen;
-		$peminjaman->nama_peminjam = $request->n_peminjam;
-		$peminjaman->tanggal_peminjaman = $request->t_peminjaman;
-		$peminjaman->waktu_peminjaman = $request->w_peminjaman;
-		$peminjaman->aprovals = $request->aproval;
-		$peminjaman->status = $request->status;
-		$peminjaman->save();
-		
-		$del = aproval::findorfail($id);
-		$del->delete();
-		
-		Session::flash('sukses','Data Berhasil disetujui dan Terkirim');
-		return redirect('Aproval');
-    }
-	
-	public function storepengembalian(Request $request)
-    {
-			Request()->validate([
-				't_Pengembalian'       			=> 'required',
-				'j_Pengembalian'       			=> 'required',
-				'kondisi'         				=> 'required',
-				],[
-					't_Pengembalian.required'       =>'Tanggal Tidak Boleh Kosong',
-					'j_Pengembalian.required'   	=>'Jumlah Tidak Boleh Kosong',
-					'kondisi.required' 				=>'Kondisi Tidak Boleh Kosong',
-				]);
+		$kode = barang_pengembalian::max('kode');
         $pengembalian = new pengembalian;
 		$pengembalian->id = Uuid::uuid4()->getHex();
-		$pengembalian->peminjaman_id = $request->n_peminjam;
+		$pengembalian->peminjaman_id = $request->id_peminjaman;
 		$pengembalian->tanggal_pengembalian = $request->t_Pengembalian;
-		$pengembalian->jumlah_pengembalian = $request->j_Pengembalian;
 		$pengembalian->kondisi_id = $request->kondisi;
+		if(!empty($kode)){
+			$pengembalian->kode_barang_pengembalian = $kode+1;
+		}if(empty($kode)){
+			$pengembalian->kode_barang_pengembalian = 1;
+		}
 		
-		$id_peminjaman = $request->n_peminjam;
+		
+		foreach ($request->namaBarang as $key => $value) {
+			$barang_pengembalian = new barang_pengembalian();
+			$barang_pengembalian->id = Uuid::uuid4()->getHex();
+			$barang_pengembalian->id_barang = $request->namaBarang[$key];
+			if(!empty($kode)){
+			$barang_pengembalian->kode = $kode+1;
+			}if(empty($kode)){
+			$barang_pengembalian->kode = 1;
+			}
+			$barang_pengembalian->jumlah = $request->j_Pengembalian[$key];
+			$barang_pengembalian->save();
+		}
+		
+		$id_peminjaman = $request->id_peminjaman;
 		
 		$peminjaman = peminjaman::findorfail($id_peminjaman);
 		$peminjaman->status = "Dikembalikan";
@@ -225,11 +202,10 @@ class PenggunaAPIController extends Controller
 		$peminjaman->save();
 		$pengembalian->save();
 		
-		Session::flash('sukses','Data Pengembalian Berhasil Terkirim');
-		return redirect('PenggunaMahasiswaPengembalian');
+		return response('[200] - Data Berhasil Disimpan');
     }
 
-	public function storepaket(Request $request, $id)
+	public function storepaketAPI(Request $request, $id)
     {
 		$paket = paket::findorfail($id);
 		$ifjumlah = $paket->jumlah - $request->j_peminjam;
@@ -237,20 +213,20 @@ class PenggunaAPIController extends Controller
 			$paket->jumlah -= $request->j_peminjam;
 			$peminjaman_paket = new peminjaman_paket;
 			$peminjaman_paket->id = Uuid::uuid4()->getHex();
-			$peminjaman_paket->kode_paket = $request->k_paket;
+			$peminjaman_paket->kode_paket = $request->id_paket;
 			$peminjaman_paket->nama_peminjam = $request->n_peminjam;
 			$peminjaman_paket->jumlah_peminjaman = $request->j_peminjam;
 			$peminjaman_paket->tanggal_peminjaman = $request->t_peminjaman;
 			$peminjaman_paket->waktu_peminjaman = $request->w_peminjaman;
+			$peminjaman_paket->Keterangan = $request->Keterangan;
 			$paket->save();
 			$peminjaman_paket->save();
 		}
 		else{
-			Session::flash('gagal','Maaf Barang Sedang Tidak ada atau kurang');
-			return redirect()->back();
+			return response('[200] - Maaf Barang Sedang Tidak ada atau kurang');
 		}
-		Session::flash('sukses','Data Pengembalian Berhasil Terkirim');
-		return redirect('PenggunaMahasiswapaket');
+		
+		return response('[200] - Data Berhasil Disimpan');
     }
 	
     /**
@@ -297,7 +273,7 @@ class PenggunaAPIController extends Controller
      * @param  \App\Models\barang  $barang
      * @return \Illuminate\Http\Response
      */
-    public function destroyAproval($id)
+    public function destroyAprovalAPI($id)
     {
 		$del = aproval::findorfail($id);
 		$kode = $del->kode_barang_peminjaman;
@@ -316,7 +292,7 @@ class PenggunaAPIController extends Controller
 			}
 		}
 		$del->delete();
-		return redirect('PenggunaDosen');
+		return response('[200] - Data Berhasil Dihapus');
     }
     public function destroyAprovalAdmin($id)
     {

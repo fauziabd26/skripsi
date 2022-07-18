@@ -68,6 +68,15 @@ class PeminjamanController extends Controller
 		return view('peminjaman.add', compact('kategoris','satuans','Barang','dosen','mahasiswa'));
     }
 
+	
+    public function Serahkan($id)
+    {
+		$Serahkan = peminjaman::findorfail($id);
+		$Serahkan->Diserahkan = "Sudah";
+		$Serahkan->save();
+		return redirect()->back();
+    }
+	
     /**
      * Store a newly created resource in storage.
      *
@@ -80,10 +89,12 @@ class PeminjamanController extends Controller
 				'nama_peminjam'       			=> 'required',
 				'tanggal_peminjaman'       		=> 'required',
 				'waktu_peminjaman'         		=> 'required',
+				'Keterangan'     				=> 'required',
 				],[
 					'nama_peminjam.required'       	=>'Nama Tidak Boleh Kosong',
 					'tanggal_peminjaman.required'   =>'Tanggal Tidak Boleh Kosong',
 					'waktu_peminjaman.required' 	=>'Waktu Peminjaman Tidak Boleh Kosong',
+					'Keterangan.required' 			=>'Keterangan Tidak Boleh Kosong',
 		
 				]);
 		foreach ($request->namaBarang as $key => $value) {
@@ -98,8 +109,11 @@ class PeminjamanController extends Controller
 		$peminjaman->nama_peminjam = $request->nama_peminjam;
 		$peminjaman->tanggal_peminjaman = $request->tanggal_peminjaman;
 		$peminjaman->waktu_peminjaman = $request->waktu_peminjaman;
+		$peminjaman->Keterangan = $request->Keterangan;
 		$peminjaman->status = $request->status;
 		$peminjaman->aprovals = $request->aproval;
+		$peminjaman->Diserahkan = "Belum";
+		$peminjaman->Dikembalikan = "Belum";
 		if(!empty($kode)){
 			$peminjaman->kode_barang_peminjaman = $kode+1;
 		}if(empty($kode)){
@@ -221,6 +235,7 @@ class PeminjamanController extends Controller
 		$kem->jumlah_peminjaman = $request->jumlahPaket;
 		$kem->tanggal_peminjaman = $request->tanggal_peminjaman;
 		$kem->waktu_peminjaman = $request->waktu_peminjaman;
+		$kem->Keterangan = $request->Keterangan;
         
 		$kem->save();
 		Session::flash('sukses','Data peminjaman Berhasil Ditambah');
@@ -246,6 +261,7 @@ class PeminjamanController extends Controller
 				'namaBarang1'     				=> 'required',
 				'aprovals'   					=> 'required',
 				'status'     					=> 'required',
+				'Keterangan'     				=> 'required',
 				],[
 					'nama_peminjam.required'       	=>'Nama Tidak Boleh Kosong',
 					'tanggal_peminjaman.required'   =>'Tanggal Tidak Boleh Kosong',
@@ -253,6 +269,7 @@ class PeminjamanController extends Controller
 					'waktu_peminjaman.required' 	=>'Waktu Peminjaman Tidak Boleh Kosong',
 					'namaBarang1.required'   		=>'Nama Barang Atau Jumlah Barang Tidak Boleh Kosong',
 					'aprovals.required' 			=>'Aproval Tidak Boleh Kosong',
+					'Keterangan.required'   		=>'Keterangan Tidak Boleh Kosong',
 					'status.required'   			=>'Status Barang Tidak Boleh Kosong',
 					'dynamic_field.required'   		=>'Form Tidak Boleh Kosong',
 		
@@ -275,6 +292,7 @@ class PeminjamanController extends Controller
 			$kem->nama_peminjam = $request->nama_peminjam;
 			$kem->tanggal_peminjaman = $request->tanggal_peminjaman;
 			$kem->waktu_peminjaman = $request->waktu_peminjaman;
+			$kem->Keterangan = $request->Keterangan;
 			$kem->aprovals = $request->aprovals;
 			$kem->status = $request->status;
 			$kem->update();

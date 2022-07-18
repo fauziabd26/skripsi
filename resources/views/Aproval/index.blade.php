@@ -71,20 +71,6 @@
                     </div>
                     <div class="modal-body">
 						<div class="container-fluid">
-						@foreach($peminjaman as $bp)
-						@foreach($barang as $b)
-							<?php if ($p->kode_barang_peminjaman == $bp->kode && $bp->id_barang == $b->id) { ?>
-                            <div class="row">
-                                <div class="col-md-4">Nama Barang</div>
-                                <div class="col-md-6 ms-auto">{{ $b->name }}</div>
-                            </div><br>
-							<div class="row">
-                                <div class="col-md-4">Jumlah Peminjaman</div>
-                                <div class="col-md-6 ms-auto">{{ $bp->jumlah }}</div>
-                            </div><br>
-							<?php } ?>
-                        @endforeach
-                        @endforeach
 						@foreach($mahasiswa as $m)
 						<?php if ($m->Mahasiswa_id == $p->id_Mahasiswa) { ?>
 							<div class="row">
@@ -109,6 +95,31 @@
                                 <div class="col-md-4">waktu Peminjaman</div>
                                 <div class="col-md-6 ms-auto">{{ $p->waktu_peminjaman }}</div>
                             </div><br>
+							
+                    <table id="example1" class="table table-bordered table-hover">
+                        <thead class="thead-dark" align="center">
+                            <tr>
+                                <th>NO</th>
+                                <th>Nama Barang</th>
+                                <th>Jumlah</th>
+                            </tr>
+                        </thead>
+                        <?php 
+							$nobarang = 1;
+						?>
+						@foreach($peminjaman as $bp)
+						@foreach($barang as $b)
+							<?php if ($p->kode_barang_peminjaman == $bp->kode && $bp->id_barang == $b->id) { ?>
+                        <tr>
+                            <td align="center">{{ $nobarang++ }}</td>
+                            <td align="center">{{ $b->name }}</td>
+                            <td align="center">{{ $bp->jumlah }}</td>
+                        </tr>
+							<?php } ?>
+                        @endforeach
+                        @endforeach
+                    </table>
+					
                         </div>
                     </div>
                     <div class="modal-footer">
