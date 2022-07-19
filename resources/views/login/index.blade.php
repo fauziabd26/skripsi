@@ -19,6 +19,10 @@
 </head>
 
 <body>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+    
   <div id="app">
     <section class="section">
       <div class="container mt-5">
@@ -69,7 +73,14 @@
                           </a>
                         </div>
                     </div>
-                    <input id="password" type="password" class="form-control" name="password" tabindex="2" required>
+                    <div class="form-group">
+                    <div class="input-group" id="show_hide_password">
+                        <input type="password" name='password' class="form-control" name="password" required autocomplete="current-password">
+                        <div class="input-group-append">
+                            <a href="" class="btn btn-outline-secondary"><i class="fas fa-eye" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                </div>   
                     <div class="text-danger">
                         @error('password')
                         {{ $message }}
@@ -108,5 +119,24 @@
   <script src="{{asset('stisla')}}/assets/js/custom.js"></script>
 
   <!-- Page Specific JS File -->
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+        <script>
+            $(document).ready(function() {
+            $("#show_hide_password a").on('click', function(event) {
+                event.preventDefault();
+                if($('#show_hide_password input').attr("type") == "text"){
+                    $('#show_hide_password input').attr('type', 'password');
+                    $('#show_hide_password i').addClass( "bi bi-eye-slash" );
+                    $('#show_hide_password i').removeClass( "bi bi-eye" );
+                }else if($('#show_hide_password input').attr("type") == "password"){
+                    $('#show_hide_password input').attr('type', 'text');
+                    $('#show_hide_password i').removeClass( "bi bi-eye-slash" );
+                    $('#show_hide_password i').addClass( "bi bi-eye" );
+                }
+            });
+            });
+        </script>
 </body>
 </html>

@@ -20,7 +20,7 @@ class UserActivity
     public function handle(Request $request, Closure $next)
     {
         if (Auth::check()) {
-            $expiresAt = now()->addMinutes(2); /* keep online for 2 min */
+            $expiresAt = now()->addSeconds(1); /* keep online for 1 sec */
             Cache::put('user-is-online-' . Auth::user()->id, true, $expiresAt);
   
             /* last seen */
