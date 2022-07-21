@@ -41,10 +41,7 @@
                                @enderror
                             </div>
                         </div>
-                        
-                    </div>
-                    <div class="row">
-                       <div class="form-group col-6 col-md-3 col-lg-3">
+                        <div class="form-group col-6 col-md-3 col-lg-3">
                             <label class="control-label" for="k_name">Pilih Kategori Barang</label>
                             <select name="kategori_id" class="form-control">
                                 <option disabled> Semua Kategori </option>
@@ -72,9 +69,22 @@
                                @enderror
                             </div>
                         </div>
-                        
                     </div>
                     <div class="row">
+                    <div class="form-group col-6 col-md-3 col-lg-3">
+                            <label class="control-label" for="kondisi_id">Pilih Kondisi Barang</label>
+                            <select name="kondisi_id" class="form-control">
+                                <option disabled>Pilih Kondisi Barang </option>
+                                @foreach ($kondisis as $data)
+                                <option value="{{ $data->id }}">{{ $data->name }}</option> 
+                                @endforeach
+                            </select>
+                            <div class="text-danger">
+                               @error('kondisi_id')
+                                   {{ $message }}
+                               @enderror
+                            </div>
+                        </div>
                         <div class="form-group col-6 col-md-3 col-lg-3">
                             <label class="control-label" for="file">Ganti Gambar Barang</label>
                             <input type="file" name="file" accept=".jpg, .png, .jpeg" class="form-control">

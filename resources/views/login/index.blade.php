@@ -52,8 +52,8 @@
                 </div>
               @endif
               <div class="card-body">
-                <form method="POST" action="{{ route('post_login') }}">
-                  @csrf
+              <form method="POST" action="{{ route('post_login') }}">
+                @csrf
                   <div class="form-group">
                     <label for="name">Nama Lengkap</label>
                     <input id="name" type="text" class="form-control" name="name" tabindex="1" value="{{ old('name') }}" required autocomplete="username" autofocus>
@@ -61,32 +61,33 @@
                         @error('name')
                         {{ $message }}
                         @enderror
-                      </div>
+                    </div>
                   </div>
 
                   <div class="form-group">
                     <div class="d-block">
                     	<label for="password" class="control-label">Password</label>
-                        <div class="float-right">
-                          <a href="{{ route('user.password.forgot') }}" class="text-small">
+                      <div class="float-right">
+                        <a href="{{ route('user.password.forgot') }}" class="text-small">
                           Forgot Password?
-                          </a>
-                        </div>
+                        </a>
+                      </div>
                     </div>
                     <div class="form-group">
                     <div class="input-group" id="show_hide_password">
-                        <input type="password" name='password' class="form-control" name="password" required autocomplete="current-password">
-                        <div class="input-group-append">
+                      <input id="password" type="password" class="form-control" name="password" tabindex="2" required>
+                      <div class="input-group-append">
                             <a href="" class="btn btn-outline-secondary"><i class="fas fa-eye" aria-hidden="true"></i></a>
                         </div>
+                        <div class="text-danger">
+                          @error('password')
+                          {{ $message }}
+                          @enderror
+                        </div>
                     </div>
-                </div>   
-                    <div class="text-danger">
-                        @error('password')
-                        {{ $message }}
-                        @enderror
-                      </div>
+                    </div>
                   </div>
+
                   <div class="form-group">
                     <button type="submit" class="btn btn-primary btn-lg btn-block" tabindex="4">
                       Login

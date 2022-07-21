@@ -119,16 +119,16 @@
                                 <div class="col-md-6 ms-auto">{{ $data->stok }}</div>
                             </div>
                             <div class="row">
+                                <div class="col-md-4">Kondisi Barang</div>
+                                <div class="col-md-6 ms-auto">{{ !empty($data->kondisi->name) ? $data->kondisi->name:'' }}</div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-4">Kategori Barang</div>
                                 <div class="col-md-6 ms-auto">{{ !empty($data->kategori->name) ? $data->kategori->name:'' }}</div>
                             </div>
                             <div class="row">
                                 <div class="col-md-4">Satuan Barang</div>
                                 <div class="col-md-6 ms-auto">{{ !empty($data->satuan->name) ? $data->satuan->name:'' }}</div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">Nama Konsumen</div>
-                                <div class="col-md-6 ms-auto">{{ !empty($data->barangmasuk->nama_konsumen) ? $data->barangmasuk->nama_konsumen:'' }}</div>
                             </div>
                             <div class="row">
                                 <div class="col-md-4">Gambar Barang</div>

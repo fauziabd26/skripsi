@@ -79,7 +79,7 @@ class HomeController extends Controller
         $kategoris = Kategori::all();
         $satuans = Satuan::all();
         $barangmasuk = BarangMasuk::all();
-        $barang = Barang::with('kategori','satuan','barangmasuk')->latest()->paginate(5);
+        $barang = Barang::with('kategori','satuan','barangmasuk','kondisi')->latest()->paginate(5);
         $names = Barang::select('name')
                            ->groupBy('name')
                            ->get();

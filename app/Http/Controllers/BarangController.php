@@ -7,6 +7,7 @@ use App\Imports\BarangImport;
 use App\Models\Barang;
 use App\Models\BarangMasuk;
 use App\Models\Kategori;
+use App\Models\Kondisi;
 use App\Models\Satuan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -43,7 +44,8 @@ class BarangController extends Controller
     {
         $kategoris = Kategori::all();
         $satuans = Satuan::all();
-        return view('barang.add', compact('kategoris','satuans'));
+        $kondisis = Kondisi::all();
+        return view('barang.add', compact('kategoris','satuans','kondisis'));
     }
 
     /**
@@ -59,6 +61,7 @@ class BarangController extends Controller
         'stok'          => 'required|min:0',
         'kategori_id'   => 'required',
         'satuan_id'     => 'required',
+        'satuan_id'     => 'required',
         'file'          => 'mimes:jpeg,jpg,png|max:2048kb',
         ],[
             'name.required'         =>'Nama Barang tidak boleh kosong',
@@ -66,6 +69,7 @@ class BarangController extends Controller
             'stok.min'              =>'stok minimal 0',
             'kategori_id.required'  =>'Kategori Barang tidak boleh kosong',
             'satuan_id.required'    =>'Satuan Barang tidak boleh kosong',
+            'kondisi_id.required'    =>'Kondisi Barang tidak boleh kosong',
             'file.mimes'            =>'Format gambar harus jpeg/jpg/png',
             'file.max'              =>'Ukuran Max Foto Barang 2 Mb',
         ]);
@@ -77,6 +81,7 @@ class BarangController extends Controller
         $data->stok         = $request->stok;
         $data->kategori_id  = $request->kategori_id;
         $data->satuan_id    = $request->satuan_id;
+        $data->kondisi_id    = $request->kondisi_id;
         $data->created_at = date('Y-m-d');
         $data->updated_at = date('Y-m-d');
 
@@ -118,10 +123,11 @@ class BarangController extends Controller
      */
     public function edit(barang $barang, $id)
     {
-        $barang = Barang::with('kategori','satuan')->findOrFail($id);
+        $barang = Barang::with('kategori','satuan','kondisi')->findOrFail($id);
         $kategoris = Kategori::all();
         $satuans = Satuan::all();
-        return view('barang.edit',compact('barang','kategoris','satuans'));
+        $kondisis = Kondisi::all();
+        return view('barang.edit',compact('barang','kategoris','satuans','kondisis'));
     }
 
     /**
