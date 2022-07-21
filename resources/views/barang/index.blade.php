@@ -120,11 +120,15 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-4">Kategori Barang</div>
-                                <div class="col-md-6 ms-auto">{{ !empty($data->kategori) ? $data->kategori->name:'' }}</div>
+                                <div class="col-md-6 ms-auto">{{ !empty($data->kategori->name) ? $data->kategori->name:'' }}</div>
                             </div>
                             <div class="row">
                                 <div class="col-md-4">Satuan Barang</div>
-                                <div class="col-md-6 ms-auto">{{ !empty($data->satuan) ? $data->satuan->name:'' }}</div>
+                                <div class="col-md-6 ms-auto">{{ !empty($data->satuan->name) ? $data->satuan->name:'' }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">Nama Konsumen</div>
+                                <div class="col-md-6 ms-auto">{{ !empty($data->barangmasuk->nama_konsumen) ? $data->barangmasuk->nama_konsumen:'' }}</div>
                             </div>
                             <div class="row">
                                 <div class="col-md-4">Gambar Barang</div>
@@ -148,6 +152,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+            <a href="getfile/?file=Format.xlsx">Download Format</a>
             <form action="{{route('import_barang')}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
@@ -163,6 +168,7 @@
                 <div class="input-group mb-3">
                     <input type="file" name="file" class="form-control" accept=".xml,.xls, .xlsx">
                     <button type="submit" class="btn btn-primary mb-1">Submit</button>
+                    
                 </div>
             </form>
         </div>

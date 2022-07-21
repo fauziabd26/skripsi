@@ -16,14 +16,17 @@ class CreateBarangMasuksTable extends Migration
         Schema::create('barang_masuks', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->date('tggl_masuk')->nullable();
-            $table->string('stok_awal')->nullable();
-            $table->string('nama_konsumen')->nullable();
+            $table->string('stok')->nullable();
             $table->uuid('barang_id');
             $table->foreign('barang_id')->references('id')->on('barangs')
+                ->onUpdate('cascade')->onDelete('cascade');
+            $table->uuid('suppliers_id');
+            $table->foreign('suppliers_id')->references('id')->on('suppliers')
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();
+
         });
     }
 

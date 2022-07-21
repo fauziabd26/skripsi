@@ -6,6 +6,7 @@ use App\Models\Barang;
 use App\Models\BarangMasuk;
 use App\Models\Kategori;
 use App\Models\Satuan;
+use App\Models\Suppliers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
@@ -24,11 +25,11 @@ class BarangMasukController extends Controller
      */
     public function index()
     {
-        $kategoris  = Kategori::all();
-        $satuans    = Satuan::all();
-        $datas      = BarangMasuk::with('barang','kategori','satuan')->paginate(5);
-        $barang     = Barang::with('kategori','satuan')->paginate(5);
-        return view('barangmasuk.index', compact('datas','satuans','kategoris','barang'));
+        $datas  = Suppliers::has('barangmasuk')
+            ->with('barangmasuk','barangmasuk.barang')
+            ->withCount('barangmasuk')
+            ->paginate(5);
+        return view('barangmasuk.index', compact('datas'));
     }
 
     /**
@@ -38,9 +39,9 @@ class BarangMasukController extends Controller
      */
     public function create()
     {
-        $kategoris = Kategori::all();
-        $satuans = Satuan::all();
-        return view('barangmasuk.add', compact('kategoris','satuans'));
+        $barang = Barang::all();
+        $suppliers = Suppliers::all();
+        return view('barangmasuk.add', compact('barang','suppliers'));
     }
 
     /**
@@ -52,55 +53,28 @@ class BarangMasukController extends Controller
     public function store(Request $request)
     {
         Request()->validate([
-            'name'          => 'required',
-            'nama_konsumen' => 'required',
-            'stok'          => 'required|min:0',
-            'kategori_id'   => 'required',
-            'satuan_id'     => 'required',
             'tggl_masuk'    => 'required',
-            'file'          => 'mimes:jpeg,jpg,png|max:2048kb',
+            'stok'     => 'required|min:0',
+            'barang_id'     => 'required',
+            'suppliers_id'  => 'required',
         ],[
-            'name.required'         =>'Nama Barang tidak boleh kosong',
-            'nama_konsumen.required'=>'Nama Konsumen tidak boleh kosong',
-            'stok.required'         =>'stok tidak boleh kosong',
-            'stok.min'              =>'stok minimal 0',
-            'kategori_id.required'  =>'Kategori Barang tidak boleh kosong',
-            'satuan_id.required'    =>'Satuan Barang tidak boleh kosong',
             'tggl_masuk.required'   =>'Tanggal Masuk tidak boleh kosong',
-            'file.mimes'            =>'Format gambar harus jpeg/jpg/png',
-            'file.max'              =>'Ukuran Max Foto Barang 2 Mb'
+            'stok.required'    =>'stok tidak boleh kosong',
+            'stok.min'         =>'stok minimal 0',
+            'barang_id.required'    =>'Nama Barang tidak boleh kosong',
+            'suppliers_id.required' =>'Nama Suppliers tidak boleh kosong',
         ]);
-
-        
-        
-        $barang = new Barang;
-        $barang->id             = Uuid::uuid4()->getHex();
-        $barang->name           = $request->name;
-        $barang->stok           = $request->stok;
-        $barang->kategori_id    = $request->kategori_id;
-        $barang->satuan_id      = $request->satuan_id;
-        if (empty($request->file('file')))
-        {
-            $barang->file = NULL;
-        }
-        else
-        {
-            //upload gambar
-            $file      = $request->file('file');
-            $fileName  = time() . "_" . $file->getClientOriginalName();
-            $file->move(public_path('img/barang/'), $fileName);
-            $barang->file = $fileName;
-
-        }
-        
         $data = new BarangMasuk;
         $data->id               = Uuid::uuid4()->getHex();
         $data->tggl_masuk       = $request->tggl_masuk;
-        $data->stok_awal        = $barang->stok;
-        $data->nama_konsumen    = $request->nama_konsumen;
-        $data->barang_id        = $barang->id;        
-        $barang->save();
+        $data->stok        = $request->stok;   
+        $data->barang_id        = $request->barang_id;
+        $data->suppliers_id     = $request->suppliers_id;        
         $data->save();
+
+        $barang = Barang::findOrFail($request->barang_id);
+        $barang->stok += $request->stok;
+        $barang->save();
         return redirect()->route('index_barang_masuk')->with('pesan','Data Berhasil Disimpan');
     }
 
@@ -123,7 +97,9 @@ class BarangMasukController extends Controller
      */
     public function edit($id)
     {
-        //
+        $barangmasuk = BarangMasuk::find($id);
+        $suppliers = Suppliers::all();
+        return view('barangmasuk.edit', compact('barangmasuk','suppliers'));
     }
 
     /**
@@ -135,7 +111,27 @@ class BarangMasukController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        Request()->validate([
+            'tggl_masuk'    => 'required',
+            'stok'     => 'required|min:0',
+            'suppliers_id'  => 'required',
+        ],[
+            'tggl_masuk.required'   =>'Tanggal Masuk tidak boleh kosong',
+            'stok.required'    =>'stok tidak boleh kosong',
+            'stok.min'         =>'stok minimal 0',
+            'suppliers_id.required' =>'Nama Suppliers tidak boleh kosong',
+        ]);
+        $barangmasuk = BarangMasuk::findOrFail($id);
+        $barangmasuk->tggl_masuk    = $request->tggl_masuk;
+        $barangmasuk->stok          = $request->stok;
+        $barangmasuk->suppliers_id  = $request->suppliers_id;        
+        $barangmasuk->save();
+        
+        $barang = Barang::findOrFail($barangmasuk->barang_id);
+        $barang->stok += $request->stok;
+        $barang->save();
+        return redirect()->route('index_barang_masuk')->with('pesan','Data Berhasil Disimpan');
+        
     }
 
     /**
@@ -148,7 +144,6 @@ class BarangMasukController extends Controller
     {
         try {
             $barangmasuk = BarangMasuk::find($barang_id);
-            $barangmasuk->barang()->delete();
             $barangmasuk->delete();                           
         return redirect()->route('index_barang_masuk')->with('delete', 'Data Berhasil Dihapus');
         } catch (\Throwable $th) {

@@ -12,17 +12,14 @@ class BarangMasuk extends Model
     use SoftDeletes, HasFactory;
     public $incrementing = false;
     protected $table="barang_masuks";
-	protected $fillable=['id','tggl_masuk','stok_awal','nama_konsumen','barang_id'];
+	protected $fillable=['id','tggl_masuk','stok_awal','nama_konsumen','barang_id','suppliers_id'];
     public function barang()
     {
         return $this->belongsTo(Barang::class);
     }
-    public function kategori()
+    public function suppliers()
     {
-        return $this->belongsTo(Kategori::class);
+        return $this->belongsTo(Suppliers::class);
     }
-    public function satuan()
-    {
-        return $this->belongsTo(Satuan::class);
-    }
+
 }

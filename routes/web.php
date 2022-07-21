@@ -86,6 +86,8 @@ Route::get('/guru/hapus_permanen_semua', [BarangController::class, 'hapus_perman
 Route::post('/laporan_masuk', 'BarangController@cetakpertanggal');
 Route::get('/laporan_excel', 'BarangController@export');
 Route::post('/import_barang', [BarangController::class, 'import'])->name('import_barang')->middleware('admin');
+Route::get('getfile', [BarangController::class, 'getFile'])->name('getfile');
+Route::get('getfile_public', [BarangController::class, 'getFile_public'])->name('getfilePublic');
 
 //Route Kategori
 use App\Http\Controllers\KategoriController;
@@ -104,11 +106,23 @@ Route::get('/satuan/edit/{id}', [SatuanController::class, 'edit'])->name('edit_s
 Route::put('/satuan/update/{id}', [SatuanController::class, 'update'])->name('update_satuan')->middleware('admin');
 Route::get('/satuan/delete{id}', [SatuanController::class, 'destroy'])->name('destroy_satuan')->middleware('admin');
 
+//Route Suppliers
+use App\Http\Controllers\SuppliersController;
+Route::get('/suppliers', [SuppliersController::class, 'index'])->name('index_suppliers')->middleware('admin');
+Route::get('/suppliers/add', [SuppliersController::class, 'create'])->name('tambah_suppliers')->middleware('admin');
+Route::post('/suppliers/post', [SuppliersController::class, 'store'])->name('post_suppliers')->middleware('admin');
+Route::get('/suppliers/edit/{id}', [SuppliersController::class, 'edit'])->name('edit_suppliers')->middleware('admin');
+Route::put('/suppliers/update/{id}', [SuppliersController::class, 'update'])->name('update_suppliers')->middleware('admin');
+Route::get('/suppliers/delete{id}', [SuppliersController::class, 'destroy'])->name('destroy_suppliers')->middleware('admin');
+Route::get('/search_suppliers', [SuppliersController::class, 'search'])->name('cari_suppliers');
+
 //Route Barang Masuk
 use App\Http\Controllers\BarangMasukController;
 Route::get('/barang_masuk', [BarangMasukController::class, 'index'])->name('index_barang_masuk')->middleware('admin');
 Route::get('/barang_masuk/add', [BarangMasukController::class, 'create'])->name('tambah_barang_masuk')->middleware('admin');
 Route::post('/barangmasuk/post', [BarangMasukController::class, 'store'])->name('post_barangmasuk')->middleware('admin');
+Route::get('/barang_masuk/edit/{id}', [BarangMasukController::class, 'edit'])->name('edit_barang_masuk')->middleware('admin');
+Route::put('/barang_masuk/update{id}', [BarangMasukController::class, 'update'])->name('update_barang_masuk')->middleware('admin');
 Route::get('/barang_masuk/delete{id}', [BarangMasukController::class, 'destroy'])->name('destroy_barang_masuk')->middleware('admin');
 
 //Route Peminjaman

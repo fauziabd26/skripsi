@@ -63,8 +63,7 @@
   <script src="{{asset('stisla')}}/assets/js/scripts.js"></script>
   <script src="{{asset('stisla')}}/assets/js/custom.js"></script>
   <script src="{{asset('stisla')}}/assets/js/page/components-statistic.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+  @yield('footer')
 
   <!-- Page Specific JS File -->
   <script src="{{asset('stisla')}}/assets/js/page/index-0.js"></script>

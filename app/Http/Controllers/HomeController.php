@@ -7,11 +7,13 @@ use App\Models\User;
 use App\Models\Mahasiswa;
 use App\Models\Barang;
 use App\Models\aproval;
+use App\Models\BarangMasuk;
 use App\Models\Dosen;
 use App\Models\peminjaman;
 use App\Models\Kategori;
 use App\Models\pengembalian;
 use App\Models\Satuan;
+use App\Models\Suppliers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Stmt\Do_;
@@ -41,20 +43,22 @@ class HomeController extends Controller
         $dosen = Dosen::count();
         $peminjaman = peminjaman::count();
         $pengembalian = pengembalian::count();
+        $namakonsumen = Suppliers::all();
+        $hitung_suppliers = Suppliers::count();
+        $barangmasuk = BarangMasuk::count();
+        $online = User::select("*")
+            ->whereNotNull('last_seen')
+            ->orderBy('last_seen', 'DESC')
+            ->paginate(5);
+        $suppliers = [];
+        $grafik_stok =[];
+        foreach ($namakonsumen as $data ) {
+            # code...
+            $suppliers[]=$data->name;
+            $grafik_stok[]=BarangMasuk::where('suppliers_id', $data->id)->sum('stok');
+        }
 
-        $stok=Barang::select(DB :: raw("CAST(SUM(stok)as int)as stok"))
-                ->GroupBy(DB :: raw("Month(created_at)"))
-                ->pluck('stok');
-        $bulan=Barang::select(DB :: raw("MONTHNAME(created_at)as bulan"))
-                ->GroupBy(DB :: raw("MONTHNAME(created_at)"))
-                ->pluck('bulan');
-
-                $online = User::select("*")
-                            ->whereNotNull('last_seen')
-                            ->orderBy('last_seen', 'DESC')
-                            ->paginate(5);
-
-        return view('dashboard.index', compact('user','mahasiswa','barang','dosen','peminjaman','pengembalian','stok','bulan','online'));
+        return view('dashboard.index', compact('user','mahasiswa','barang','dosen','peminjaman','pengembalian','online','suppliers','grafik_stok','hitung_suppliers','barangmasuk'));
     }
 
     public function grafik()
@@ -74,8 +78,12 @@ class HomeController extends Controller
     {
         $kategoris = Kategori::all();
         $satuans = Satuan::all();
-        $barang = Barang::with('kategori','satuan')->latest()->paginate(5);
-        return view('barang.index', compact('barang','satuans','kategoris'));
+        $barangmasuk = BarangMasuk::all();
+        $barang = Barang::with('kategori','satuan','barangmasuk')->latest()->paginate(5);
+        $names = Barang::select('name')
+                           ->groupBy('name')
+                           ->get();
+        return view('barang.index', compact('barang','satuans','kategoris','names','barangmasuk'));
     }
     public function index_dosen()
     {

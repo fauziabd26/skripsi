@@ -14,7 +14,7 @@
                 </div>
                 <div class="card-wrap">
                   <div class="card-header">
-                    <h4>Total Admin</h4>
+                    <h4>Total Pengguna</h4>
                   </div>
                   <div class="card-body">
                   <div class="count">{{$user}}</div>
@@ -47,7 +47,7 @@
                     <h4>Total Dosen</h4>
                   </div>
                   <div class="card-body">
-                    <div class="count">{{$mahasiswa}}</div>
+                    <div class="count">{{$dosen}}</div>
                   </div>
                 </div>
               </div>
@@ -97,43 +97,53 @@
                 </div>
               </div>
             </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+              <a href="{{route('index_suppliers')}}">
+                <div class="card card-statistic-1">
+                  <div class="card-icon bg-primary">
+                    <i class="far fa-address-book"></i>
+                  </div>
+                  <div class="card-wrap">
+                    <div class="card-header">
+                      <h4>Data Suppliers</h4>
+                    </div>
+                    <div class="card-body">
+                      <div class="count">{{$hitung_suppliers}}</div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+              <a href="{{route('index_barang_masuk')}}">
+                  <div class="card card-statistic-1">
+                  <div class="card-icon bg-primary">
+                    <i class="far fa-address-book"></i>
+                  </div>
+                  <div class="card-wrap">
+                    <div class="card-header">
+                      <h4>Data Barang Masuk</h4>
+                    </div>
+                    <div class="card-body">
+                      <div class="count">{{$barangmasuk}}</div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
           </div>
 
           <div class="row">
             <div class="col-lg-8 col-md-12 col-12 col-sm-12">
               <div class="card">
               <div class="card-header">
-                    <h4>Data Grafik Barang Bulanan</h4>
+                    <h4>Data Grafik Supplier Barang</h4>
                   </div>
                 <div class="card-body">
-                    <canvas id="myChart" height="182"></canvas>
+                    <div id="suppliers">
+
+                    </div>
                 </div>
-              </div>
-            </div>
-            
-            <div class="col-lg-4 col-md-12 col-12 col-sm-12">
-              <div class="card">
-                <div class="card-header">
-                  <h4>Recent Activities</h4>
-                </div>
-                @foreach ($online as $data)
-                <div class="card-body">
-                  <ul class="list-unstyled list-unstyled-border">
-                    <li class="media">
-                     <div class="media-body">
-                        <div class="float-right text-primary">
-                          @if(Cache::has('user-is-online-' . $data->id))
-                            <span class="text-success">Online</span>
-                          @else
-                            <span class="text-secondary">Offline</span>
-                          @endif
-                        </div>
-                        <div class="media-title">{{ $data->name }}</div>
-                        <span class="text-small text-muted">{{ Carbon\Carbon::parse($data->last_seen)->diffForHumans() }}</span>
-                      </div>
-                  </ul>
-                </div>
-                @endforeach
               </div>
             </div>
           </div>
@@ -252,5 +262,64 @@
         </div>
       </div>
     </section>
-    @endif
+    @endif    
+@stop
+
+@section('footer')
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script>
+  Highcharts.chart('suppliers', {
+    chart: {
+        type: 'column',
+        options3d: {
+            enabled: true,
+            alpha: 15,
+            beta: 15,
+            viewDistance: 25,
+            depth: 40
+        }
+    },
+
+    title: {
+        text: 'Total stok dari suppliers'
+    },
+
+    xAxis: {
+        categories: {!!json_encode($suppliers)!!},
+        labels: {
+            skew3d: true,
+            style: {
+                fontSize: '16px'
+            }
+        }
+    },
+
+    yAxis: {
+        allowDecimals: false,
+        min: 0,
+        title: {
+            text: 'Stok',
+            skew3d: true
+        }
+    },
+
+    tooltip: {
+        headerFormat: '<b>{point.key}</b><br>',
+        pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: {point.y} / {point.stackTotal}'
+    },
+
+    plotOptions: {
+        column: {
+            stacking: 'normal',
+            depth: 40
+        }
+    },
+
+    series: [{
+        name: 'Stok awal dari Supplier',
+        data: {!!json_encode($grafik_stok)!!},
+        stack: 'male'
+    }]
+});
+</script>
 @stop

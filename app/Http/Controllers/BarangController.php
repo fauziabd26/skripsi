@@ -10,7 +10,9 @@ use App\Models\Kategori;
 use App\Models\Satuan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Ramsey\Uuid\Uuid;
 
@@ -266,5 +268,27 @@ class BarangController extends Controller
     	$barang->forceDelete();
  
     	return redirect()->route('index_recycle_bin')->with('success', 'Data Berhasil Dihapus');
+    }
+
+    public function getFile(Request $request){
+        if(Storage :: disk('local')->exists("excel/$request->file")){
+            $path = Storage::disk('local')->path("excel/$request->file");
+            $content = file_get_contents($path);
+            return response($content)->withHeaders([
+                 'Content-Type'=>mime_content_type($path)
+            ]);
+        }
+        return redirect('/400');
+    }
+
+    public function getFile_public(Request $request){
+        if(Storage :: disk('local')->exists("excel/$request->file")){
+            $path = Storage::disk('local')->path("excel/$request->file");
+            $content = file_get_contents($path);
+            return response($content)->withHeaders([
+                 'Content-Type'=>mime_content_type($path)
+            ]);
+        }
+        return redirect('/400');
     }
 }

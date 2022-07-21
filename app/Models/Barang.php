@@ -23,6 +23,6 @@ class Barang extends Model
     }
     public function barangmasuk()
     {
-        return $this->belongsTo(BarangMasuk::class);
+        return $this->belongsTo('App\Models\BarangMasuk','barang_id');
     }
 }

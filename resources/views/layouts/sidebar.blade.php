@@ -28,6 +28,7 @@
                   <li><a class="nav-link" href="{{ route('index_kategori') }}">Kategori Barang</a></li>
                   <li><a class="nav-link" href="{{ route('index_satuan') }}">Satuan Barang</a></li>
                   <li><a class="nav-link" href="{{ route('index_barang_masuk') }}">Data Barang Masuk</a></li>
+                  <li><a class="nav-link" href="{{ route('index_suppliers') }}">Data Suppliers</a></li>
                 </ul>
               </li>
               <li class="nav-item dropdown">
