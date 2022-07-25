@@ -67,14 +67,11 @@ class BarangMasukController extends Controller
         $data = new BarangMasuk;
         $data->id               = Uuid::uuid4()->getHex();
         $data->tggl_masuk       = $request->tggl_masuk;
-        $data->stok        = $request->stok;   
+        $data->stok             = $request->stok;   
         $data->barang_id        = $request->barang_id;
         $data->suppliers_id     = $request->suppliers_id;        
         $data->save();
 
-        $barang = Barang::findOrFail($request->barang_id);
-        $barang->stok += $request->stok;
-        $barang->save();
         return redirect()->route('index_barang_masuk')->with('pesan','Data Berhasil Disimpan');
     }
 
@@ -112,26 +109,16 @@ class BarangMasukController extends Controller
     public function update(Request $request, $id)
     {
         Request()->validate([
-            'tggl_masuk'    => 'required',
             'stok'     => 'required|min:0',
-            'suppliers_id'  => 'required',
         ],[
-            'tggl_masuk.required'   =>'Tanggal Masuk tidak boleh kosong',
             'stok.required'    =>'stok tidak boleh kosong',
             'stok.min'         =>'stok minimal 0',
-            'suppliers_id.required' =>'Nama Suppliers tidak boleh kosong',
         ]);
         $barangmasuk = BarangMasuk::findOrFail($id);
-        $barangmasuk->tggl_masuk    = $request->tggl_masuk;
-        $barangmasuk->stok          = $request->stok;
-        $barangmasuk->suppliers_id  = $request->suppliers_id;        
+        $barangmasuk->stok          = $request->stok;        
         $barangmasuk->save();
         
-        $barang = Barang::findOrFail($barangmasuk->barang_id);
-        $barang->stok += $request->stok;
-        $barang->save();
-        return redirect()->route('index_barang_masuk')->with('pesan','Data Berhasil Disimpan');
-        
+        return redirect()->route('index_barang_masuk')->with('pesan','Data Berhasil Disimpan');    
     }
 
     /**
@@ -140,10 +127,12 @@ class BarangMasukController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($barang_id)
+    public function destroy(Request $request)
     {
         try {
-            $barangmasuk = BarangMasuk::find($barang_id);
+            $barangmasuk = BarangMasuk::find($request->id);
+            $barang = Barang::findOrFail($barangmasuk->barang_id);
+            $barang->stok -= $barangmasuk->stok;
             $barangmasuk->delete();                           
         return redirect()->route('index_barang_masuk')->with('delete', 'Data Berhasil Dihapus');
         } catch (\Throwable $th) {

@@ -1,6 +1,7 @@
 @extends('layouts.main')
 
 @section('content')
+@if (auth()->user()->role_id == "1")
 <section class="section">
     <div class="section-header">
         <h1>Data Dosen</h1>
@@ -18,6 +19,15 @@
                             <i class="fas fa-plus mr-2"></i> Tambah Data Dosen
                         </a>
                     </div>
+                    @if (count($dosen))
+                        <div class="col">
+                            <form class="form" method="get" action="{{ route('cari_dosen') }}">
+                                <label for="search" class="d-block mr-2">Pencarian Database Dosen</label>
+                                <input type="text" name="search" class="form-control w-75 d-inline" id="search" placeholder="Masukkan keyword">
+                                <button type="submit" class="btn btn-primary mb-1">Cari</button>
+                            </form>
+                        </div>
+                        @endif
                 </div>
                 @if (session()->has('alert-success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -66,4 +76,63 @@
         </div>
     </div>
 </section>
+@elseif (auth()->user()->role_id == "4")
+<section class="section">
+    <div class="section-header">
+        <h1>Data Dosen</h1>
+        <div class="section-header-breadcrumb">
+            <div class="breadcrumb-item active"><a href="/">Dashboard</a></div>
+            <div class="breadcrumb-item">Data Dosen</div>
+        </div>
+    </div>
+    <div class="section-body">
+        <div class="card">
+            <div class="card-body">
+            <div class="row mb-3">
+                    @if (count($dosen))
+                        <div class="col">
+                            <form class="form" method="get" action="{{ route('cari_dosen') }}">
+                                <label for="search" class="d-block mr-2">Pencarian Database Dosen</label>
+                                <input type="text" name="search" class="form-control w-75 d-inline" id="search" placeholder="Masukkan keyword">
+                                <button type="submit" class="btn btn-primary mb-1">Cari</button>
+                            </form>
+                        </div>
+                        @endif
+                </div>
+                @if (count($dosen))
+                <div class="table-responsive">
+                    <table id="example1" class="table table-bordered table-hover">
+                        <thead class="thead-dark" align="center">
+                            <tr>
+                                <th>NO</th>
+                                <th>NIP DOSEN</th>
+                                <th>NAMA DOSEN</th>
+                                <th>KETERANGAN</th>
+                            </tr>
+                        </thead>
+                        <?php $no = 1;?>
+                        @foreach($dosen as $data)
+                        <tr>
+                            <td align="center" style="width: 1%;">{{ $no++ }}</td>
+                            <td align="center" style="width: 15%;">{{ $data->nip }}</td>
+                            <td align="center">{{ $data->name }}</td>
+                            <td align="center" style="width: 15%;">{{ $data->keterangan }}</td>
+                        </tr>
+                        @endforeach
+                    </table>
+                </div>
+                @else
+                <div class="row mb-3">
+                    <div class="col">
+                            <div class="alert alert-primary" style="width: 26%;">
+                                <i class="fa fa-exclamation-triangle"></i> Data Dosen Belum tersedia
+                            </div>
+                    </div>
+                </div>
+                @endif
+            </div>
+        </div>
+    </div>
+</section>
+@endif
 @stop

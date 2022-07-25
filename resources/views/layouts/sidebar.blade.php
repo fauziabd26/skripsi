@@ -65,11 +65,23 @@
                 <a href="{{url('/PenggunaMahasiswaPengembalian')}}" ><i class="fas fa-address-book"></i> <span>Pengembalian</span></a>
               </li>
               @elseif (auth()->user()->role_id == "4")
-              <li class="menu-header">Pilih Menu</li>   
+              <li class="menu-header">Data</li>
               <li class="nav-item dropdown">
-                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-file"></i></i> <span>Laporan</span></a>
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-user"></i> <span>Data Pengguna</span></a>
                 <ul class="dropdown-menu">
-                  <li><a class="nav-link" href="{{ route('index_laporan_barang') }}">Laporan Barang</a></li>
+                  <li><a class="nav-link" href="{{ route('index_mahasiswa') }}">Mahasiswa</a></li>
+                  <li><a class="nav-link" href="{{ route('index_dosen') }}">Dosen</a></li>
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-folder"></i></i> <span>Data Master</span></a>
+                <ul class="dropdown-menu">
+                  <li class="menu-header">Pilih Menu</li>
+                  <li><a class="nav-link" href="{{ route('index_barang') }}">Data Barang</a></li>
+                  <li><a class="nav-link" href="{{ route('index_kategori') }}">Kategori Barang</a></li>
+                  <li><a class="nav-link" href="{{ route('index_satuan') }}">Satuan Barang</a></li>
+                  <li><a class="nav-link" href="{{ route('index_barang_masuk') }}">Data Barang Masuk</a></li>
+                  <li><a class="nav-link" href="{{ route('index_suppliers') }}">Data Suppliers</a></li>
                 </ul>
               </li>
               @endif

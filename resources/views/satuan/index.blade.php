@@ -1,6 +1,7 @@
 @extends('layouts.main')
 
 @section('content')
+@if (auth()->user()->role_id == "1")
 <section class="section">
     <div class="section-header">
         <h1>Data Satuan</h1>
@@ -70,4 +71,48 @@
         </div>
     </div>
 </section>
+@elseif (auth()->user()->role_id == "4")
+<section class="section">
+    <div class="section-header">
+        <h1>Data Satuan</h1>
+        <div class="section-header-breadcrumb">
+            <div class="breadcrumb-item active"><a href="/">Dashboard</a></div>
+            <div class="breadcrumb-item">Data Satuan</div>
+        </div>
+    </div>
+    <div class="section-body">
+        <div class="card">
+            <div class="card-body">
+                @if (count($satuan))
+                <div class="table-responsive">
+                    <table id="example1" class="table table-bordered table-hover">
+                        <thead class="thead-dark" align="center">
+                            <tr>
+                                <th>NO</th>
+                                <th>Nama Satuan</th>
+                            </tr>
+                        </thead>
+                        <?php $no = 1;?>
+                        @foreach($satuan as $data)
+                        <tr>
+                            <td align="center">{{ $no++ }}</td>
+                            <td align="center">{{ $data->name }}</td>
+                        </tr>
+                        @endforeach
+                    </table>
+                </div>
+                @else
+                <div class="row mb-3">
+                    <div class="col">
+                            <div class="alert alert-primary" style="width: 26%;">
+                                <i class="fa fa-exclamation-triangle"></i> Data Satuan Belum tersedia
+                            </div>
+                    </div>
+                </div>
+                @endif
+            </div>
+        </div>
+    </div>
+</section>
+@endif
 @stop

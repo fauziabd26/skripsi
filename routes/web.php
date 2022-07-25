@@ -43,12 +43,12 @@ use App\Http\Controllers\HomeController;
 Route::get('/', [HomeController::class, 'index'])->name('dashboard');
 Route::get('stok', [HomeController::class, 'grafik']);
 Route::get('/home', [HomeController::class, 'index'])->name('home');
-Route::get('barang', [HomeController::class, 'index_barang'])->name('index_barang')->middleware('admin');
+Route::get('barang', [HomeController::class, 'index_barang'])->name('index_barang');
 Route::get('kategori', [HomeController::class, 'index_kategori'])->name('index_kategori');
 
 //Route Mahasiswa
 use App\Http\Controllers\MahasiswaController;
-Route::get('mahasiswa', [MahasiswaController::class, 'index'])->name('index_mahasiswa')->middleware('admin');
+Route::get('mahasiswa', [MahasiswaController::class, 'index'])->name('index_mahasiswa');
 Route::get('mahasiswa/add', [MahasiswaController::class, 'create'])->name('tambah_mahasiswa')->middleware('admin');
 Route::post('/mahasiswa/post', [MahasiswaController::class, 'store'])->name('post_mahasiswa')->middleware('admin');
 Route::get('/mahasiswa/delete{id}', [MahasiswaController::class, 'destroy'])->name('destroy_mahasiswa')->middleware('admin');
@@ -64,10 +64,11 @@ Route::get('kalab/add', [RegisterController::class, 'createKalab'])->name('tamba
 Route::post('/kalab/post', [RegisterController::class, 'storeKalab'])->name('post_kalab')->middleware('admin');
 //Route Dosen
 use App\Http\Controllers\DosenController;
-Route::get('dosen', [DosenController::class, 'index'])->name('index_dosen')->middleware('admin');
+Route::get('dosen', [DosenController::class, 'index'])->name('index_dosen');
 Route::get('dosen/add', [DosenController::class, 'create'])->name('tambah_dosen')->middleware('admin');
 Route::post('/dosen/post', [DosenController::class, 'store'])->name('post_dosen')->middleware('admin');
 Route::get('/dosen/delete{id}', [DosenController::class, 'destroy'])->name('destroy_dosen')->middleware('admin');
+Route::get('search_dosen', [DosenController::class, 'search'])->name('cari_dosen');
 
 //Route Barang
 use App\Http\Controllers\BarangController;
@@ -99,7 +100,7 @@ Route::get('/kategori/delete{id}', [KategoriController::class, 'destroy'])->name
 
 //Route Satuan
 use App\Http\Controllers\SatuanController;
-Route::get('/satuan', [SatuanController::class, 'index'])->name('index_satuan')->middleware('admin');
+Route::get('/satuan', [SatuanController::class, 'index'])->name('index_satuan');
 Route::get('/satuan/add', [SatuanController::class, 'create'])->name('tambah_satuan')->middleware('admin');
 Route::post('/satuan/post', [SatuanController::class, 'store'])->name('post_satuan')->middleware('admin');
 Route::get('/satuan/edit/{id}', [SatuanController::class, 'edit'])->name('edit_satuan')->middleware('admin');
@@ -108,7 +109,7 @@ Route::get('/satuan/delete{id}', [SatuanController::class, 'destroy'])->name('de
 
 //Route Suppliers
 use App\Http\Controllers\SuppliersController;
-Route::get('/suppliers', [SuppliersController::class, 'index'])->name('index_suppliers')->middleware('admin');
+Route::get('/suppliers', [SuppliersController::class, 'index'])->name('index_suppliers');
 Route::get('/suppliers/add', [SuppliersController::class, 'create'])->name('tambah_suppliers')->middleware('admin');
 Route::post('/suppliers/post', [SuppliersController::class, 'store'])->name('post_suppliers')->middleware('admin');
 Route::get('/suppliers/edit/{id}', [SuppliersController::class, 'edit'])->name('edit_suppliers')->middleware('admin');
@@ -118,7 +119,7 @@ Route::get('/search_suppliers', [SuppliersController::class, 'search'])->name('c
 
 //Route Barang Masuk
 use App\Http\Controllers\BarangMasukController;
-Route::get('/barang_masuk', [BarangMasukController::class, 'index'])->name('index_barang_masuk')->middleware('admin');
+Route::get('/barang_masuk', [BarangMasukController::class, 'index'])->name('index_barang_masuk');
 Route::get('/barang_masuk/add', [BarangMasukController::class, 'create'])->name('tambah_barang_masuk')->middleware('admin');
 Route::post('/barangmasuk/post', [BarangMasukController::class, 'store'])->name('post_barangmasuk')->middleware('admin');
 Route::get('/barang_masuk/edit/{id}', [BarangMasukController::class, 'edit'])->name('edit_barang_masuk')->middleware('admin');

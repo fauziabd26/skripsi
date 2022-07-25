@@ -24,7 +24,7 @@ class Kalab
                 return redirect()->route('home')->with('error',"Anda Tidak Dapat mengakses halaman ini");
             }
         } else {
-            return redirect('/home')->with('status', ' pleaselogin first');
+            return redirect('/home')->with('status', ' please login first');
         }
     }
 }

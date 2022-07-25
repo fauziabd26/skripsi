@@ -142,4 +142,11 @@ class DosenController extends Controller
             return redirect()->route('index_dosen')->withErrors('Data gagal Dihapus');
         }
     }
+
+    public function search(Request $request)
+    {
+        $keyword = $request->search;
+        $dosen = Dosen::where('name', 'like', "%" . $keyword . "%")->paginate(5);
+        return view('dosen.index', compact('dosen'))->with('i', (request()->input('page', 1) - 1) * 5);
+    }
 }

@@ -12,13 +12,6 @@
     <div class="section-body">
         <div class="card">
             <div class="card-body">
-                <div class="row mb-3">
-                    <div class="col">
-                        <a href="{{ route('tambah_kalab') }}" class="btn btn-primary" title="Tambah" data-toggle="tooltip">
-                            <i class="fas fa-plus mr-2"></i> Tambah Data Kalab
-                        </a>
-                    </div>
-                </div>
                 <div class="table-responsive">
                     @if(session()->has('alert-success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -28,6 +21,7 @@
                         </button>
                     </div>
                     @endif
+                    @if (count($kalab))
                     <table id="example1" class="table table-bordered table-hover">
                         <thead class="thead-dark" align="center">
                             <tr>
@@ -48,8 +42,18 @@
                         </tr>
                         @endforeach
                     </table>
+                    @else
+                    <div class="row mb-3">
+                    <div class="col">
+                        <a href="{{ route('tambah_kalab') }}" class="btn btn-primary" title="Tambah" data-toggle="tooltip">
+                            <i class="fas fa-plus mr-2"></i> Tambah Data Kalab
+                        </a>
+                    </div>
+                </div>
+                    @endif
                 </div>
             </div>
+            
         </div>
     </div>
 </section>

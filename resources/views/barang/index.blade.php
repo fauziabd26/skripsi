@@ -1,6 +1,7 @@
 @extends('layouts.main')
 
 @section('content')
+@if (auth()->user()->role_id == "1")
 <section class="section">
     <div class="section-header">
         <a href="{{ route('index_barang') }}"><h1>Data Barang</h1></a>
@@ -64,7 +65,7 @@
                         <tr>
                             <td align="center">{{ $no++ }}</td>
                             <td align="center" style="width: 25%;">{{ $data->name }}</td>
-                            <td align="center">{{ $data->stok }}</td>
+                            <td align="center">{{ App\Models\Barang::where('id',$data->id)->sum('stok') + App\Models\BarangMasuk::where('barang_id',$data->id)->sum('stok') }}</td>
                             <td align="center">{{ !empty($data->kategori) ? $data->kategori->name:'' }}</td>
                             <td align="center">{{ !empty($data->satuan) ? $data->satuan->name:'' }}</td>
                             <td align="center" style="width: 30%;">
@@ -152,10 +153,10 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <a href="getfile/?file=Format.xlsx">Download Format</a>
             <form action="{{route('import_barang')}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
+                    <p class="danger">Mohon Sebelum Import Barang agar disesuaikan dengan format yang ada, Download Format <a href="getfile/?file=Format.xlsx" class="tooltip-test" title="Download Format CSV">disini</a>, Terima Kasih.</p>
                 <div class="form-group col-6">
                     <label class="control-label" for="kategori_id">Kategori Barang</label>
                     <select name="kategori_id" class="form-control">
@@ -174,5 +175,151 @@
         </div>
     </div>
 </div>
+@elseif (auth()->user()->role_id == "4")
+<section class="section">
+    <div class="section-header">
+        <a href="{{ route('index_barang') }}"><h1>Data Barang</h1></a>
+        <div class="section-header-breadcrumb">
+            <div class="breadcrumb-item active"><a href="/">Dashboard</a></div>
+            <div class="breadcrumb-item">Data Barang</div>
+        </div>
+    </div>
+    <div class="section-body">
+    <div class="card">
+            <div class="card-body">
+                <div class="row mb-3">
+                    @if (count($barang))
+                    <div class="col">
+                        <form class="form" method="get" action="{{ route('cari_barang') }}">
+                            <label for="search" class="d-block mr-2">Pencarian</label>
+                            <input type="text" name="search" class="form-control w-75 d-inline" id="search" placeholder="Masukkan keyword">
+                            <button type="submit" class="btn btn-primary mb-1">Cari</button>
+                        </form>
+                    </div>
+                    @endif
+                </div>
+                    @if (count($barang))
+                    <div class="table-responsive">
+                        <table id="example1" class="table table-bordered table-hover">
+                            <thead class="thead-dark" align="center">
+                                <tr>
+                                <th>NO</th>
+                                <th>Nama Barang</th>
+                                <th>stok</th>
+                                <th>Kategori Barang</th>
+                                <th>Satuan Barang</th>
+                            </tr>
+                        </thead>
+                        <?php $no = 1;?>
+                        @foreach($barang as $data)
+                        <tr>
+                            <td align="center">{{ $no++ }}</td>
+                            <td align="center" style="width: 25%;">{{ $data->name }}</td>
+                            <td align="center">{{ App\Models\Barang::where('id',$data->id)->sum('stok') + App\Models\BarangMasuk::where('barang_id',$data->id)->sum('stok') }}</td>
+                            <td align="center">{{ !empty($data->kategori) ? $data->kategori->name:'' }}</td>
+                            <td align="center">{{ !empty($data->satuan) ? $data->satuan->name:'' }}</td>
+                        </tr>
+                        @endforeach
+                    </table>
+                    
+                    <br>
+                    Halaman             : {{ $barang->currentPage() }} <br/>
+	                Jumlah Data         : {{ $barang->total() }} <br/>
+	                Data Per Halaman    : {{ $barang->perPage() }} <br/>
+ 
+ 
+	                {{ $barang->links() }}
+                </div>
+                @else
+                <div class="row mb-3">
+                    <div class="col">
+                        <div class="alert alert-primary" style="width: 26%;">
+                            <i class="fa fa-exclamation-triangle"></i> Data Barang Belum tersedia
+                        </div>
+                    </div>
+                </div>
+                <a class="btn btn-primary" href="{{ route('index_recycle_bin') }}">
+                    <i class="fas fa-recycle"></i> Recycle Bin
+                </a>
+                @endif
+            </div>
+        </div>
+    </div>
+</section>
+@foreach ($barang as $data)
+<!-- Modal Lihat -->
+        <div aria-hidden="true" aria-labelledby="exampleModalLabel" role="dialog" tabindex="-1" id="modal-lihat-{{ $data->id }}" class="modal fade">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Data Barang </h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-4">Nama Barang</div>
+                                <div class="col-md-6 ms-auto">{{ $data->name }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">Stok Barang</div>
+                                <div class="col-md-6 ms-auto">{{ $data->stok }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">Kondisi Barang</div>
+                                <div class="col-md-6 ms-auto">{{ !empty($data->kondisi->name) ? $data->kondisi->name:'' }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">Kategori Barang</div>
+                                <div class="col-md-6 ms-auto">{{ !empty($data->kategori->name) ? $data->kategori->name:'' }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">Satuan Barang</div>
+                                <div class="col-md-6 ms-auto">{{ !empty($data->satuan->name) ? $data->satuan->name:'' }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">Gambar Barang</div>
+                                <div class="col-md-6 ms-auto"><img src="{{ url('img/barang/'.$data->file) }}" width="150px" alt=""></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!-- END Modal Lihat -->
+@endforeach
+
+<!-- Modal Import-->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Import Data Barang</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{route('import_barang')}}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <p class="danger">Mohon Sebelum Import Barang agar disesuaikan dengan format yang ada, Download Format <a href="getfile/?file=Format.xlsx" class="tooltip-test" title="Download Format CSV">disini</a>, Terima Kasih.</p>
+                <div class="form-group col-6">
+                    <label class="control-label" for="kategori_id">Kategori Barang</label>
+                    <select name="kategori_id" class="form-control">
+                        <option selected disabled> Pilih Kategori Barang </option>
+                        @foreach ($kategoris as $data)
+                            <option value="{{ $data->id }}">{{ $data->name }}</option> 
+                        @endforeach
+                    </select>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="file" name="file" class="form-control" accept=".xml,.xls, .xlsx">
+                    <button type="submit" class="btn btn-primary mb-1">Submit</button>
+                    
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endif
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 @stop

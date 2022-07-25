@@ -29,17 +29,7 @@
                         </div>
                         <div class="form-group col-6 col-md-3 col-lg-3">
                             <label class="control-label" for="suppliers_id">Nama Supplier</label>
-                            <select class="form-control" name="suppliers_id" id="suppliers_id">
-                            <option selected disabled> Pilih Supplier Barang </option>
-								@foreach ($suppliers as $data)
-                                <option value="{{ $data->id }}">{{ $data->name }}</option> 
-                                @endforeach
-                            </select>
-                            <div class="text-danger">
-                                @error('suppliers_id')
-                                    {{ $message }}
-                                @enderror
-                            </div>
+                            <input type="text" class="form-control" value="{{ $barangmasuk->suppliers->name }}" disabled>
                         </div>
                         <div class="form-group col-6 col-md-3 col-lg-3">
                             <label class="control-label" for="stok">Stok Barang</label>
@@ -52,12 +42,7 @@
                         </div>
                         <div class="form-group col-6 col-md-3 col-lg-3">    
                             <label class="control-label" for="tggl_masuk">Tanggal Masuk</label>
-                            <input type="date" name="tggl_masuk" class="form-control" value="{{ old('tggl_masuk') }}" >
-                            <div class="text-danger">
-                                @error('tggl_masuk')
-                                    {{ $message }}
-                                @enderror
-                            </div>
+                            <input type="date" class="form-control" value="{{ $barangmasuk->tggl_masuk }}" disabled>
                         </div>
                     </div>
                     <div class="form-group">

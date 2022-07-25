@@ -38,27 +38,67 @@ class HomeController extends Controller
     public function index()
     {
         $user = User::count();
-        $mahasiswa = Mahasiswa::count();
-        $barang = Barang::count();
-        $dosen = Dosen::count();
-        $peminjaman = peminjaman::count();
-        $pengembalian = pengembalian::count();
-        $namakonsumen = Suppliers::all();
-        $hitung_suppliers = Suppliers::count();
-        $barangmasuk = BarangMasuk::count();
-        $online = User::select("*")
-            ->whereNotNull('last_seen')
-            ->orderBy('last_seen', 'DESC')
-            ->paginate(5);
-        $suppliers = [];
-        $grafik_stok =[];
-        foreach ($namakonsumen as $data ) {
-            # code...
-            $suppliers[]=$data->name;
-            $grafik_stok[]=BarangMasuk::where('suppliers_id', $data->id)->sum('stok');
-        }
 
-        return view('dashboard.index', compact('user','mahasiswa','barang','dosen','peminjaman','pengembalian','online','suppliers','grafik_stok','hitung_suppliers','barangmasuk'));
+        $mahasiswa = Mahasiswa::count();
+        
+        $barang = Barang::count();
+        
+        $dosen = Dosen::count();
+        
+        $peminjaman = peminjaman::count();
+        
+        $pengembalian = pengembalian::count();
+        
+        $hitung_suppliers = Suppliers::count();
+        
+        $barangmasuk = BarangMasuk::count();
+        
+        $contoh = BarangMasuk::join('suppliers','suppliers.id','=','barang_masuks.suppliers_id')
+        ->selectRaw('*,SUM(stok)as total_stok')
+        ->groupBy('suppliers_id')
+        ->orderBy('total_stok','DESC')
+        ->get()
+        ->take(5);
+        
+        $contoh2 = BarangMasuk::join('barangs','barangs.id','=','barang_masuks.barang_id')
+        ->selectRaw('*,SUM(barang_masuks.stok)as total_stok')
+        ->groupBy('barang_id')
+        ->orderBy('total_stok','DESC')
+        ->get()
+        ->take(5);
+        
+        $online = User::select("*")
+        ->whereNotNull('last_seen')
+        ->orderBy('last_seen', 'DESC')
+        ->paginate(5);
+        
+            $suppliers = [];
+
+            $suppliers2 = [];
+        
+            $grafik_stok =[];
+        
+            $grafik_stok2 =[];
+        
+            // dd($contoh2);
+        
+            foreach ($contoh as $data ) {
+            # code...
+                $suppliers[]=$data->name;
+                
+                $grafik_stok[]=$data->total_stok;
+                
+
+            }
+            foreach ($contoh2 as $data ) {
+                # code...
+                    $suppliers2[]=$data->name;
+                    
+                    $grafik_stok2[]=$data->total_stok;
+                    
+                    
+                }
+        return view('dashboard.index', compact('user','mahasiswa','barang','dosen','peminjaman','pengembalian','online','suppliers','suppliers2','grafik_stok','grafik_stok2','hitung_suppliers','barangmasuk'));
     }
 
     public function grafik()

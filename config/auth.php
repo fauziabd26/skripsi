@@ -44,6 +44,44 @@ return [
             'driver' => 'token',
             'provider' => 'users',
         ],
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admin',
+        ],
+        'apiadmin' => [
+            'driver' => 'token',
+            'provider' => 'admin',
+            'hash' => false,
+        ],
+        'dosen' => [
+            'driver' => 'session',
+            'provider' => 'dosen',
+        ],
+        'apidosen' => [
+            'driver' => 'token',
+            'provider' => 'dosen',
+            'hash' => false,
+        ],
+        'mahasiswa' => [
+            'driver' => 'session',
+            'provider' => 'mahasiswa',
+        ],
+        'apimahasiswa' => [
+            'driver' => 'token',
+            'provider' => 'mahasiswa',
+            'hash' => false,
+        ],
+        'kalab' => [
+            'driver' => 'session',
+            'provider' => 'kalab',
+        ],
+        'apikalab' => [
+            'driver' => 'token',
+            'provider' => 'kalab',
+            'hash' => false,
+        ],
+
+
     ],
 
     /*
@@ -65,6 +103,22 @@ return [
 
     'providers' => [
         'users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class,
+        ],
+        'admin' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class,
+        ],
+        'dosen' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Dosen::class,
+        ],
+        'mahasiswa' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Mahasiswa::class,
+        ],
+        'kalab' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],

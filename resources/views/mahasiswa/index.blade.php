@@ -1,6 +1,7 @@
 @extends('layouts.main')
 
 @section('content')
+@if (auth()->user()->role_id == "1")
 <section class="section">
     <div class="section-header">
         <a href="{{ route('index_mahasiswa') }}"> <h1>Data Mahasiswa</h1> </a>
@@ -82,5 +83,63 @@
         </div>
     </div>
 </section>
-
+@elseif (auth()->user()->role_id == "4")
+<section class="section">
+    <div class="section-header">
+        <a href="{{ route('index_mahasiswa') }}"> <h1>Data Mahasiswa</h1> </a>
+        <div class="section-header-breadcrumb">
+            <div class="breadcrumb-item active"><a href="/">Dashboard</a></div>
+            <div class="breadcrumb-item">Data Mahasiswa</div>
+        </div>
+    </div>
+    <div class="section-body">
+        <div class="card">
+            <div class="card-body">
+                <div class="row mb-3">
+                    @if (count($mahasiswa))
+                        <div class="col">
+                            <form class="form" method="get" action="{{ route('cari_mahasiswa') }}">
+                                <label for="search" class="d-block mr-2">Pencarian Database Mahasiswa</label>
+                                <input type="text" name="search" class="form-control w-75 d-inline" id="search" placeholder="Masukkan keyword">
+                                <button type="submit" class="btn btn-primary mb-1">Cari</button>
+                            </form>
+                        </div>
+                        @endif
+                </div>
+                @if (count($mahasiswa))
+                <div class="table-responsive">
+                    <table id="example1" class="table table-bordered table-hover">
+                        <thead class="thead-dark" align="center">
+                            <tr>
+                                <th>NO</th>
+                                <th>NIM</th>
+                                <th>NAMA MAHASISWA</th>
+                                <th>KELAS</th>
+                            </tr>
+                        </thead>
+                        <?php $no = 1;?>
+                        @foreach($mahasiswa as $data)
+                        <tr>
+                            <td align="center" style="width: 1%;">{{ $no++ }}</td>
+                            <td align="center" style="width: 3%;">{{ $data->nim }}</td>
+                            <td align="center">{{ $data->name }}</td>
+                            <td align="center" style="width: 15%;">{{ $data->kelas }}</td>
+                        </tr>
+                        @endforeach
+                    </table>
+                </div>
+                @else
+                <div class="row mb-3">
+                    <div class="col">
+                            <div class="alert alert-primary">
+                                <i class="fa fa-exclamation-triangle"></i> Data Mahasiswa Belum tersedia
+                            </div>
+                    </div>
+                </div>
+                @endif
+            </div>
+        </div>
+    </div>
+</section>
+@endif
 @stop
